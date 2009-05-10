@@ -4,7 +4,7 @@
 #include <ext/hash_map>
 
 #define HSTEP 1
-#define VSTEP 4
+#define VSTEP 3
 #define BR 4
 #define LEFT   "L"
 #define RIGHT  "R"
@@ -26,7 +26,7 @@ struct state8_t {
     unsigned p = p1_;
     for( int i = 0; i < 4; ++i, p = p>>4 ) if( (p&0xF) == 0 ) return(i);
     p = p2_;
-    for( int i = 0; i <= 4; ++i, p = p>>4 ){ std::cout<<"i:"<< p; if( (p&0xF) == 0 ) return(4+i);}
+    for( int i = 0; i <= 4; ++i, p = p>>4 ){ if( (p&0xF) == 0 ) return(4+i);}
     return((unsigned)-1);
   }
   unsigned cont( unsigned p ) const { return( (p<4?(p1_>>(p<<2)):(p2_>>((p-4)<<2))) & 0xF ); }
@@ -43,16 +43,17 @@ struct state8_t {
     memset(successors, 0, sizeof(successors));
 
     short as = allowed_steps(), k = 0;
-    for (int i = 0; i < BR; i++, as >> 1) {
+    for (int i = 0; i < BR; i++, as = as >> 1) {
+      successors[i] = NULL;
       if (as & 1 == 1) {
 	// Clone the current state
-	state8_t clone;
-	clone.p1_ = p1_; clone.p2_ = p2_;
-	if (i == 0) clone.left();
-	else if (i == 1) clone.right();
-	else if (i == 2) clone.up();
-	else if (i == 3) clone.down();
-	successors[k] = &clone; k++;
+	state8_t * clone = (state8_t *)malloc(sizeof(state8_t));
+	clone->p1_ = p1_; clone->p2_ = p2_;
+	if (i == 0)      clone->left();
+	else if (i == 1) clone->right();
+	else if (i == 2) clone->up();
+	else if (i == 3) clone->down();
+	successors[k] = clone; k++;
       }
     }
   }
@@ -139,16 +140,13 @@ int main (){
   std::cout <<"p1:"<< state.p1_ << std::endl;
   std::cout <<"p2:"<< state.p2_ << std::endl << std::endl;
 
-  state.left(); state.down(); state.down();
   std::cout << state << "aaa" << std::endl << std::endl;
 
-  state8_t * successors[4];
-  std::cout << state.bpos() << " " << state.allowed_steps() << std::endl;
-//  state.successors(successors);
-//   for (int i = 0; i < BR; i++) {
-//     if (successors[i] == NULL)
-//       std::cout << *successors[i];
-//   }
+  state8_t * successors[BR];
+  state.successors(successors);
+  for (int i = 0; i < BR; i++) {
+    if (successors[i] != NULL) std::cout << successors[i][0] << std::endl;
+  }
 
   return 0;
 }
