@@ -1,9 +1,11 @@
 #include <iostream>
 #include <iomanip>
+#include <string.h>
 #include <ext/hash_map>
 
 #define HSTEP 1
 #define VSTEP 4
+#define BR 4
 #define LEFT   "L"
 #define RIGHT  "R"
 #define UP     "U"
@@ -11,7 +13,8 @@
 
 
 // bit representation for movements: LRUD
-static char m[5] = { 0xAB, 0x9E, 0xFD, 0x67, 0x50 }; // 0101 1101  1001 0111  1111 1011  0110 1110  1010 0000
+static short m1_    = 0xAB9E;
+static unsigned m2_ = 0xFD675000; // 0101 1101  1001 0111  1111 1011  0110 1110  1010 0000
 
 struct state8_t {
   unsigned short p1_;
@@ -27,14 +30,32 @@ struct state8_t {
     return((unsigned)-1);
   }
   unsigned cont( unsigned p ) const { return( (p<4?(p1_>>(p<<2)):(p2_>>((p-4)<<2))) & 0xF ); }
-
    //  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
   void set( unsigned p, unsigned t ) { if( p < 4 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-4)<<2)))|(t<<((p-4)<<2)); }
-  
+  short allowed_steps() { unsigned bp = bpos(); return ( (bp<4?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
+
   void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
   void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
   void up() { unsigned bp = bpos(), t = cont(bp-VSTEP); set(bp-VSTEP,0); set(bp,t); }
   void down() { unsigned bp = bpos(), t = cont(VSTEP+bp); set(VSTEP+bp,0); set(bp,t); }
+
+  // Problem methods
+  void successors(state8_t ** successors) {
+    memset(successors, 0, sizeof (successors));
+    short as = allowed_steps(), k = 0;
+    for (int i = 0; i < BR; i++, as >> 1) {
+      if (as & 1 == 1) {
+	// Clone the current state
+	state8_t clone;
+	clone.p1_ = p1_; clone.p2_ = p2_;
+	if (i == 0) clone.left();
+	else if (i == 1) clone.right();
+	else if (i == 2) clone.up();
+	else if (i == 3) clone.down();
+	successors[k] = &clone; k++;
+      }
+    }
+  }
 
   void print( std::ostream &os ) const
   {
@@ -48,40 +69,7 @@ struct state8_t {
     }
 };
 
-struct state15_t {
-  unsigned int p1_,p2_;
-  state15_t() : p1_(0),p2_(0) { for( int i = 7; i >= 0; --i ) { p1_ = p1_<<4; p1_ += i; p2_ = p2_<<4; p2_ += i+8; } }
-   bool operator==( const state15_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
-  unsigned bpos() const
-  {
-    unsigned p = p1_;
-    for( int i = 0; i < 8; ++i, p = p>>4 ) if( (p&0xF) == 0 ) return(i);
-    p = p2_;
-    for( int i = 0; i < 8; ++i, p = p>>4 ) if( (p&0xF) == 0 ) return(8+i);
-    return((unsigned)-1);
-  }
-  unsigned cont( unsigned p ) const { return( (p<8?(p1_>>(p<<2)):(p2_>>((p-8)<<2))) & 0xF ); }
-  //  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
-  void set( unsigned p, unsigned t ) { if( p < 8 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-8)<<2)))|(t<<((p-8)<<2)); }
-
-  void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
-  void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
-  void up() { unsigned bp = bpos(), t = cont(bp-VSTEP); set(bp-VSTEP,0); set(bp,t); }
-  void down() { unsigned bp = bpos(), t = cont(VSTEP+bp); set(VSTEP+bp,0); set(bp,t); }
-
-  void print( std::ostream &os ) const
-  {
-    unsigned p = p1_;
-    for( int i = 0; i < 16; ++i ) {
-      os << std::setw(2) << (p&0xF) << ' ';
-      p = p>>4;
-      if( i%4 == 3 ) os << std::endl;
-      if( i == 7 ) p = p2_;
-    }
-  }
-};
-
-inline std::ostream& operator<<( std::ostream &os, const state15_t &s ) { s.print(os); return(os); }
+inline std::ostream& operator<<( std::ostream &os, const state8_t &s ) { s.print(os); return(os); }
 
 struct value_t;
 
@@ -111,19 +99,21 @@ protected:
 
 inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(os); return(os); }
 
-struct value_t : public std::pair<const state15_t,node_t> {
+struct value_t : public std::pair<const state8_t,node_t> {
   void link( value_t *n ) { n->second.next_ = second.next_; if( second.next_ ) second.next_->second.prev_ = n; second.next_ = n; n->second.prev_ = this; }
   void unlink() { if( second.next_ ) second.next_->second.prev_ = second.prev_; if( second.prev_ ) second.prev_->second.next_ = second.next_; }
+
+  
 };
 
 namespace __gnu_cxx {
-  template<> class hash<state15_t> {
+  template<> class hash<state8_t> {
   public:
-    size_t operator()( const state15_t &s ) const { return(s.p1_^s.p2_); }
+    size_t operator()( const state8_t &s ) const { return(s.p1_^s.p2_); }
   };
 };
 
-class hash_t : public __gnu_cxx::hash_map<state15_t,node_t> { };  // class
+class hash_t : public __gnu_cxx::hash_map<state8_t,node_t> { };  // class
 hash_t hash; // hash instance
 
 class priority_queue_t {
