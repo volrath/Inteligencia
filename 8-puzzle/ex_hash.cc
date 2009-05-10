@@ -13,8 +13,8 @@
 
 
 // bit representation for movements: LRUD
-static short m1_    = 0xAB9E;
-static unsigned m2_ = 0xFD675000; // 0101 1101  1001 0111  1111 1011  0110 1110  1010 0000
+static unsigned short m1_ = 0xE9BA;
+static unsigned m2_       = 0x000576DF; // 0101 1101  1001 0111  1111 1011  0110 1110  1010
 
 struct state8_t {
   unsigned short p1_;
@@ -30,9 +30,8 @@ struct state8_t {
     return((unsigned)-1);
   }
   unsigned cont( unsigned p ) const { return( (p<4?(p1_>>(p<<2)):(p2_>>((p-4)<<2))) & 0xF ); }
-   //  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
   void set( unsigned p, unsigned t ) { if( p < 4 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-4)<<2)))|(t<<((p-4)<<2)); }
-  short allowed_steps() { unsigned bp = bpos(); return ( (bp<4?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
+  short allowed_steps() { unsigned bp = bpos(); return ( (bp<4?(m1_>>(bp<<2)):(m2_>>((bp-4)<<2))) & 0xF ); }
 
   void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
   void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
@@ -41,8 +40,8 @@ struct state8_t {
 
   // Problem methods
   void successors(state8_t ** successors) {
-    printf("entre");
-    memset(successors, 0, sizeof (successors));
+    memset(successors, 0, sizeof(successors));
+
     short as = allowed_steps(), k = 0;
     for (int i = 0; i < BR; i++, as >> 1) {
       if (as & 1 == 1) {
@@ -103,8 +102,6 @@ inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(o
 struct value_t : public std::pair<const state8_t,node_t> {
   void link( value_t *n ) { n->second.next_ = second.next_; if( second.next_ ) second.next_->second.prev_ = n; second.next_ = n; n->second.prev_ = this; }
   void unlink() { if( second.next_ ) second.next_->second.prev_ = second.prev_; if( second.prev_ ) second.prev_->second.next_ = second.next_; }
-
-  
 };
 
 namespace __gnu_cxx {
@@ -141,15 +138,15 @@ int main (){
   state8_t state;
   std::cout <<"p1:"<< state.p1_ << std::endl;
   std::cout <<"p2:"<< state.p2_ << std::endl << std::endl;
+
+  state.left(); state.down(); state.down();
   std::cout << state << "aaa" << std::endl << std::endl;
-  std::cout << "algo";
 
-
-  state8_t ** successors;
+  state8_t * successors[4];
+  std::cout << state.bpos() << " " << state.allowed_steps() << std::endl;
 //  state.successors(successors);
-//   std::cout << "otra cosa";
 //   for (int i = 0; i < BR; i++) {
-//     if (successors[i] == 0)
+//     if (successors[i] == NULL)
 //       std::cout << *successors[i];
 //   }
 
