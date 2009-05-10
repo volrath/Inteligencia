@@ -68,7 +68,7 @@ public:
   bool open_;
   value_t *prev_, *next_;  // to be used in the priority queue
 
-  node_t( unsigned g = 0, unsigned h = 0, bool open = false ) : g_(g), h_(h), open_(open), prev_(0), next_(0) { }
+  node_t( unsigned g = 0, unsigned h = 0, bool open = true ) : g_(g), h_(h), open_(open), prev_(0), next_(0) { }
   unsigned g() const { return(g_); }
   unsigned h() const { return(h_); }
   unsigned f() const { return(g_+h_); }
