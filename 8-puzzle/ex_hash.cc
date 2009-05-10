@@ -15,9 +15,44 @@
 static char m[5] = { 0xAB, 0x9E, 0xFD, 0x67, 0x50 }; // 0101 1101  1001 0111  1111 1011  0110 1110  1010 0000
 
 struct state8_t {
-  char ps[5];
-  state8_t() : p1_(0), p2_(0) { for( int i = 7; i >= 0; --i ) { p1_ = p1_<<4; p1_ += i; p2_ = p2_<<4; p2_ += i+8; } }
-  bool operator==( const state15_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
+  unsigned short p1_;
+  unsigned int p2_;
+  state8_t() : p1_(0), p2_(0) { p2_ = p2_ << 16;  p2_ += 8; for( int i = 3; i >= 0; --i ) { p1_ = p1_<<4;  p1_ += i; p2_ = p2_ << 4; p2_ += i + 4; }}
+  bool operator==( const state8_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
+  unsigned bpos() const
+  {
+    unsigned p = p1_;
+    for( int i = 0; i < 4; ++i, p = p>>4 ) if( (p&0xF) == 0 ) return(i);
+    p = p2_;
+    for( int i = 0; i <= 4; ++i, p = p>>4 ){ std::cout<<"i:"<< p; if( (p&0xF) == 0 ) return(4+i);}
+    return((unsigned)-1);
+  }
+  unsigned cont( unsigned p ) const { return( (p<4?(p1_>>(p<<2)):(p2_>>((p-4)<<2))) & 0xF ); }
+
+   //  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
+  void set( unsigned p, unsigned t ) { if( p < 4 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-4)<<2)))|(t<<((p-4)<<2)); }
+  
+  void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
+  void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
+  void up() { unsigned bp = bpos(), t = cont(bp-VSTEP); set(bp-VSTEP,0); set(bp,t); }
+  void down() { unsigned bp = bpos(), t = cont(VSTEP+bp); set(VSTEP+bp,0); set(bp,t); }
+
+  void print( std::ostream &os ) const
+  {
+    unsigned p = p1_;
+    for( int i = 0; i < 9; ++i ) {
+      os << std::setw(2) << (p&0xF) << ' ';
+      p = p>>4;
+      if( i%3 == 0 ) os << std::endl;
+      if( i == 3 ) p = p2_;
+    }
+    }
+};
+
+struct state15_t {
+  unsigned int p1_,p2_;
+  state15_t() : p1_(0),p2_(0) { for( int i = 7; i >= 0; --i ) { p1_ = p1_<<4; p1_ += i; p2_ = p2_<<4; p2_ += i+8; } }
+   bool operator==( const state15_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
   unsigned bpos() const
   {
     unsigned p = p1_;
@@ -27,7 +62,7 @@ struct state8_t {
     return((unsigned)-1);
   }
   unsigned cont( unsigned p ) const { return( (p<8?(p1_>>(p<<2)):(p2_>>((p-8)<<2))) & 0xF ); }
-  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
+  //  short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
   void set( unsigned p, unsigned t ) { if( p < 8 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-8)<<2)))|(t<<((p-8)<<2)); }
 
   void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
@@ -135,6 +170,12 @@ public:
   }
 };
 
-
-
-
+int main (){
+  state8_t * p = new state8_t;
+  std::cout <<"p1:"<< p->p1_;
+  std::cout <<"p2:"<< p->p2_;
+  p->set(0,1);
+  p->set(4,0);
+  p->print(std::cout);
+  return 0;
+}

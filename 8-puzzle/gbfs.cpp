@@ -56,7 +56,7 @@ int main (int argc , char** argv){
   value_t* vp3 = new value_t;
   vp3->second.g_ = 100;
   value_t* vp4 = new value_t;
-  vp4->second.g_ = 11;
+  vp4->second.g_ = 1;
   qp.push(vp);
   qp.push(vp2);
   qp.push(vp3);
