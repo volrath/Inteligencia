@@ -42,7 +42,7 @@ struct state8_t {
     for( int i = 0; i < 9; ++i ) {
       os << std::setw(2) << (p&0xF) << ' ';
       p = p>>4;
-      if( i%3 == 0 ) os << std::endl;
+      if( (i +1) % 3 == 0) os << std::endl;
       if( i == 3 ) p = p2_;
     }
     }
@@ -148,8 +148,6 @@ public:
 
 int main (){
   state8_t * p = new state8_t;
-  std::cout <<"p1:"<< p->p1_;
-  std::cout <<"p2:"<< p->p2_;
   p->set(0,1);
   p->set(4,0);
   p->print(std::cout);
