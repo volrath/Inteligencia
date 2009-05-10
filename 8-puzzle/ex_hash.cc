@@ -64,7 +64,7 @@ struct state8_t {
     for( int i = 0; i < 9; ++i ) {
       os << std::setw(2) << (p&0xF) << ' ';
       p = p>>4;
-      if( i%3 == 0 ) os << std::endl;
+      if( (i +1) % 3 == 0) os << std::endl;
       if( i == 3 ) p = p2_;
     }
   }
