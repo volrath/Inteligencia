@@ -41,6 +41,7 @@ struct state8_t {
 
   // Problem methods
   void successors(state8_t ** successors) {
+    printf("entre");
     memset(successors, 0, sizeof (successors));
     short as = allowed_steps(), k = 0;
     for (int i = 0; i < BR; i++, as >> 1) {
@@ -66,7 +67,7 @@ struct state8_t {
       if( i%3 == 0 ) os << std::endl;
       if( i == 3 ) p = p2_;
     }
-    }
+  }
 };
 
 inline std::ostream& operator<<( std::ostream &os, const state8_t &s ) { s.print(os); return(os); }
@@ -137,11 +138,20 @@ public:
 };
 
 int main (){
-  state8_t * p = new state8_t;
-  std::cout <<"p1:"<< p->p1_;
-  std::cout <<"p2:"<< p->p2_;
-  p->set(0,1);
-  p->set(4,0);
-  p->print(std::cout);
+  state8_t state;
+  std::cout <<"p1:"<< state.p1_ << std::endl;
+  std::cout <<"p2:"<< state.p2_ << std::endl << std::endl;
+  std::cout << state << "aaa" << std::endl << std::endl;
+  std::cout << "algo";
+
+
+  state8_t ** successors;
+//  state.successors(successors);
+//   std::cout << "otra cosa";
+//   for (int i = 0; i < BR; i++) {
+//     if (successors[i] == 0)
+//       std::cout << *successors[i];
+//   }
+
   return 0;
 }
