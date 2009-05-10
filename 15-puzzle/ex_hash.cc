@@ -32,14 +32,19 @@ struct state15_t {
     for( int i = 0; i < 8; ++i, p = p>>4 ) if( (p&0xF) == 0 ) return(8+i);
     return((unsigned)-1);
   }
+  // Helpers
   unsigned cont( unsigned p ) const { return( (p<8?(p1_>>(p<<2)):(p2_>>((p-8)<<2))) & 0xF ); }
   short allowed_steps() { unsigned bp = bpos(); return ( (bp<8?(m1_>>(bp<<2)):(m2_>>((bp-8)<<2))) & 0xF ); }
   void set( unsigned p, unsigned t ) { if( p < 8 ) p1_ = (p1_&~(0xF<<(p<<2)))|(t<<(p<<2)); else p2_ = (p2_&~(0xF<<((p-8)<<2)))|(t<<((p-8)<<2)); }
 
+  // Movements
   void left() { unsigned bp = bpos(), t = cont(bp-HSTEP); set(bp-HSTEP, 0); set(bp, t); }
   void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
   void up() { unsigned bp = bpos(), t = cont(bp-VSTEP); set(bp-VSTEP,0); set(bp,t); }
   void down() { unsigned bp = bpos(), t = cont(VSTEP+bp); set(VSTEP+bp,0); set(bp,t); }
+
+  // Problem methods
+  void successors() {}
 
   void print( std::ostream &os ) const
   {

@@ -1,9 +1,3 @@
-// Hash table for 15-puzzle
-// Universidad Simon Bolivar, 2008.
-// Author: Blai Bonet
-// Last Revision: 05/19/08
-// Modified by:
-
 #include <iostream>
 #include <iomanip>
 #include <ext/hash_map>
@@ -17,12 +11,11 @@
 
 
 // bit representation for movements: LRUD
-static unsigned m1_ = 3758005178, m2_ = 1467408382; // m1_ = 0101 1101 1101 1001 0111 1111 1111 1011
-                                                    // m2_ = 0111 1111 1111 1011 0110 1110 1110 1010
+static char m[5] = { 0xAB, 0x9E, 0xFD, 0x67, 0x50 }; // 0101 1101  1001 0111  1111 1011  0110 1110  1010 0000
 
-struct state15_t {
-  unsigned p1_, p2_;
-  state15_t() : p1_(0), p2_(0) { for( int i = 7; i >= 0; --i ) { p1_ = p1_<<4; p1_ += i; p2_ = p2_<<4; p2_ += i+8; } }
+struct state8_t {
+  char ps[5];
+  state8_t() : p1_(0), p2_(0) { for( int i = 7; i >= 0; --i ) { p1_ = p1_<<4; p1_ += i; p2_ = p2_<<4; p2_ += i+8; } }
   bool operator==( const state15_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
   unsigned bpos() const
   {
