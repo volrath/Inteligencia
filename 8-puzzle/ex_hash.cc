@@ -4,6 +4,7 @@
 
 #define HSTEP 1
 #define VSTEP 4
+#define BR 4
 #define LEFT   "L"
 #define RIGHT  "R"
 #define UP     "U"
@@ -33,6 +34,27 @@ struct state8_t {
   void right() { unsigned bp = bpos(), t = cont(HSTEP+bp); set(HSTEP+bp,0); set(bp,t); }
   void up() { unsigned bp = bpos(), t = cont(bp-VSTEP); set(bp-VSTEP,0); set(bp,t); }
   void down() { unsigned bp = bpos(), t = cont(VSTEP+bp); set(VSTEP+bp,0); set(bp,t); }
+
+  // Problem methods
+  unsigned * successors() {
+    unsigned successors[4];
+    memset(successors, 0, sizeof (successors));
+    short as = allowed_steps(), k = 0;
+    for (int i = 0; i < BR; i++, as >> 1) {
+      if (as & 1 == 1) {
+	// Clone the current state
+	state8_t clone;
+	clone.p1_ = p1_; clone.p2_ = p2_;
+	if (i == 0) clone.left();
+	else if (i == 1) clone.right();
+	else if (i == 2) clone.up();
+	else if (i == 3) clone.down();
+	successors[k] = &clone; k++;
+      }
+    }
+
+    return(successors);
+  }
 
   void print( std::ostream &os ) const
   {
@@ -79,6 +101,8 @@ inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(o
 struct value_t : public std::pair<const state15_t,node_t> {
   void link( value_t *n ) { n->second.next_ = second.next_; if( second.next_ ) second.next_->second.prev_ = n; second.next_ = n; n->second.prev_ = this; }
   void unlink() { if( second.next_ ) second.next_->second.prev_ = second.prev_; if( second.prev_ ) second.prev_->second.next_ = second.next_; }
+
+  
 };
 
 namespace __gnu_cxx {
