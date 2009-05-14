@@ -1,9 +1,0 @@
-General
-=======
- * Problem class for state's successors, heuristics, path_costs, blabla
-   (see norvig code at: http://aima-python.googlecode.com/svn/trunk/search.py)
- * Hash table and Priority queue to make state tree/graph
- * Add previous movement (LRUD) to value_t struct
- * A* & IDA*
- * Disjoint patterns DB
- * State constructor for program input
