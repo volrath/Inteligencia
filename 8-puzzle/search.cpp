@@ -5,9 +5,10 @@ using namespace std;
 
 class value_comparison{
 public:
-  value_comparison(){}
+  int heu_;
+  value_comparison(int heu = 0) : heu_(heu) {}
   bool operator() (const node_t *lhs, const node_t *rhs) const{
-    return(lhs->f() > rhs->f());
+    if (heu_ == 1) return(lhs->h() > rhs->h()); else return(lhs->f() > rhs->f());
   }
 };
 typedef priority_queue<node_t*,vector<node_t*>, value_comparison> pq_t;
@@ -21,12 +22,13 @@ namespace __gnu_cxx {
 
 class hash_t : public __gnu_cxx::hash_map<state8_t, node_t> { };  // class
 
-int informed_search(state8_t initial_state, node_t *root) {
-  hash_t closed;
-  pq_t open;
-  bool better_p;
+unsigned (*heuristics[2]) (state8_t state) = { misplaced_tiles, manhattan };
 
-  root->set_h(misplaced_tiles(initial_state));
+int informed_search(state8_t initial_state, node_t *root, int alg, int heu) {
+  hash_t closed;
+  pq_t open(heu);
+
+  root->set_h(heuristics[heu](initial_state));
   root->set_prev(NULL);
 
   open.push(root);
@@ -47,8 +49,6 @@ int informed_search(state8_t initial_state, node_t *root) {
       return(1);
     }
 
-    //    pActual->prev()->set_next(pActual);
-
     pActual->successors(scs);
     for (int i = 0; i < BR; i++) {
       if (scs[i] != NULL) { 
@@ -56,7 +56,7 @@ int informed_search(state8_t initial_state, node_t *root) {
 
 	if (closed.count(*(pAux->state()))) continue;
 
-	pAux->set_h(misplaced_tiles(*(pAux->state())));
+	pAux->set_h(heuristics[heu](*(pAux->state())));
 	pAux->set_prev(pActual);
 	open.push(pAux);
       }

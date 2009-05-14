@@ -33,6 +33,10 @@ bool can_be_resolved(state8_t state) {
   return (k%2 == 0);
 }
 
+/*
+  Use:
+  8puzzle 1 2 3 4 5 6 7 8 0 [algorithm] [heuristic]
+ */
 int main (int argc, char **argv) {
   int alg = 0, heu = 0;
   if (argc == 12) {
@@ -56,7 +60,7 @@ int main (int argc, char **argv) {
   if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
 
   node_t *path = new node_t(0, 0, &state, true);
-  if (informed_search(state, path)) {
+  if (informed_search(state, path, alg, heu)) {
     //while(path != NULL) { cout << *path << endl; path = path->next(); }
     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
     cout << endl;
