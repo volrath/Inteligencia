@@ -19,7 +19,8 @@ static unsigned m2_       = 0x000576DF; // 0101 1101  1001 0111  1111 1011  0110
 struct state8_t {
   unsigned short p1_;
   unsigned int p2_;
-  state8_t() : p1_(0), p2_(0) { p2_ = p2_ << 16;  p2_ += 8; for( int i = 3; i >= 0; --i ) { p1_ = p1_<<4;  p1_ += i; p2_ = p2_ << 4; p2_ += i + 4; }}
+  state8_t() : p1_(0), p2_(0) { p2_ = p2_ << 16;  p2_ += 8;
+    for( int i = 3; i >= 0; --i ) { p1_ = p1_<<4;  p1_ += i; p2_ = p2_ << 4; p2_ += i + 4; }}
   bool operator==( const state8_t &s ) const { return((p1_==s.p1_)&&(p2_==s.p2_)); }
   unsigned bpos() const
   {
@@ -80,7 +81,7 @@ struct state8_t {
 
 inline std::ostream& operator<<( std::ostream &os, const state8_t &s ) { s.print(os); return(os); }
 
-class node_t {   // CAN I DROP *state?
+class node_t {
 public:
   char g_, h_, m_;
   bool open_;
