@@ -9,4 +9,5 @@ unsigned manhattan(state8_t state);
 //unsigned (*heuristics[2]) (state8_t state);
 
 // Search Algorithms
-int informed_search(state8_t initial_state, node_t * node, int alg, int heu);
+bool informed_search(state8_t initial_state, node_t * node, int alg, int heu);
+bool iterative_deepening_search(state8_t initial_state, node_t *root, int heu);

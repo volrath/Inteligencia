@@ -60,7 +60,10 @@ int main (int argc, char **argv) {
   if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
 
   node_t *path = new node_t(0, 0, &state, true);
-  if (informed_search(state, path, alg, heu)) {
+  bool did_it;
+  if (alg == 2) did_it = iterative_deepening_search(state, path, heu);
+  else          did_it = informed_search(state, path, alg, heu);
+  if (did_it) {
     //while(path != NULL) { cout << *path << endl; path = path->next(); }
     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
     cout << endl;
