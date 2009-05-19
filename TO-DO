@@ -12,6 +12,6 @@ Disjoint patterns DB
 --------------------
  - patterns generator for a given state: 1 7 5 4 2 6 8 0 3 -> 1 0 0 4 2 0 0 0 3
  - read about switch optimization
- * successors should tell if the movement touch a *tile or a important tile
+ - successors should tell if the movement touch a *tile or a important tile
  * complete pdb_bfs: insert state's pattern into db, get successors, get their patterns,
    check if they're alredy into the db, recursive call to pdb_bfs

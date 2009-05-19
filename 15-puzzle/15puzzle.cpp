@@ -1,5 +1,7 @@
 #include "lib.h"
 #include <queue>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define CZERO '0'
 
@@ -16,7 +18,7 @@ using namespace std;
 int construct_initial(char ** input, state15_t *state) {
   int nums[NUM_TILES];
   for (int i = ZERO; i < NUM_TILES; i++) {
-    nums[i] = *input[i+1] - CZERO;
+    nums[i] = atoi(input[i+1]);
     if (nums[i] < 0 || nums[i] > 15)
       return(0);
   }
@@ -76,12 +78,14 @@ bool can_be_resolved(state15_t state) {
 int main(int argc, char **argv) {
   state15_t state;
   state15_t *scs[BR];
+  bool important[BR];
 
   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
 
-  state.successors(scs);
+  cout << state << " ---- " << endl << endl;
+  successors18(state, scs, important);
   for (int i = 0; scs[i] != NULL; i++)
-    cout << *scs[i] << endl;
+      cout << *scs[i] << important[i] << endl;
 
   return(0);
 }

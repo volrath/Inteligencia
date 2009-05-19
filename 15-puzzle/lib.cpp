@@ -127,7 +127,7 @@ public:
 
 	if (i == 0)      { clone_st->left(); clone_nd->set_m(*LEFT); }
 	else if (i == 1) { clone_st->right(); clone_nd->set_m(*RIGHT); }
-	else if (i == 2) { clone_st->up(); clone_nd->set_m(*UP); } 
+	else if (i == 2) { clone_st->up(); clone_nd->set_m(*UP); }
 	else if (i == 3) { clone_st->down(); clone_nd->set_m(*DOWN); }
 	successors[k] = clone_nd; k++;
       }
@@ -138,3 +138,12 @@ protected:
 };
 
 inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(os); return(os); }
+
+namespace __gnu_cxx {
+  template<> class hash<state15_t> {
+  public:
+    size_t operator()( const state15_t &s ) const { return(s.p1_^s.p2_); }
+  };
+};
+
+class hash_t : public __gnu_cxx::hash_map<state15_t, node_t> { };  // class

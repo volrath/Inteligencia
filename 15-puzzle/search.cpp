@@ -14,15 +14,6 @@ public:
 };
 typedef priority_queue<node_t*,vector<node_t*>, value_comparison> pq_t;
 
-namespace __gnu_cxx {
-  template<> class hash<state15_t> {
-  public:
-    size_t operator()( const state15_t &s ) const { return(s.p1_^s.p2_); }
-  };
-};
-
-class hash_t : public __gnu_cxx::hash_map<state15_t, node_t> { };  // class
-
 unsigned (*heuristics[2]) (state15_t state) = { misplaced_tiles, manhattan };
 
 bool informed_search(state15_t initial_state, node_t *root, int alg, int heu) {

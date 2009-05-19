@@ -1,8 +1,8 @@
-S_HELPERS = search.cpp heuristics.cpp
+S_HELPERS = search.cpp heuristics.cpp pdb-generator.cc
 O_HELPERS = $(S_HELPERS:.cpp=.o)
 HEADER = lib.h
 
-S_MAIN = pdb-generator.cc
+S_MAIN = 15puzzle.cpp
 
 CC = g++
 CFLAGS = -g -o

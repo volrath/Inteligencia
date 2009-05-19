@@ -5,15 +5,6 @@
 
 using namespace std;
 
-namespace __gnu_cxx {
-  template<> class hash<state15_t> {
-  public:
-    size_t operator()( const state15_t &s ) const { return(s.p1_^s.p2_); }
-  };
-};
-
-class hash_t : public __gnu_cxx::hash_map<state15_t, node_t> { };  // class
-
 void pdb_gen18(state15_t state, unsigned *pt1, unsigned *pt2) {
   *pt1 = ZERO; *pt2 = ZERO;
   for (int i = 7; i >= ZERO; --i) {
@@ -30,17 +21,6 @@ void pdb_gen915(state15_t state, unsigned *pt1, unsigned *pt2) {
     *pt1 = *pt1 + (state.cont(i) <= HALF_NUM_TILES ? ZERO : state.cont(i));
     *pt2 = *pt2 + (state.cont(i+HALF_NUM_TILES) <= HALF_NUM_TILES ? ZERO : state.cont(i+HALF_NUM_TILES));
   }
-}
-
-int construct_initial(char ** input, state15_t *state) {
-  int nums[NUM_TILES];
-  for (int i = ZERO; i < NUM_TILES; i++) {
-    nums[i] = atoi(input[i+1]);
-    if (nums[i] < 0 || nums[i] > 15)
-      return(0);
-  }
-  state->set_state(nums);
-  return(1);
 }
 
 int pdb_bfs(state15_t *state, int cost, hash_t *closed) {
@@ -63,27 +43,83 @@ int pdb_bfs(state15_t *state, int cost, hash_t *closed) {
   return(0);
 }
 
-void print(unsigned p1_, unsigned p2_) {
-  unsigned p = p1_;
-  for( int i = ZERO; i < NUM_TILES; ++i ) {
-    cout << std::setw(2) << (p&0xF) << ' ';
-    p = p>>TILE_SIZE;
-    if( i%4 == 3 ) cout << endl;
-    if( i == 7 ) p = p2_;
+void successors18(state15_t state, state15_t ** scs, bool * is_important) {
+  memset(scs, ZERO, sizeof(scs));
+  memset(is_important, ZERO, sizeof(bool));
+
+  short as = state.allowed_steps(), k = ZERO;
+  for (int i = ZERO; i < BR; i++, as = as >> 1) {
+    scs[i] = NULL;
+    if (as & 1 == 1) {
+      // Clone the current state
+      state15_t * clone = (state15_t *)malloc(sizeof(state15_t));
+      bool important = false;
+      clone->p1_ = state.p1_; clone->p2_ = state.p2_;
+      if (i == 0) {
+	is_important[k] = (clone->cont(clone->bpos()-HSTEP) <= HALF_NUM_TILES ? true : false);
+	clone->left();
+      }
+      else if (i == 1) {
+	is_important[k] = (clone->cont(clone->bpos()+HSTEP) <= HALF_NUM_TILES ? true : false);
+	clone->right();
+      }
+      else if (i == 2) {
+	is_important[k] = (clone->cont(clone->bpos()-VSTEP) <= HALF_NUM_TILES ? true : false);
+	clone->up();
+      }
+      else if (i == 3) {
+	is_important[k] = (clone->cont(clone->bpos()+VSTEP) <= HALF_NUM_TILES ? true : false);
+	clone->down();
+      }
+      scs[k] = clone; k++;
+    }
   }
 }
 
-int main(int argc, char **argv) {
-  state15_t state;
-  hash_t closed;
+void successors915(state15_t state, state15_t ** scs, bool *is_important) {
+  memset(scs, ZERO, sizeof(scs));
+  memset(is_important, ZERO, sizeof(bool));
 
-  if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
-
-  //pdb_bfs(&state, 0, &closed);
-  unsigned pt1, pt2;
-  pdb_gen915(state, &pt1, &pt2);
-  print(pt1, pt2);
-  cout << endl << endl;
-  cout << state;
-  return(0);
+  short as = state.allowed_steps(), k = ZERO;
+  for (int i = ZERO; i < BR; i++, as = as >> 1) {
+    scs[i] = NULL;
+    if (as & 1 == 1) {
+      // Clone the current state
+      state15_t * clone = (state15_t *)malloc(sizeof(state15_t));
+      bool important = false;
+      clone->p1_ = state.p1_; clone->p2_ = state.p2_;
+      if (i == 0) {
+	is_important[k] = (clone->cont(clone->bpos()-HSTEP) > HALF_NUM_TILES ? true : false);
+	clone->left();
+      }
+      else if (i == 1) {
+	is_important[k] = (clone->cont(clone->bpos()+HSTEP) > HALF_NUM_TILES ? true : false);
+	clone->right();
+      }
+      else if (i == 2) {
+	is_important[k] = (clone->cont(clone->bpos()-VSTEP) > HALF_NUM_TILES ? true : false);
+	clone->up();
+      }
+      else if (i == 3) {
+	is_important[k] = (clone->cont(clone->bpos()+VSTEP) > HALF_NUM_TILES ? true : false);
+	clone->down();
+      }
+      scs[k] = clone; k++;
+    }
+  }
 }
+
+// int main(int argc, char **argv) {
+//   state15_t state;
+//   hash_t closed;
+
+//   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
+
+//   //pdb_bfs(&state, 0, &closed);
+//   unsigned pt1, pt2;
+//   pdb_gen915(state, &pt1, &pt2);
+//   print(pt1, pt2);
+//   cout << endl << endl;
+//   cout << state;
+//   return(0);
+// }
