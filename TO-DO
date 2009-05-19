@@ -3,9 +3,10 @@ Puzzles
  - Hash table and Priority queue to make state tree/graph
  - Add previous movement (LRUD) to value_t struct
  - A* & GBFS
- * IDA*
+ - IDA*
  * Disjoint patterns DB
  - State constructor for program input
+ * Fix state constructor for 15 puzzle
 
 Disjoint patterns DB
 --------------------
