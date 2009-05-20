@@ -136,8 +136,23 @@ public:
 
 protected:
 };
-
 inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(os); return(os); }
+
+struct pattern_t {
+  unsigned p1_, p2_;
+  pattern_t() : p1_(ZERO), p2_(ZERO) { }
+  bool operator==( const pattern_t &p ) const { return((p1_==p.p1_)&&(p2_==p.p2_)); }
+  void print( std::ostream &os ) const {
+    unsigned p = p1_;
+    for( int i = ZERO; i < NUM_TILES; ++i ) {
+      std::cout << std::setw(2) << (p&0xF) << ' ';
+      p = p>>TILE_SIZE;
+      if( i == 7 ) p = p2_;
+    }
+    std::cout << std::endl;
+  }
+};
+inline std::ostream& operator<<( std::ostream &os, const pattern_t &s ) { s.print(os); return(os); }
 
 namespace __gnu_cxx {
   template<> class hash<state15_t> {

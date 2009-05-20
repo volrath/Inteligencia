@@ -5,45 +5,25 @@
 
 using namespace std;
 
-void pdb_gen18(state15_t state, unsigned *pt1, unsigned *pt2) {
-  *pt1 = ZERO; *pt2 = ZERO;
+void pdb_gen07(state15_t state, pattern_t *p) {
+  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
   for (int i = 7; i >= ZERO; --i) {
-    *pt1 = *pt1 << 4; *pt2 = *pt2 << 4;
-    *pt1 = *pt1 + (state.cont(i) > HALF_NUM_TILES ? ZERO : state.cont(i));
-    *pt2 = *pt2 + (state.cont(i+HALF_NUM_TILES) > HALF_NUM_TILES ? ZERO : state.cont(i+HALF_NUM_TILES));
+    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
+    (*p).p1_ = (*p).p1_ + (state.cont(i) >= HALF_NUM_TILES ? 0xF : state.cont(i));
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) >= HALF_NUM_TILES ? 0xF : state.cont(i+HALF_NUM_TILES));
   }
 }
 
-void pdb_gen915(state15_t state, unsigned *pt1, unsigned *pt2) {
-  *pt1 = ZERO; *pt2 = ZERO;
+void pdb_gen815(state15_t state, pattern_t *p) {
+  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
   for (int i = 7; i >= ZERO; --i) {
-    *pt1 = *pt1 << 4; *pt2 = *pt2 << 4;
-    *pt1 = *pt1 + (state.cont(i) <= HALF_NUM_TILES ? ZERO : state.cont(i));
-    *pt2 = *pt2 + (state.cont(i+HALF_NUM_TILES) <= HALF_NUM_TILES ? ZERO : state.cont(i+HALF_NUM_TILES));
+    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
+    (*p).p1_ = (*p).p1_ + (state.cont(i) < HALF_NUM_TILES ? ZERO : state.cont(i));
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < HALF_NUM_TILES ? ZERO : state.cont(i+HALF_NUM_TILES));
   }
 }
 
-int pdb_bfs(state15_t *state, int cost, hash_t *closed) {
-  // Insert this state into the pattern database
-  unsigned int pt_state1 = ZERO, pt_state2 = ZERO;
-  pdb_gen18(*state, &pt_state1, &pt_state2);
-  cout << pt_state1 << pt_state2 << endl;
-  // ...
-
-  state15_t *scs[BR];
-  state->successors(scs);
-  for (int i = 0; scs[i] != NULL; i++) {
-    if (!closed->count(*scs[i])) {
-      closed->insert(make_pair(*scs[i], cost));
-      pdb_bfs(scs[i], cost + 1, closed);
-    }
-  }
-
-  free(scs);
-  return(0);
-}
-
-void successors18(state15_t state, state15_t ** scs, bool * is_important) {
+void successors07(state15_t state, state15_t ** scs, bool * is_important) {
   memset(scs, ZERO, sizeof(scs));
   memset(is_important, ZERO, sizeof(bool));
 
@@ -76,7 +56,7 @@ void successors18(state15_t state, state15_t ** scs, bool * is_important) {
   }
 }
 
-void successors915(state15_t state, state15_t ** scs, bool *is_important) {
+void successors815(state15_t state, state15_t ** scs, bool *is_important) {
   memset(scs, ZERO, sizeof(scs));
   memset(is_important, ZERO, sizeof(bool));
 
@@ -109,17 +89,43 @@ void successors915(state15_t state, state15_t ** scs, bool *is_important) {
   }
 }
 
-// int main(int argc, char **argv) {
-//   state15_t state;
-//   hash_t closed;
+namespace __gnu_cxx {
+  template<> class hash<pattern_t> {
+  public:
+    size_t operator()( const pattern_t &s ) const { return(s.p1_^s.p2_); }
+  };
+};
+class pt_hash_t : public __gnu_cxx::hash_map<pattern_t, int> { };  // class
 
-//   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
+int pdb_bfs(state15_t *state, int cost, pt_hash_t *closed) {
+  // Insert this state into the pattern database
+  pattern_t pt;
+  pdb_gen07(*state, &pt);
+  cout << cost << " -- " << pt << endl;
+  // ...
+  closed->insert(make_pair(pt, cost));
 
-//   //pdb_bfs(&state, 0, &closed);
-//   unsigned pt1, pt2;
-//   pdb_gen915(state, &pt1, &pt2);
-//   print(pt1, pt2);
-//   cout << endl << endl;
+  state15_t *scs07[BR];
+  bool is_important07[BR];
+  successors07(*state, scs07, is_important07);
+  for (int i = 0; scs07[i] != NULL && i < BR; i++) {
+    pdb_gen07(*scs07[i], &pt);
+    if (!closed->count(pt))
+      pdb_bfs(scs07[i], cost + (is_important07[i] ? 1 : 0), closed);
+  }
+
+  //  free(scs07);
+  return(0);
+}
+
+int main(int argc, char **argv) {
+  state15_t state;
+  pt_hash_t closed;
+
+  pdb_bfs(&state, 0, &closed);
+//   pattern_t p;
+//   pdb_gen815(state, &p);
+//   cout << p << endl;
 //   cout << state;
-//   return(0);
-// }
+  return(0);
+}

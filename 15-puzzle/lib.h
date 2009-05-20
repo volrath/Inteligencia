@@ -16,5 +16,5 @@ bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu);
 void pdb_gen18(state15_t state, unsigned *pt1, unsigned *pt2);
 void pdb_gen915(state15_t state, unsigned *pt1, unsigned *pt2);
 int pdb_bfs(state15_t *state, int cost, hash_t *closed);
-void successors18(state15_t state, state15_t ** scs, bool * important);
-void successors915(state15_t state, state15_t ** scs, bool * important);
+void successors07(state15_t state, state15_t ** scs, bool * important);
+void successors815(state15_t state, state15_t ** scs, bool * important);

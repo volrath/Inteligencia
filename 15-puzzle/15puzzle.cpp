@@ -38,54 +38,54 @@ bool can_be_resolved(state15_t state) {
   Use:
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
-// int main (int argc, char **argv) {
-//   int alg = ZERO, heu = ZERO;
-//   if (argc == 19) {
-//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-//     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
+int main (int argc, char **argv) {
+  int alg = ZERO, heu = ZERO;
+  if (argc == 19) {
+    if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
+    else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
 
-//     if (strcmp(argv[11], H_MIS) == ZERO)   heu = 1;
-//   }
-//   else if (argc == 18) {
-//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-//     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
-//   }
-//   else if (argc == 17) {}
-//   else {
-//     std::cout << "You dumb ass..." << std::endl;
-//     return(0);
-//   }
+    if (strcmp(argv[11], H_MIS) == ZERO)   heu = 1;
+  }
+  else if (argc == 18) {
+    if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
+    else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
+  }
+  else if (argc == 17) {}
+  else {
+    std::cout << "You dumb ass..." << std::endl;
+    return(0);
+  }
 
-//   state15_t state;
-//   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
-//   if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
-
-//   node_t *path = new node_t(ZERO, ZERO, &state, true);
-//   bool did_it;
-//   if (alg == 2) did_it = iterative_deepening_search(state, path, heu);
-//   else          did_it = informed_search(state, path, alg, heu);
-//   if (did_it) {
-//     //while(path != NULL) { cout << *path << endl; path = path->next(); }
-//     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
-//     cout << endl;
-//   } else {
-//     cout << "Couldn't find a path.." << endl;
-//   }
-//   return(ZERO);
-// }
-
-
-int main(int argc, char **argv) {
   state15_t state;
-  state15_t *scs[BR];
-  bool important[BR];
-
   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
+  if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
 
-  cout << state << " ---- " << endl << endl;
-  successors18(state, scs, important);
-  for (int i = 0; scs[i] != NULL; i++)
-      cout << *scs[i] << important[i] << endl;
-
-  return(0);
+  node_t *path = new node_t(ZERO, ZERO, &state, true);
+  bool did_it;
+  if (alg == 2) did_it = iterative_deepening_search(state, path, heu);
+  else          did_it = informed_search(state, path, alg, heu);
+  if (did_it) {
+    //while(path != NULL) { cout << *path << endl; path = path->next(); }
+    while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
+    cout << endl;
+  } else {
+    cout << "Couldn't find a path.." << endl;
+  }
+  return(ZERO);
 }
+
+
+// int main(int argc, char **argv) {
+//   state15_t state;
+//   state15_t *scs[BR];
+//   bool important[BR];
+
+//   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
+
+//   cout << state << " ---- " << endl << endl;
+//   successors18(state, scs, important);
+//   for (int i = 0; scs[i] != NULL; i++)
+//       cout << *scs[i] << important[i] << endl;
+
+//   return(0);
+// }
