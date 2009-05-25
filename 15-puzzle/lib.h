@@ -9,7 +9,7 @@ bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu);
 
 // pattern database
 void pdb_gen05(state15_t state, pattern_t *pt);
-void pdb_gen1015(state15_t state, pattern_t *pt);
+void pdb_gen1115(state15_t state, pattern_t *pt);
 
 // Heuristics
 unsigned misplaced_tiles(state15_t state);

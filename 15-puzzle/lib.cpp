@@ -13,7 +13,8 @@
 #define DOWN   "D"
 
 #define PDB05_FILE    "pdb05.bin"
-#define PDB1015_FILE  "pdb1015.bin"
+#define PDB610_FILE   "pdb610.bin"
+#define PDB1115_FILE  "pdb1115.bin"
 #define PATTERN_SIZE 8
 #define INT_SIZE 4
 

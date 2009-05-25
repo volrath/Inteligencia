@@ -4,7 +4,7 @@
 #include "lib.h"
 using namespace std;
 
-extern pt_hash_t pdb05, pdb1015;
+extern pt_hash_t pdb05, pdb610, pdb1115;
 
 class value_comparison{
 public:
@@ -136,11 +136,20 @@ void pdb_gen05(state15_t state, pattern_t *p) {
   }
 }
 
-void pdb_gen1015(state15_t state, pattern_t *p) {
+void pdb_gen610(state15_t state, pattern_t *p) {
   (*p).p1_ = ZERO; (*p).p2_ = ZERO;
   for (int i = 7; i >= ZERO; --i) {
     (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
-    (*p).p1_ = (*p).p1_ + (state.cont(i) < 10 ? ZERO : state.cont(i));
-    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 10 ? ZERO : state.cont(i+HALF_NUM_TILES));
+    (*p).p1_ = (*p).p1_ + (state.cont(i) < 6 || state.cont(i) > 10 ? ZERO : state.cont(i));
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 6 || state.cont(i+HALF_NUM_TILES) > 10 ? ZERO : state.cont(i+HALF_NUM_TILES));
+  }
+}
+
+void pdb_gen1115(state15_t state, pattern_t *p) {
+  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
+  for (int i = 7; i >= ZERO; --i) {
+    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
+    (*p).p1_ = (*p).p1_ + (state.cont(i) < 11 ? ZERO : state.cont(i));
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 11 ? ZERO : state.cont(i+HALF_NUM_TILES));
   }
 }

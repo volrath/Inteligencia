@@ -15,7 +15,7 @@
 
 using namespace std;
 
-extern pt_hash_t pdb05, pdb1015;
+extern pt_hash_t pdb05, pdb610, pdb1115;
 
 int construct_initial(char ** input, state15_t *state) {
   int nums[NUM_TILES];
@@ -33,7 +33,7 @@ int construct_initial(char ** input, state15_t *state) {
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 2, heu = 2;
+  int alg = 0, heu = 2;
 //   if (argc == 19) {
 //     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
 //     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
@@ -54,20 +54,39 @@ int main (int argc, char **argv) {
   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
 
   // Load heurisitic
-  cout << "Loading pattern database" << endl;
   time_t load_time = time(0);
   pattern_t pt;
   int cost;
   ifstream pdb_file;
 
+  cout << "Loading pattern database 0-5" << endl;
   pdb_file.open(PDB05_FILE, ios::in | ios::binary);
   while(!pdb_file.eof()) {
     pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
     pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
     pdb05.insert(make_pair(pt, cost));
   }
-  load_time = time(0) - load_time;
   pdb_file.close();
+
+  cout << "Loading pattern database 6-10" << endl;
+  pdb_file.open(PDB610_FILE, ios::in | ios::binary);
+  while(!pdb_file.eof()) {
+    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+    pdb610.insert(make_pair(pt, cost));
+  }
+  pdb_file.close();
+
+  cout << "Loading pattern database 11-15" << endl;
+  pdb_file.open(PDB1115_FILE, ios::in | ios::binary);
+  while(!pdb_file.eof()) {
+    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+    pdb1115.insert(make_pair(pt, cost));
+  }
+  pdb_file.close();
+
+  load_time = time(0) - load_time;
   cout << "All set up... loading time = " << load_time << "s" << endl;
   // -----------------------------------------------------------------
 
