@@ -4,6 +4,8 @@
 #include "lib.h"
 using namespace std;
 
+extern pt_hash_t pdb05, pdb1015;
+
 class value_comparison{
 public:
   int alg_;
@@ -14,7 +16,7 @@ public:
 };
 typedef priority_queue<node_t*,vector<node_t*>, value_comparison> pq_t;
 
-unsigned (*heuristics[2]) (state15_t state) = { misplaced_tiles, manhattan };
+unsigned (*heuristics[3]) (state15_t state) = { misplaced_tiles, manhattan, pdb_heuristic };
 
 bool informed_search(state15_t initial_state, node_t *root, int alg, int heu) {
   hash_t closed;
@@ -123,4 +125,22 @@ bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu) 
   }
 
   return(true);
+}
+
+void pdb_gen05(state15_t state, pattern_t *p) {
+  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
+    for (int i = 7; i >= ZERO; --i) {
+    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
+    (*p).p1_ = (*p).p1_ + (state.cont(i) >= 0 && state.cont(i) < 6 ? state.cont(i) : 0xF);
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) >= 0 && state.cont(i+HALF_NUM_TILES) < 6 ? state.cont(i+HALF_NUM_TILES) : 0xF);
+  }
+}
+
+void pdb_gen1015(state15_t state, pattern_t *p) {
+  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
+  for (int i = 7; i >= ZERO; --i) {
+    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
+    (*p).p1_ = (*p).p1_ + (state.cont(i) < 10 ? ZERO : state.cont(i));
+    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 10 ? ZERO : state.cont(i+HALF_NUM_TILES));
+  }
 }

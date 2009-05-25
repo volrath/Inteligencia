@@ -3,18 +3,25 @@
 #include <string.h>
 #include "lib.cpp"
 
-// Heuristics
-unsigned misplaced_tiles(state15_t state);
-unsigned manhattan(state15_t state);
-//unsigned (*heuristics[2]) (state15_t state);
-
 // Search Algorithms
 bool informed_search(state15_t initial_state, node_t * node, int alg, int heu);
 bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu);
 
 // pattern database
-void pdb_gen05(state15_t state, unsigned *pt1, unsigned *pt2);
-void pdb_gen1015(state15_t state, unsigned *pt1, unsigned *pt2);
-int pdb_bfs(state15_t *state, int cost, hash_t *closed);
-void successors05(state15_t state, state15_t ** scs, bool * important);
-void successors1015(state15_t state, state15_t ** scs, bool * important);
+void pdb_gen05(state15_t state, pattern_t *pt);
+void pdb_gen1015(state15_t state, pattern_t *pt);
+
+// Heuristics
+unsigned misplaced_tiles(state15_t state);
+unsigned manhattan(state15_t state);
+unsigned pdb_heuristic(state15_t state);
+//unsigned (*heuristics[2]) (state15_t state);
+
+// Global variables
+/* #ifndef GLOBAL_PDB */
+/* #define GLOBAL_PDB */
+
+
+/* #endif */
+//pt_hash_t pdb05;
+

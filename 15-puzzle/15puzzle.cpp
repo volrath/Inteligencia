@@ -2,6 +2,7 @@
 #include <queue>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define CZERO '0'
 
@@ -14,6 +15,7 @@
 
 using namespace std;
 
+extern pt_hash_t pdb05, pdb1015;
 
 int construct_initial(char ** input, state15_t *state) {
   int nums[NUM_TILES];
@@ -26,39 +28,48 @@ int construct_initial(char ** input, state15_t *state) {
   return(1);
 }
 
-bool can_be_resolved(state15_t state) {
-  int k = ZERO;
-  for (int i = ZERO; i < 15; i++) {
-    for (int j = i+1; j < NUM_TILES; j++) { if (state.cont(j) != 0 && state.cont(i) > state.cont(j)) k++; }
-  }
-  return (k%2 == ZERO);
-}
-
 /*
   Use:
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = ZERO, heu = ZERO;
-  if (argc == 19) {
-    if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-    else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
+  int alg = 2, heu = 2;
+//   if (argc == 19) {
+//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
+//     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
 
-    if (strcmp(argv[11], H_MIS) == ZERO)   heu = 1;
-  }
-  else if (argc == 18) {
-    if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-    else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
-  }
-  else if (argc == 17) {}
-  else {
-    std::cout << "You dumb ass..." << std::endl;
-    return(0);
-  }
+//     if (strcmp(argv[11], H_MIS) == ZERO)   heu = 1;
+//   }
+//   else if (argc == 18) {
+//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
+//     else if (strcmp(argv[10], ASTAR) == ZERO) alg = 0;
+//   }
+//   else if (argc == 17) {}
+//   else {
+//     std::cout << "You dumb ass..." << std::endl;
+//     return(0);
+//   }
 
   state15_t state;
   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
-  //if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
+
+  // Load heurisitic
+  cout << "Loading pattern database" << endl;
+  time_t load_time = time(0);
+  pattern_t pt;
+  int cost;
+  ifstream pdb_file;
+
+  pdb_file.open(PDB05_FILE, ios::in | ios::binary);
+  while(!pdb_file.eof()) {
+    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+    pdb05.insert(make_pair(pt, cost));
+  }
+  load_time = time(0) - load_time;
+  pdb_file.close();
+  cout << "All set up... loading time = " << load_time << "s" << endl;
+  // -----------------------------------------------------------------
 
   node_t *path = new node_t(ZERO, ZERO, &state, true);
   bool did_it;
@@ -82,10 +93,26 @@ int main (int argc, char **argv) {
 
 //   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
 
-//   cout << state << " ---- " << endl << endl;
-//   successors18(state, scs, important);
-//   for (int i = 0; scs[i] != NULL; i++)
-//       cout << *scs[i] << important[i] << endl;
+//   // Load heurisitic
+//   cout << "Loading pattern database" << endl;
+//   time_t load_time = time(0);
+//   pattern_t pt;
+//   int cost;
+//   ifstream pdb_file;
+
+//   pdb_file.open(PDB05_FILE, ios::in | ios::binary);
+//   while(!pdb_file.eof()) {
+//     pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+//     pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+//     pdb05.insert(make_pair(pt, cost));
+//   }
+//   load_time = time(0) - load_time;
+//   pdb_file.close();
+//   cout << "All set up... loading time = " << load_time << "s" << endl;
+//   // -----------------------------------------------------------------
+
+//   cout << state << endl;
+//   cout << pdb_heuristic(state) << endl;
 
 //   return(0);
 // }

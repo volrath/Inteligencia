@@ -3,34 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <queue>
-#include <fstream>
-
-#define PATTERN_SIZE 8
-#define INT_SIZE 4
 
 using namespace std;
 
-void pdb_gen05(state15_t state, pattern_t *p) {
-  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
-    for (int i = 7; i >= ZERO; --i) {
-    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
-    (*p).p1_ = (*p).p1_ + (state.cont(i) >= 0 && state.cont(i) < 6 ? state.cont(i) : 0xF);
-    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) >= 0 && state.cont(i+HALF_NUM_TILES) < 6 ? state.cont(i+HALF_NUM_TILES) : 0xF);
-  }
-}
-
-void pdb_gen1015(state15_t state, pattern_t *p) {
-  (*p).p1_ = ZERO; (*p).p2_ = ZERO;
-  for (int i = 7; i >= ZERO; --i) {
-    (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
-    (*p).p1_ = (*p).p1_ + (state.cont(i) < 10 ? ZERO : state.cont(i));
-    (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 10 ? ZERO : state.cont(i+HALF_NUM_TILES));
-  }
-}
-
 void successors05(state15_t state, state15_t ** scs, bool * is_important) {
-  //memset(scs, ZERO, sizeof(scs));
-  //memset(is_important, ZERO, sizeof(bool));
+  memset(scs, ZERO, sizeof(scs));
+  memset(is_important, ZERO, sizeof(bool));
 
   short as = state.allowed_steps(), k = ZERO;
   for (int i = ZERO; i < BR; i++, as = as >> 1) {
@@ -94,14 +72,6 @@ void successors1015(state15_t state, state15_t ** scs, bool *is_important) {
   }
 }
 
-namespace __gnu_cxx {
-  template<> class hash<pattern_t> {
-  public:
-    size_t operator()( const pattern_t &s ) const { return(s.p1_^s.p2_); }
-  };
-};
-class pt_hash_t : public __gnu_cxx::hash_map<pattern_t, int> { };  // class
-
 int main(int argc, char **argv) {
   state15_t state;
   pair <state15_t*,int> statep;
@@ -110,7 +80,7 @@ int main(int argc, char **argv) {
   state15_t * scs1015[BR];
   bool is_important1015[BR];
   queue< pair<state15_t*,int> > stqueue;
-  ofstream pdb ("pdb1015.bin", ios::out | ios::binary);
+  ofstream pdb (PDB1015_FILE, ios::out | ios::binary);
 
   stqueue.push(make_pair(&state,0));
 
