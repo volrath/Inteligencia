@@ -1,0 +1,95 @@
+50 millones de evaluaciones:
+
+   Mi Algoritmo:  
+
+   BSF[0]: -0.445010
+   BSF[1]: -0.239335
+   BSF[2]: 0.948468
+   BSF[3]: -0.597962
+   BSF[4]: 0.382533
+   BSF[5]: 0.372166
+   BSF[6]: -0.695604
+   BSF[7]: 0.669360
+   BSF[8]: 0.057226
+   BSF[9]: 0.245984
+   BestSoFarGeneral: 9.993918 No. Eval: 50504552
+
+   real    1m28.325s
+   user    1m28.142s
+   sys     0m0.072s
+
+   Simulated Annealing:
+
+   BSF[0]: -0.431043
+   BSF[1]: -0.264924
+   BSF[2]: 0.925577
+   BSF[3]: -0.562926
+   BSF[4]: 0.384358
+   BSF[5]: 0.385220
+   BSF[6]: -0.689881
+   BSF[7]: 0.664138
+   BSF[8]: 0.110794
+   BSF[9]: 0.189600
+   BestSoFarGeneral: 9.911276 No. Eval: 50100000
+
+   real    1m38.275s
+   user    1m38.070s
+   sys     0m0.088s
+
+   Hill Climbing: 
+
+   BSF[0]: -0.294912
+   BSF[1]: -0.916537
+   BSF[2]: 0.792755 
+   BSF[3]: -0.972542
+   BSF[4]: -0.061093
+   BSF[5]: 0.153378 
+   BSF[6]: -0.495089
+   BSF[7]: 0.565276 
+   BSF[8]: 0.107285 
+   BSF[9]: -0.024496
+   BestSoFarGeneral: -1.198469 No. Eval: 50000020
+
+   real    3m20.887s
+   user    1m46.435s
+   sys     0m33.850s
+
+   Genetic Algorithm:
+
+   BSF[0] : -0.436552
+   BSF[1] : 0.251048
+   BSF[2] : 0.931155
+   BSF[3] : -0.974332
+   BSF[4] : 0.601587
+   BSF[5] : 0.180820
+   BSF[6] : -0.661699
+   BSF[7] : 0.998618
+   BSF[8] : -0.519220
+   BSF[9] : 0.600893
+   BestSoFarGeneral: 4.217664 No. Eval: 50057000
+
+   real    1m23.525s
+   user    1m23.425s
+   sys     0m0.056s
+
+
+200 millones de evaluaciones:
+    
+    
+    Mi Algoritmo: 
+    
+    BSF[0]: -0.432894
+    BSF[1]: -0.280561
+    BSF[2]: 0.954265
+    BSF[3]: -0.599838
+    BSF[4]: 0.364557
+    BSF[5]: 0.354825
+    BSF[6]: -0.703351
+    BSF[7]: 0.652299
+    BSF[8]: 0.067945
+    BSF[9]: 0.219949
+    BestSoFarGeneral: 9.973997 No. Eval: 2000251350
+
+    real    66m36.518s
+    user    64m19.689s
+    sys     0m16.629s
