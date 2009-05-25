@@ -109,6 +109,7 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int heu, int
     }
   }
   *limit = best_f;
+  for (int i = ZERO; i < BR && scs[i] == NULL; i ++) free(scs[i]);
   return(false);
 }
 

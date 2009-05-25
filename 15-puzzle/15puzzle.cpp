@@ -58,7 +58,7 @@ int main (int argc, char **argv) {
 
   state15_t state;
   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
-  if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
+  //if (!can_be_resolved(state)) { cout << "This puzzle cannot be resolved!" << endl; return(0); }
 
   node_t *path = new node_t(ZERO, ZERO, &state, true);
   bool did_it;

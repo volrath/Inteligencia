@@ -5,17 +5,6 @@
 
 using namespace std;
 
-int construct_initial2(char ** input, state15_t *state) {
-  int nums[NUM_TILES];
-  for (int i = ZERO; i < NUM_TILES; i++) {
-    nums[i] = atoi(input[i+1]);
-    if (nums[i] < 0 || nums[i] > 15)
-      return(0);
-  }
-  state->set_state(nums);
-  return(1);
-}
-
 void pdb_gen05(state15_t state, pattern_t *p) {
   (*p).p1_ = ZERO; (*p).p2_ = ZERO;
   for (int i = 7; i >= ZERO; --i) {
@@ -67,7 +56,7 @@ void successors05(state15_t state, state15_t ** scs, bool * is_important) {
   }
 }
 
-void successors815(state15_t state, state15_t ** scs, bool *is_important) {
+void successors1015(state15_t state, state15_t ** scs, bool *is_important) {
   memset(scs, ZERO, sizeof(scs));
   memset(is_important, ZERO, sizeof(bool));
 
@@ -111,15 +100,8 @@ class pt_hash_t : public __gnu_cxx::hash_map<pattern_t, int> { };  // class
 int pdb_bfs(state15_t *state, int cost, pt_hash_t *closed) {
   // Insert this state into the pattern database
   pattern_t pt;
-  if (cost > 22657) {
-    cout << *state << endl;
-    cout << "hola" << endl;
-    pdb_gen05(*state, &pt);
-    cout << pt << endl;
-  }
-  else
-    pdb_gen05(*state, &pt);
-  //cout << cost << " -- " << pt.p1_ << pt.p2_ << endl;
+  pdb_gen05(*state, &pt);
+  cout << cost << " -- " << pt.p1_ << pt.p2_ << endl;
   // ...
   closed->insert(make_pair(pt, cost));
 
