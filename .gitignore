@@ -3,3 +3,4 @@
 pdb-generator
 a.out
 *.o
+*.bin
