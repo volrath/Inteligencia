@@ -18,7 +18,7 @@ typedef priority_queue<node_t*,vector<node_t*>, value_comparison> pq_t;
 
 unsigned (*heuristics[3]) (state15_t state) = { misplaced_tiles, manhattan, pdb_heuristic };
 
-bool informed_search(state15_t initial_state, node_t *root, int alg, int heu) {
+bool informed_search(state15_t initial_state, node_t *root, int *en, int alg, int heu) {
   hash_t closed;
   pq_t open(alg);
 
@@ -30,6 +30,7 @@ bool informed_search(state15_t initial_state, node_t *root, int alg, int heu) {
   node_t * scs[BR];
 
   while(!open.empty()) {
+    (*en)++;
     pActual = open.top(); open.pop();
     closed.insert(make_pair(*(pActual->state()), *pActual));
 
@@ -60,7 +61,7 @@ bool informed_search(state15_t initial_state, node_t *root, int alg, int heu) {
   return(false);
 }
 
-bool limited_informed_search(state15_t initial_state, node_t *root, int heu, int *limit) {
+bool limited_informed_search(state15_t initial_state, node_t *root, int *en, int heu, int *limit) {
   hash_t closed;
   pq_t open(ZERO);
   unsigned best_f = INT_MAX;
@@ -68,12 +69,14 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int heu, int
 
   root->set_h(heuristics[heu](initial_state));
   root->set_prev(NULL);
+  *en = 0;
 
   open.push(root);
   node_t *pActual, *pAux;
   node_t * scs[BR];
 
   while(!open.empty()) {
+    (*en)++;
     pActual = open.top(); open.pop();
     closed.insert(make_pair(*(pActual->state()), *pActual));
 
@@ -116,12 +119,12 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int heu, int
 }
 
 
-bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu) {
+bool iterative_deepening_search(state15_t initial_state, node_t *root, int *en, int heu) {
   int *limit = (int *)malloc(sizeof(int)); *limit = ZERO;
   bool find_result = false;
   
   while (!find_result) {
-    find_result = limited_informed_search(initial_state, root, heu, limit);
+    find_result = limited_informed_search(initial_state, root, en, heu, limit);
   }
 
   return(true);

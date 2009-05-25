@@ -33,7 +33,7 @@ int construct_initial(char ** input, state15_t *state) {
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 0, heu = 2;
+  int alg = 0, heu = 2, expanded_nodes = 0;
 //   if (argc == 19) {
 //     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
 //     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
@@ -92,11 +92,15 @@ int main (int argc, char **argv) {
 
   node_t *path = new node_t(ZERO, ZERO, &state, true);
   bool did_it;
-  if (alg == 2) did_it = iterative_deepening_search(state, path, heu);
-  else          did_it = informed_search(state, path, alg, heu);
+  time_t execution_time = time(0);
+  if (alg == 2) did_it = iterative_deepening_search(state, path, &expanded_nodes, heu);
+  else          did_it = informed_search(state, path, &expanded_nodes, alg, heu);
   if (did_it) {
+    execution_time = execution_time - time(0);
     //while(path != NULL) { cout << *path << endl; path = path->next(); }
     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
+    cout << endl << "Expanded nodes: " << expanded_nodes;
+    cout << endl << "Execution time: " << execution_time << "s";
     cout << endl;
   } else {
     cout << "Couldn't find a path.." << endl;

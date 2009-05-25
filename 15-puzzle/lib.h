@@ -4,8 +4,8 @@
 #include "lib.cpp"
 
 // Search Algorithms
-bool informed_search(state15_t initial_state, node_t * node, int alg, int heu);
-bool iterative_deepening_search(state15_t initial_state, node_t *root, int heu);
+bool informed_search(state15_t initial_state, node_t * node, int *en, int alg, int heu);
+bool iterative_deepening_search(state15_t initial_state, node_t *root, int *en, int heu);
 
 // pattern database
 void pdb_gen05(state15_t state, pattern_t *pt);
