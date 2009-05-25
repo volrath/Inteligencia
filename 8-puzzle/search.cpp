@@ -25,7 +25,7 @@ class hash_t : public __gnu_cxx::hash_map<state8_t, node_t> { };  // class
 
 unsigned (*heuristics[2]) (state8_t state) = { misplaced_tiles, manhattan };
 
-bool informed_search(state8_t initial_state, node_t *root, int alg, int heu) {
+bool informed_search(state8_t initial_state, node_t *root, int *en, int alg, int heu) {
   hash_t closed;
   pq_t open(alg);
 
@@ -37,6 +37,7 @@ bool informed_search(state8_t initial_state, node_t *root, int alg, int heu) {
   node_t * scs[BR];
 
   while(!open.empty()) {
+    (*en)++;
     pActual = open.top(); open.pop();
     closed.insert(make_pair(*(pActual->state()), *pActual));
 
@@ -53,7 +54,7 @@ bool informed_search(state8_t initial_state, node_t *root, int alg, int heu) {
 
     pActual->successors(scs);
     for (int i = 0; i < BR; i++) {
-      if (scs[i] != NULL) { 
+      if (scs[i] != NULL) {
 	pAux = scs[i];
 
 	if (closed.count(*(pAux->state()))) continue;
@@ -67,7 +68,7 @@ bool informed_search(state8_t initial_state, node_t *root, int alg, int heu) {
   return(false);
 }
 
-bool limited_informed_search(state8_t initial_state, node_t *root, int heu, int *limit) {
+bool limited_informed_search(state8_t initial_state, node_t *root, int *en, int heu, int *limit) {
   hash_t closed;
   pq_t open(0);
   unsigned best_f = INT_MAX;
@@ -75,6 +76,7 @@ bool limited_informed_search(state8_t initial_state, node_t *root, int heu, int 
 
   root->set_h(heuristics[heu](initial_state));
   root->set_prev(NULL);
+  *en++;
 
   open.push(root);
   node_t *pActual, *pAux;
@@ -118,16 +120,17 @@ bool limited_informed_search(state8_t initial_state, node_t *root, int heu, int 
     }
   }
   *limit = best_f;
+  for (int i = 0; i < BR && scs[i] == NULL; i ++) free(scs[i]);
   return(false);
 }
 
 
-bool iterative_deepening_search(state8_t initial_state, node_t *root, int heu) {
+bool iterative_deepening_search(state8_t initial_state, node_t *root, int *en, int heu) {
   int *limit = (int *)malloc(sizeof(int)); *limit = 0;
   bool find_result = false;
   
   while (!find_result) {
-    find_result = limited_informed_search(initial_state, root, heu, limit);
+    find_result = limited_informed_search(initial_state, root, en, heu, limit);
   }
 
   return(true);

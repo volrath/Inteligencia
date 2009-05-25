@@ -38,7 +38,7 @@ bool can_be_resolved(state8_t state) {
   8puzzle 1 2 3 4 5 6 7 8 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 0, heu = 0;
+  int alg = 0, heu = 0, expanded_nodes = 0;
   if (argc == 12) {
     if (strcmp(argv[10], GBFS) == 0)     alg = 1;
     else if (strcmp(argv[10], IDA) == 0) alg = 2;
@@ -61,12 +61,11 @@ int main (int argc, char **argv) {
 
   node_t *path = new node_t(0, 0, &state, true);
   bool did_it;
-  if (alg == 2) did_it = iterative_deepening_search(state, path, heu);
-  else          did_it = informed_search(state, path, alg, heu);
+  if (alg == 2) did_it = iterative_deepening_search(state, path, &expanded_nodes, heu);
+  else          did_it = informed_search(state, path, &expanded_nodes, alg, heu);
   if (did_it) {
-    //while(path != NULL) { cout << *path << endl; path = path->next(); }
     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
-    cout << endl;
+    cout << endl << "Expanded nodes: " << expanded_nodes << endl;
   } else {
     cout << "Couldn't find a path.." << endl;
   }
