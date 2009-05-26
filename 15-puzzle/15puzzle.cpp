@@ -33,12 +33,12 @@ int construct_initial(char ** input, state15_t *state) {
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 0, heu = 2, expanded_nodes = 0;
+  int alg = 2, heu = 2, expanded_nodes = 0;
 //   if (argc == 19) {
 //     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
 //     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
 
-//     if (strcmp(argv[11], H_MIS) == ZERO)   heu = 1;
+//     if (strcmp(argv[11], H_MIS) == ZERO)   heu = 0;
 //   }
 //   else if (argc == 18) {
 //     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
@@ -50,8 +50,40 @@ int main (int argc, char **argv) {
 //     return(0);
 //   }
 
+// -----------------------------------------------------------------------
+
   state15_t state;
-  if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
+
+  if (strcmp(argv[1], "rand") == ZERO) {
+    heu = 1;
+    srand(time(NULL));
+    int i = 0;
+    short as, rand_mov, last_mov = 0;
+    while (i < atoi(argv[2])) {
+      as = state.allowed_steps();
+      rand_mov = 1 << (rand() % 4);
+      if ((rand_mov & as) && rand_mov != last_mov) {
+	switch(rand_mov) {
+	case 1:
+	  state.left();
+	  break;
+	case 2:
+	  state.right();
+	  break;
+	case 4:
+	  state.up();
+	  break;
+	case 8:
+	  state.down();
+	  break;
+	}
+	i++; last_mov = rand_mov;
+      }
+    }
+    cout << state << endl;
+  
+  } else
+    if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
 
   // Load heurisitic
   time_t load_time = time(0);
@@ -96,7 +128,7 @@ int main (int argc, char **argv) {
   if (alg == 2) did_it = iterative_deepening_search(state, path, &expanded_nodes, heu);
   else          did_it = informed_search(state, path, &expanded_nodes, alg, heu);
   if (did_it) {
-    execution_time = execution_time - time(0);
+    execution_time = time(0) - execution_time;
     //while(path != NULL) { cout << *path << endl; path = path->next(); }
     while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
     cout << endl << "Expanded nodes: " << expanded_nodes;
@@ -107,35 +139,3 @@ int main (int argc, char **argv) {
   }
   return(ZERO);
 }
-
-
-// int main(int argc, char **argv) {
-//   state15_t state;
-//   state15_t *scs[BR];
-//   bool important[BR];
-
-//   if (!construct_initial(argv, &state)) { std::cout << "Error initializing" << std::endl; return(0); }
-
-//   // Load heurisitic
-//   cout << "Loading pattern database" << endl;
-//   time_t load_time = time(0);
-//   pattern_t pt;
-//   int cost;
-//   ifstream pdb_file;
-
-//   pdb_file.open(PDB05_FILE, ios::in | ios::binary);
-//   while(!pdb_file.eof()) {
-//     pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
-//     pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
-//     pdb05.insert(make_pair(pt, cost));
-//   }
-//   load_time = time(0) - load_time;
-//   pdb_file.close();
-//   cout << "All set up... loading time = " << load_time << "s" << endl;
-//   // -----------------------------------------------------------------
-
-//   cout << state << endl;
-//   cout << pdb_heuristic(state) << endl;
-
-//   return(0);
-// }
