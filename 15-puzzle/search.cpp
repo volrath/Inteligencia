@@ -90,31 +90,28 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int *en, int
       return(true);
     }
 
-    pActual->successors(scs);
     if (pActual->f() <= *limit) {
-      for (int i = ZERO; i < BR; i++) {
-	if (scs[i] != NULL) { 
-	  pAux = scs[i];
-	  
-	  if (closed.count(*(pAux->state()))) continue;
-	  
-	  pAux->set_h(heuristics[heu](*(pAux->state())));
-	  pAux->set_prev(pActual);
-	  open.push(pAux);
-	}
+      pActual->successors(scs);
+      for (int i = ZERO; i < BR && scs[i] != NULL; i++) {
+	pAux = scs[i];
+
+	if (closed.count(*(pAux->state()))) { free(scs[i]); continue; }
+
+	pAux->set_h(heuristics[heu](*(pAux->state())));
+	pAux->set_prev(pActual);
+	open.push(pAux);
       }
-    } else {
-      for (int i = ZERO; i < BR; i++) {
-	if (scs[i] != NULL) {
-	  h = scs[i]->f()+heuristics[heu](*(scs[i]->state()));
-	  best_f = best_f<h ? best_f : h;
-	}
-      }
-      best_f = best_f>pActual->f() ? best_f : h;
-    }
+    } else
+      best_f = best_f<pActual->f() ? best_f : pActual->f();
   }
   *limit = best_f;
-  for (int i = ZERO; i < BR && scs[i] == NULL; i ++) free(scs[i]);
+
+  // Free all created nodes
+  pActual->set_next(NULL);
+  pAux = pActual; pActual = pActual->prev(); 
+  while (pActual != NULL) { free(pAux); pAux = pActual; pActual = pActual->prev(); }
+  //free(pAux); free(root);
+
   return(false);
 }
 
