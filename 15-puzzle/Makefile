@@ -1,4 +1,4 @@
-S_HELPERS = search.cpp heuristics.cpp
+S_HELPERS = heuristics.cpp search.cpp
 O_HELPERS = $(S_HELPERS:.cpp=.o)
 HEADER = lib.h
 

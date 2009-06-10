@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <string.h>
 #include <ext/hash_map>
+#include <fstream>
 
 #define HSTEP 1
 #define VSTEP 4
@@ -10,6 +11,12 @@
 #define RIGHT  "R"
 #define UP     "U"
 #define DOWN   "D"
+
+#define PDB05_FILE    "pdb05.bin"
+#define PDB610_FILE   "pdb610.bin"
+#define PDB1115_FILE  "pdb1115.bin"
+#define PATTERN_SIZE 8
+#define INT_SIZE 4
 
 #define NUM_TILES 16
 #define HALF_NUM_TILES 8
@@ -162,3 +169,11 @@ namespace __gnu_cxx {
 };
 
 class hash_t : public __gnu_cxx::hash_map<state15_t, node_t> { };  // class
+
+namespace __gnu_cxx {
+  template<> class hash<pattern_t> {
+  public:
+    size_t operator()( const pattern_t &s ) const { return(s.p1_^s.p2_); }
+  };
+};
+class pt_hash_t : public __gnu_cxx::hash_map<pattern_t, int> { };  // class

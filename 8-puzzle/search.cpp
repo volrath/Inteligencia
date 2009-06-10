@@ -76,13 +76,14 @@ bool limited_informed_search(state8_t initial_state, node_t *root, int *en, int 
 
   root->set_h(heuristics[heu](initial_state));
   root->set_prev(NULL);
-  *en++;
+  *en = 0;
 
   open.push(root);
   node_t *pActual, *pAux;
   node_t * scs[BR];
 
   while(!open.empty()) {
+    (*en)++;
     pActual = open.top(); open.pop();
     closed.insert(make_pair(*(pActual->state()), *pActual));
 
