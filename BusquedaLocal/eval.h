@@ -6,7 +6,7 @@
 #include <math.h>
 #include "ia1.h"
 
-#define NUMEVAL 2000000000
+#define NUMEVAL 500000000
 
 double evaluar(double * x){
   int r;
