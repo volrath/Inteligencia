@@ -13,4 +13,9 @@ def solver(problem_class, *args, **kwargs):
     cnf_file.close()
 
     output = getoutput('./zchaff/zchaff %s' % cnf_file.name)
-    print output
+    satisfiable = output.find('Satisfiable')
+    if satisfiable != -1:
+        problem.write_solution([int(n) for n in \
+                                output[satisfiable+12:].split(' Random')[0].split()])
+    else:
+        problem.write_solution(False)

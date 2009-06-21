@@ -114,3 +114,13 @@ class Sudoku(object):
                                            for x in range(1,3) for k in range(x+1, 4)]
                             clauses.extend(clauses_aux)
         return clauses
+
+    def write_solution(self, cnf_solution):
+        """
+        Writes a solution in a specified format given the zchaff's cnf output
+        """
+        if cnf_solution:
+            print ''.join([str(self._cnfIndex2SudIndex(k)[2])
+                           for k in cnf_solution if k > 0])
+        else:
+            print '0' * 81

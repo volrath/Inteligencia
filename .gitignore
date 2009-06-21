@@ -5,3 +5,5 @@ a.out
 *.o
 *.bin
 zchaff
+cnf_*
+*.pyc
