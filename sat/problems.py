@@ -24,12 +24,9 @@ class Sudoku(object):
     def _get_instance_clauses(self, plain_sudoku):
         """
         """
-        clauses = []
-        for i in range(0, len(plain_sudoku)):
-            if plain_sudoku[i] != '.':
-                clauses.append([self._sudIndex2CNFIndex((int(i)/9)+1, (int(i)%9 +1),
-                                                  int(plain_sudoku[i]))])
-        return clauses
+        return [[self._sudIndex2CNFIndex(i/9 + 1, i%9 + 1,
+                                         int(plain_sudoku[i]))]
+                for i in range(0, len(plain_sudoku)) if plain_sudoku[i] != '.']
 
     def _get_static_clauses(self):
         """
@@ -128,6 +125,7 @@ class Sudoku(object):
 
 class CardPuzzle(object):
     """
+    A card puzzle problem for zchaff
     """
     def __init__(self, num_holes, num_cards, cards):
         self.num_holes = num_holes
@@ -175,7 +173,114 @@ class CardPuzzle(object):
         Writes a solution in a specified format given the zchaff's cnf output
         """
         if cnf_solution:
-            for c in cnf_solution:
-                print c
+            print ' '.join(map(str, cnf_solution))
+        else:
+            print 0
+
+class Solitaire(object):
+    """
+    """
+    def __init__(self, board_size, board):
+        self.board_size = board_size
+        self.clauses = self._get_static_clauses() + \
+                       self._get_instance_clauses(board)
+        self.num_variables = board_size * board_size * 3
+
+    def __str__(self):
+        return 'solitaire'
+    __repr__ = __str__
+
+    @property
+    def num_clauses(self):
+        return len(self.clauses)
+
+    def _get_instance_clauses(self, board):
+        """
+        Ensures that for every non empty position in the board, the ball
+        can be preserved or removed to reach the final solution.
+        """
+        clauses = []
+        for i in range(0, len(board)):
+            if board[i] == 0:
+                clauses.append([self._solIndex2CNFIndex(i/self.board_size+1,
+                                                        i%self.board_size+1,
+                                                        0)])
+            else:
+                clauses.append([
+                    self._solIndex2CNFIndex(i/self.board_size + 1,
+                                            i%self.board_size + 1,
+                                            board[i]),
+                    self._solIndex2CNFIndex(i/self.board_size + 1,
+                                            i%self.board_size + 1,
+                                            0),
+                    ])
+        return clauses
+
+    def _get_static_clauses(self):
+        return self._non_vacuity() + self._uniqueness() + \
+               self._rows_restrictions() + self._columns_restrictions()
+
+    def _solIndex2CNFIndex(self, i, j, k):
+        return 3*self.board_size * (i-1) + 3 * (j-1) + (k+1)
+
+    def _cnfIndex2SolIndex(self, i):
+        return ((i-1)/3/self.board_size + 1,
+                (((i-1)/3) % self.board_size) + 1,
+                (i-1) % 3)
+
+    def _non_vacuity(self):
+        """
+        """
+        clauses = []
+        for i in range(1, self.board_size+1):
+            clause = []
+            for j in range(1, self.board_size+1):
+                clause = [self._solIndex2CNFIndex(i, j, k) for k in range(0, 3)]
+                clauses.append(clause)
+        return clauses
+
+    def _uniqueness(self):
+        """
+        """
+        clauses = []
+        for i in range(1, self.board_size+1):
+            clauses_aux = []
+            for j in range(1, self.board_size+1):
+                clauses_aux = [[-self._solIndex2CNFIndex(i,j,d1), -self._solIndex2CNFIndex(i,j,d2)]
+                               for d1 in range(0, 2) for d2 in range(d1+1, 3)]
+                clauses.extend(clauses_aux)
+        return clauses
+
+    def _rows_restrictions(self):
+        """
+        Ensures every row has at least one ball
+        """
+        clauses = []
+        for i in range(1,self.board_size+1):
+            clauses.append([self._solIndex2CNFIndex(i, j, d)
+                            for j in range(1, self.board_size+1)
+                            for d in range(1, 3)])
+        return clauses
+
+    def _columns_restrictions(self):
+        """
+        Ensures that each column has balls of the same color
+        """
+        clauses = []
+        for j in range(1,self.board_size+1):
+            clauses_aux = []
+            for d in range(1,3):
+                clauses_aux = [[-self._solIndex2CNFIndex(i1,j,d), -self._solIndex2CNFIndex(i2,j,d)]
+                               for i1 in range(1,self.board_size) for i2 in range(i1+1,self.board_size+1)]
+                clauses.extend(clauses_aux)
+        return clauses
+
+    def write_solution(self, cnf_solution):
+        """
+        Writes a solution in a specified format given the zchaff's cnf output
+        """
+        print '\nResultado:'
+        if cnf_solution:
+            print 1#cnf_solution
         else:
             print 0

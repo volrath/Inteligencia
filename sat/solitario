@@ -1,0 +1,35 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import sys
+from solver import solver
+from problems import Solitaire
+
+# get arguments
+try:
+    board_size = int(raw_input('Introduzca el tamaño del tablero: '))
+    if board_size < 1:
+        raise ValueError
+except ValueError:
+    print 'El tamaño del tablero debe ser un número positivo'
+    sys.exit(0)
+
+print """
+Introduzca la configuración del tablero. Si ésta no esta especificada como
+en el enunciado del proyecto, el programa terminará.
+"""
+
+board = []
+for i in range(0, board_size):
+    inp = raw_input('')
+    try:
+        row = map(int, inp.split())
+        if filter(lambda x: x < 0 or x > 2, row) or len(row) != board_size:
+            raise ValueError
+        board.extend(row)
+    except ValueError:
+        print 'Formato erróneo, saliendo...'
+        sys.exit(0)
+# ...
+
+solver(Solitaire, board_size=board_size, board=board)
