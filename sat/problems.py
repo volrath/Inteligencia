@@ -124,3 +124,58 @@ class Sudoku(object):
                            for k in cnf_solution if k > 0])
         else:
             print '0' * 81
+
+
+class CardPuzzle(object):
+    """
+    """
+    def __init__(self, num_holes, num_cards, cards):
+        self.num_holes = num_holes
+        self.num_cards = num_cards
+        self.cards = cards
+
+    def __str__(self):
+        return 'card_puzzle'
+    __repr__ = __str__
+
+    @property
+    def num_variables(self):
+        return self.num_cards
+
+    @property
+    def num_clauses(self):
+        return 2 * self.num_holes
+
+    def _get_clauses(self):
+        """
+        """
+        clauses = []
+        for i in range(0, self.num_clauses):
+            clauses.append([])
+        card_number = 1
+        for card in self.cards:
+            fcard = self._flip(card)
+            for h in range(0, self.num_clauses):
+                if not card[h]: # if the hole number `h` in the `card` is not open
+                    clauses[h].append(card_number)
+                if not fcard[h]: # the same of above but in the flipped card
+                    clauses[h].append(-card_number)
+            card_number += 1
+        return clauses
+    clauses = property(_get_clauses)
+
+    def _flip(self, card):
+        """
+        flip a card and return a tuple with the holes flipped
+        """
+        return card[self.num_holes:] + card[:self.num_holes]
+
+    def write_solution(self, cnf_solution):
+        """
+        Writes a solution in a specified format given the zchaff's cnf output
+        """
+        if cnf_solution:
+            for c in cnf_solution:
+                print c
+        else:
+            print 0

@@ -1,3 +1,4 @@
+from os import remove, error
 from commands import getoutput
 
 def solver(problem_class, *args, **kwargs):
@@ -19,3 +20,7 @@ def solver(problem_class, *args, **kwargs):
                                 output[satisfiable+12:].split(' Random')[0].split()])
     else:
         problem.write_solution(False)
+    try:
+        remove(cnf_file.name)
+    except error:
+        print 'Warning: No se pudo borrar el archivo auxiliar utilizado para zchaff'
