@@ -27,12 +27,18 @@ Reglas de traducción
 ====================
 Sudoku
 ------
+Hablar sobre sudIndex y cnfIndex, sobre que representa cada variable
 
 Card Puzzle
 -----------
+Hablar sobre que representa cada variable y sobre su interpretación
+en el resultado
 
 Solitario
 ---------
+Bastante parecido al sudoku, kizas mencionar porque es importante
+utilizar una variable para cuando no hay ninguna metra en una posición
+dada
 
 Sudoku Hard
 ===========
