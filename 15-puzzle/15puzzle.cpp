@@ -33,7 +33,7 @@ int construct_initial(char ** input, state15_t *state) {
   15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 2, heu = 2, expanded_nodes = 0;
+  int alg = 2, heu = 1, expanded_nodes = 0;
 //   if (argc == 19) {
 //     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
 //     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
@@ -91,41 +91,43 @@ int main (int argc, char **argv) {
   int cost;
   ifstream pdb_file;
 
-  cout << "Loading pattern database 0-5" << endl;
-  pdb_file.open(PDB05_FILE, ios::in | ios::binary);
-  while(!pdb_file.eof()) {
-    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
-    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
-    pdb05.insert(make_pair(pt, cost));
+  if (heu==2) {
+    cout << "Loading pattern database 0-5" << endl;
+    pdb_file.open(PDB05_FILE, ios::in | ios::binary);
+    while(!pdb_file.eof()) {
+      pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+      pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+      pdb05.insert(make_pair(pt, cost));
+    }
+    pdb_file.close();
+
+    cout << "Loading pattern database 6-10" << endl;
+    pdb_file.open(PDB610_FILE, ios::in | ios::binary);
+    while(!pdb_file.eof()) {
+      pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+      pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+      pdb610.insert(make_pair(pt, cost));
+    }
+    pdb_file.close();
+
+    cout << "Loading pattern database 11-15" << endl;
+    pdb_file.open(PDB1115_FILE, ios::in | ios::binary);
+    while(!pdb_file.eof()) {
+      pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+      pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+      pdb1115.insert(make_pair(pt, cost));
+    }
+    pdb_file.close();
+
+    load_time = time(0) - load_time;
+    cout << "All set up... loading time = " << load_time << "s" << endl;
+    // -----------------------------------------------------------------
+
   }
-  pdb_file.close();
-
-  cout << "Loading pattern database 6-10" << endl;
-  pdb_file.open(PDB610_FILE, ios::in | ios::binary);
-  while(!pdb_file.eof()) {
-    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
-    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
-    pdb610.insert(make_pair(pt, cost));
-  }
-  pdb_file.close();
-
-  cout << "Loading pattern database 11-15" << endl;
-  pdb_file.open(PDB1115_FILE, ios::in | ios::binary);
-  while(!pdb_file.eof()) {
-    pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
-    pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
-    pdb1115.insert(make_pair(pt, cost));
-  }
-  pdb_file.close();
-
-  load_time = time(0) - load_time;
-  cout << "All set up... loading time = " << load_time << "s" << endl;
-  // -----------------------------------------------------------------
-
   node_t *path = new node_t(ZERO, ZERO, &state, true);
   bool did_it;
   time_t execution_time = time(0);
-  if (alg == 2) did_it = iterative_deepening_search(state, path, &expanded_nodes, heu);
+  if (alg == 2) did_it = iterative_deepening_search(path, &expanded_nodes, heu);
   else          did_it = informed_search(state, path, &expanded_nodes, alg, heu);
   if (did_it) {
     execution_time = time(0) - execution_time;
