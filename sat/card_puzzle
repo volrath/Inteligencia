@@ -1,0 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from solver import solver
+from problems import CardPuzzle
+
+# get arguments
+kwargs = {}
+kwargs['num_holes'] = int(raw_input('Número de agujeros en cada columna: '))
+kwargs['num_cards'] = int(raw_input('Número de cartas en total: '))
+kwargs['cards'] = []
+i = 0
+while i < kwargs['num_cards']:
+    card_conf = raw_input('carta #%s: ' % i)
+    try:
+        card_conf = tuple(map(int, card_conf.split()))
+        if len(card_conf) == 2*kwargs['num_holes']:
+            kwargs['cards'].append(card_conf)
+            i += 1
+        else:
+            print 'ERROR: Cada configuración de cartas tiene que tener %s huecos\n' % (2*kwargs['num_holes'])
+    except ValueError:
+        print 'ERROR: Solo es válido introducir números'
+# ...
+
+solver(CardPuzzle, **kwargs)

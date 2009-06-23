@@ -1,0 +1,21 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import sys
+from solver import solver
+from problems import Sudoku
+
+# check arguments
+if len(sys.argv) != 2 or len(sys.argv[1]) != 81:
+    sys.stderr.write(
+"""
+Modo de uso:
+    > sudoku `sudoku_plain_representation`
+
+donde `sudoku_plain_representation` es una cadena de caractéres
+de longitud 81 descrita en el enunciado del proyecto
+
+"""
+)
+
+solver(Sudoku, sys.argv[1])

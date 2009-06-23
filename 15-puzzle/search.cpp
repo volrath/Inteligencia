@@ -8,10 +8,12 @@ extern pt_hash_t pdb05, pdb610, pdb1115;
 
 class value_comparison{
 public:
-  int alg_;
-  value_comparison(int alg = ZERO) : alg_(alg) {}
+  //int alg_;
+  //  value_comparison(int alg = ZERO) : alg_(alg) {}
+  value_comparison() {}
   bool operator() (const node_t *lhs, const node_t *rhs) const{
-    if (alg_ == 1) return(lhs->h() > rhs->h()); else return(lhs->f() > rhs->f());
+    //if (alg_ == 1) return(lhs->h() > rhs->h()); else return(lhs->f() > rhs->f());
+    return(lhs->f() > rhs->f());
   }
 };
 typedef priority_queue<node_t*,vector<node_t*>, value_comparison> pq_t;
@@ -20,7 +22,7 @@ unsigned (*heuristics[3]) (state15_t state) = { misplaced_tiles, manhattan, pdb_
 
 bool informed_search(state15_t initial_state, node_t *root, int *en, int alg, int heu) {
   hash_t closed;
-  pq_t open(alg);
+  pq_t open;
 
   root->set_h(heuristics[heu](initial_state));
   root->set_prev(NULL);
@@ -46,24 +48,22 @@ bool informed_search(state15_t initial_state, node_t *root, int *en, int alg, in
     }
 
     pActual->successors(scs);
-    for (int i = ZERO; i < BR; i++) {
-      if (scs[i] != NULL) { 
-	pAux = scs[i];
+    for (int i = ZERO; i < BR && scs[i] != NULL; i++) {
+      pAux = scs[i];
 
-	if (closed.count(*(pAux->state()))) continue;
+      if (closed.count(*(pAux->state()))) continue;
 
-	pAux->set_h(heuristics[heu](*(pAux->state())));
-	pAux->set_prev(pActual);
-	open.push(pAux);
-      }
+      pAux->set_h(heuristics[heu](*(pAux->state())));
+      pAux->set_prev(pActual);
+      open.push(pAux);
     }
   }
   return(false);
 }
 
-bool limited_informed_search(state15_t initial_state, node_t *root, int *en, int heu, int *limit) {
+bool limited_informed_search2(state15_t initial_state, node_t *root, int *en, int heu, int *limit) {
   hash_t closed;
-  pq_t open(ZERO);
+  pq_t open;
   unsigned best_f = INT_MAX;
   int h = ZERO;
 
@@ -74,6 +74,8 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int *en, int
   open.push(root);
   node_t *pActual, *pAux;
   node_t * scs[BR];
+
+  cout << "limit " << *limit << endl;
 
   while(!open.empty()) {
     (*en)++;
@@ -95,33 +97,66 @@ bool limited_informed_search(state15_t initial_state, node_t *root, int *en, int
       for (int i = ZERO; i < BR && scs[i] != NULL; i++) {
 	pAux = scs[i];
 
-	if (closed.count(*(pAux->state()))) { free(scs[i]); continue; }
+	//if (closed.count(*(pAux->state()))) { free(scs[i]); continue; }
 
 	pAux->set_h(heuristics[heu](*(pAux->state())));
 	pAux->set_prev(pActual);
 	open.push(pAux);
       }
-    } else
+    } else {
       best_f = best_f<pActual->f() ? best_f : pActual->f();
+    }
   }
   *limit = best_f;
 
   // Free all created nodes
   pActual->set_next(NULL);
-  pAux = pActual; pActual = pActual->prev(); 
+  pAux = pActual; pActual = pActual->prev();
   while (pActual != NULL) { free(pAux); pAux = pActual; pActual = pActual->prev(); }
   //free(pAux); free(root);
 
   return(false);
 }
 
+bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int limit, int *best_f) {
+  if (node->goal_test())
+    return(true);
+  if (node->f() > limit) { *best_f = *best_f < node->f() ? *best_f : node->f(); return false; }
+  cout << " " << limit << endl;
+  if (closed->count(*(node->state())))
+    return (false);
 
-bool iterative_deepening_search(state15_t initial_state, node_t *root, int *en, int heu) {
-  int *limit = (int *)malloc(sizeof(int)); *limit = ZERO;
+  node_t * scs[BR];
+  int h = ZERO;
+  bool found = false;
+
+  closed->insert(make_pair(*(node->state()), *node));
+  (*en)++;
+
+  node->successors(scs);
+  for (int i = ZERO; i < BR && scs[i] != NULL && found != true; i++) {
+    if (closed->count(*(scs[i]->state()))) { free(scs[i]); continue; }
+    node->set_next(scs[i]);
+    scs[i]->set_prev(node);
+    scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
+    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f);
+  }
+  for (int i = ZERO; i < BR && scs[i] != NULL; i++) cout << scs[i]->f() << " "; cout << endl;
+  return(found);
+}
+
+bool iterative_deepening_search(node_t *root, int *en, int heu) {
+  int limit, best_f;
+  hash_t closed;
   bool find_result = false;
-  
+
+  root->set_h(heuristics[heu](*(root->state())));
+  limit = root->h();
   while (!find_result) {
-    find_result = limited_informed_search(initial_state, root, en, heu, limit);
+    cout << limit << endl;
+    best_f = INT_MAX;
+    find_result = limited_informed_search(root, en, &closed, heu, limit, &best_f);
+    limit = best_f;
   }
 
   return(true);
