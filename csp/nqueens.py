@@ -7,18 +7,17 @@ class CSPSolver(object):
     def __init__(self, problem):
         self.problem = problem
 
-    def forward_checking(self, var_num, domain):
+    def forward_checking(self, var_repr, domain):
         """
         Execute forward_checking over a given `domain` when a variable
         `var_num` is recently assignated.
         Returns a new domain free of restrictions
         """
-        new_domain = []
-        new_domain[:] = domain[:]
-        val_var_num = self.problem.assignment[var_num]
+        new_domain = domain.copy()
+        val_var_repr = self.problem.assignment[var_repr]
         for vn in self.problem.unassigned_variables:
             new_domain[vn] = filter(lambda val: \
-                                    not self.problem.check_conflicts((var_num, val_var_num),
+                                    not self.problem.check_conflicts((var_repr, val_var_repr),
                                                                      (vn, val)), domain[vn])
         return new_domain
 
@@ -27,26 +26,26 @@ class CSPSolver(object):
         Returns the number of the variable with the minimum remaining value
         in a given `domain`
         """
-        var_num = None
+        var_repr = None
         min_domain_size = maxint
         for vn in self.problem.unassigned_variables:
             if len(domain[vn]) < min_domain_size:
-                var_num = vn
+                var_repr = vn
                 min_domain_size = len(domain[vn])
-        return var_num
+        return var_repr
 
     def solve(self, domain):
         """
         """
-        if self.problem.assignment.count(None) == 0:
+        if self.problem.is_solved:
             self.problem.print_result()
             return
-        var_num = self.mrv_select(domain)
-        for value in domain[var_num]:
-            self.problem.assignment[var_num] = value
-            new_domain = self.forward_checking(var_num, domain)
+        var_repr = self.mrv_select(domain)
+        for value in domain[var_repr]:
+            self.problem.assign(var_repr, value)
+            new_domain = self.forward_checking(var_repr, domain)
             self.solve(new_domain)
-            self.problem.assignment[var_num] = None
+            self.problem.assign(var_repr, None)
 
 class NQueens(object):
     """
@@ -67,11 +66,21 @@ class NQueens(object):
         """
         Returns a complete domain
         """
-        domain = []
-        for i in range(self.n):
-            domain.append(range(self.n))
+        domain = dict().fromkeys(range(self.n))
+        for key in domain:
+            domain[key] = range(self.n)
         return domain
     complete_domain = property(_get_complete_domain)
+
+    def assign(self, var, value):
+        """
+        Make an assignment in this problem's assignment representation
+        """
+        self.assignment[var] = value
+
+    @property
+    def is_solved(self):
+        return self.assignment.count(None) == 0
 
     def check_conflicts(self, pair1, pair2, *args, **kwargs):
         """
