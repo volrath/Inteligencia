@@ -1,9 +1,3 @@
-#
-#
-#   LA CAGASTE MAL!!! Usaste domain en vez de assignment
-#
-#
-
 
 # Auxiliar Function.
 def is_aux(variable):
@@ -32,6 +26,14 @@ class Cryptarithmetic(object):
             self.variables = self.variables.union(list(word))
         self.assignment = dict().fromkeys(list(self.variables))
         self.constraints = self._generate_constraints(*tuple(words))
+
+    def _add_variable(self, variable):
+        """
+        Add a variable to the context
+        """
+        self.assignment[variable] = None
+        self.variables.add(variable)
+        self.extra_variables.append(variable)
 
     def _generate_constraints(self, op1, op2, result):
         """
@@ -66,8 +68,7 @@ class Cryptarithmetic(object):
             #const_self.ops.append('+') if extra_var else None
             #const_self.ops.extend(['=', '+10x'])
             extra_var = '$_var%s' % extra_count; extra_count += 1
-            self.variables.add(extra_var)
-            self.extra_variables.append(extra_var)
+            self._add_variable(extra_var)
             constraints.append(tuple(const_vars))
         if len(self.op1) != len(self.op2):
             max_word = max(self.op1, self.op2, key=(lambda l: len(l)))

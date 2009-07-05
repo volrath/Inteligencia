@@ -17,7 +17,7 @@ class CSPSolver(object):
         for vn in self.problem.unassigned_variables:
             new_domain[vn] = filter(lambda val: \
                                     not self.problem.check_conflicts((var_repr, val_var_repr),
-                                                                     (vn, val)), domain)
+                                                                     (vn, val)), domain[vn])
         return new_domain
 
     def mrv_select(self, domain):
@@ -39,6 +39,7 @@ class CSPSolver(object):
         if self.problem.is_solved:
             self.problem.print_result()
             return
+
         var_repr = self.mrv_select(domain)
         for value in domain[var_repr]:
             self.problem.assign(var_repr, value)
