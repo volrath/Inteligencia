@@ -44,7 +44,7 @@ class Cryptarithmetic(object):
         number of variables involve:
          * 2 vars: V1 = W2
          * 3 vars: V1 + V/W2 = V3
-         * 4 vars: V1 + V2 = V3 + 10xW4 OR... FUCK... V1 + V2 + W3 = V4
+         * 4 vars: V1 + V2 = V3 + 10xW4
          * 5 vars: V1 + V2 + W3 = V4 + 10xW5
 
         So, except for the 4vars state, I can just record the exact position
