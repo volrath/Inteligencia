@@ -71,17 +71,18 @@ class NQueensLS(NQueens):
                                                           else 0
         return restrictions
 
-    def _get_num_conflicts_for(self, var_num, value=None):
+    def _get_num_conflicts_for(self, var_num, value=None, assignment=None):
         """
         Gets the number of conflicts in which the `var_num` is involved (taking
         only the current assignment)
         """
-        value = value or self.assignment[var_num]
+        assignment = assignment or self.assignment
+        value = value or assignment[var_num]
         restrictions = 0
         for q in range(self.n):
             restrictions += 1 if q != var_num and self.check_conflicts((var_num, value),
-                                                      (q, self.assignment[q])) \
-                                                      else 0
+                                                                       (q, assignment[q])) \
+                                                                       else 0
         return restrictions
 
     def _select_conflicted_variable(self):
@@ -94,13 +95,26 @@ class NQueensLS(NQueens):
         except IndexError:
             return None
 
-    def _get_min_conflicts_position_for(self, var_num):
+    def _get_min_conflicts_position_for(self, var_num, assignment=None):
         """
         Returns the position where the variable `var_num` presents least
         conflicts.
         """
-        return min([self._get_num_conflicts_for(var_num, value)
-                    for value in range(self.n)])            
+        assignment = assignment or self.assignment
+        mins = []
+        conflicts = sorted([(index, self._get_num_conflicts_for(var_num, value, assignment))
+                            for index, value in enumerate(range(self.n))],
+                           key=(lambda t: t[1]))
+        mc = conflicts[0][1]
+        min_conflicts = [conflicts[0][0]]
+        for conflict in conflicts[1:]:
+            if conflict[1] != mc:
+                break
+            min_conflicts.append(conflict[0])
+        return choice(min_conflicts)
+##         return (lambda t: t[0])(min([(index, self._get_num_conflicts_for(var_num, value, assignment))
+##                                      for index, value in enumerate(range(self.n))],
+##                                     key=(lambda t: t[1])))
 
     def min_conflicts(self, *args, **kwargs):
         """
@@ -108,18 +122,15 @@ class NQueensLS(NQueens):
         select the queen that results in the minimum number of conflicts
         with the other variables.
         """
-        current = []
-        current[:] = self.assignment[:]
         for i in range(100000):
-            if self._get_num_conflicts(assignment=current) == 0:
-                self.print_result(current)
+            if self._get_num_conflicts() == 0:
+                self.print_result()
                 return
             var_num = self._select_conflicted_variable()
-            current[var_num] = self._get_min_conflicts_position_for(var_num)
-        print 'Fuck'
-
+            self.assignment[var_num] = self._get_min_conflicts_position_for(var_num)
+        print 'No results'
 
 if __name__ == "__main__":
-    nqueens_problem = NQueens(int(argv[1]))
-    solver = CSPSolver(nqueens_problem)
-    solver.solve(nqueens_problem.complete_domain)
+    # Runs NQueensLS
+    from sys import argv
+    NQueensLS(int(argv[1])).min_conflicts()
