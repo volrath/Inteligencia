@@ -65,9 +65,6 @@ class Cryptarithmetic(object):
             const_vars = [self.op1[i], self.op2[i]]
             const_vars.append(extra_var) if extra_var else None
             const_vars.extend([self.result[i], '$_var%s' % extra_count])
-            #const_self.ops  = ['+']
-            #const_self.ops.append('+') if extra_var else None
-            #const_self.ops.extend(['=', '+10x'])
             extra_var = '$_var%s' % extra_count; extra_count += 1
             self._add_variable(extra_var)
             constraints.append(tuple(const_vars))
@@ -178,5 +175,5 @@ class Cryptarithmetic(object):
         """
         result = result or self.assignment
         print ' '.join(['='.join(map(str, pair))
-                        for pair in result.iteritems()
+                        for pair in sorted(result.iteritems(), (lambda p1, p2: cmp(p1[0], p2[0])))
                         if pair[0] not in self.extra_variables])
