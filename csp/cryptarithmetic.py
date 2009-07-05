@@ -1,3 +1,4 @@
+import sys
 
 # Auxiliar Function.
 def is_aux(variable):
@@ -106,33 +107,36 @@ class Cryptarithmetic(object):
                 if value is None]
     unassigned_variables = property(_get_unassigned_variables)
 
-    def _check_constraint(const):
+    def _check_constraint(self, const, assignment=None):
         """
         Checks a constraint, where all the variables in the constraint are
         assigned
         Returns True if the constraint is satisfied
         """
-        len_constraint = len(constraint)
+        assignment = assignment or self.assignment
+        len_constraint = len(const)
+        satisfied = False
         if len_constraint == 2:
-            return self.assignment[const[0]] == self.assignment[const[1]]
+            return assignment[const[0]] == assignment[const[1]]
         elif len_constraint == 3:
-            return self.assignment[const[0]] + self.assignment[const[1]] == self.assignment[const[2]]
+            return assignment[const[0]] + assignment[const[1]] == assignment[const[2]]
         elif len_constraint == 4:
-            return self.assignment[const[0]] + self.assignment[const[1]] == \
-                   self.assignment[const[2]] + 10 * self.assignment[const[3]] # CHECK THIS, LOOK AT LINE Nro 38
+            return assignment[const[0]] + assignment[const[1]] == \
+                   assignment[const[2]] + 10 * assignment[const[3]] # CHECK THIS, LOOK AT LINE Nro 38
         elif len_constraint == 5:
-            return self.assignment[const[0]] + self.assignment[const[1]] + self.assignment[const[1]] == \
-                   self.assignment[const[3]] + 10 * self.assignment[const[4]]
+            return assignment[const[0]] + assignment[const[1]] + assignment[const[2]] == \
+                   assignment[const[3]] + 10 * assignment[const[4]]
 
-    def _complete_constraints_with(self, pair1, pair2):
+    def _complete_constraints_with(self, pair1, pair2, assignment=None):
         """
         Returns all the constraints in which the variable `pair1` and pair2
         (as defined in check_conflicts) are involved and it's completely
         assigned.
         """
+        assignment = assignment or self.assignment
         return [const for const in self.constraints if pair1[0] in const \
                 and pair2[0] in const \
-                and all(map((lambda var: self.assignment[var] is not None), const))]
+                and all(map((lambda var: assignment[var] is not None), const))]
 
     def assign(self, var, value):
         """
@@ -156,21 +160,23 @@ class Cryptarithmetic(object):
         represented by a pair of the form: (var_num, value)
         
         Returns True if there's a conflict
-
-        EL QUESO DE LA TAJADA!
         """
         # Check alldiff
-        if pair1[1] == pair2[1]:
+        if not is_aux(pair1[0]) and not is_aux(pair2[0]) \
+               and pair1[1] == pair2[1]:
             return True
+        new_assignment = self.assignment.copy()
+        new_assignment[pair2[0]] = pair2[1]
         # return not all the constraints satisfied
-        return not all([self._check_constraint(constraint)
-                        for constraint in self._complete_constraints_with(pair1, pair2)])
+        return not all([self._check_constraint(constraint, new_assignment)
+                        for constraint in \
+                        self._complete_constraints_with(pair1, pair2, new_assignment)])
 
     def print_result(self, result=None):
         """
         Just print.
         """
         result = result or self.assignment
-        print ' '.join(['='.join(list(pair))
-                        for pair in self.assignment.iteritems()
+        print ' '.join(['='.join(map(str, pair))
+                        for pair in result.iteritems()
                         if pair[0] not in self.extra_variables])

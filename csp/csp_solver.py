@@ -39,7 +39,8 @@ class CSPSolver(object):
         if self.problem.is_solved:
             self.problem.print_result()
             return
-
+##         import pdb
+##         pdb.set_trace()
         var_repr = self.mrv_select(domain)
         for value in domain[var_repr]:
             self.problem.assign(var_repr, value)
