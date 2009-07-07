@@ -1,0 +1,11 @@
+#!/usr/bin/python
+import sys
+
+from csp_solver import solver
+from cryptarithmetic import Cryptarithmetic
+
+if len(sys.argv) != 4:
+    print "Modo de uso: python crypto <WORD1> <WORD2> <RESULT>"
+    sys.exit(0)
+
+solver(Cryptarithmetic, sys.argv[1:])

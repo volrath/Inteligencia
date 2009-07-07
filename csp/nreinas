@@ -1,0 +1,11 @@
+#!/usr/bin/python
+import sys
+
+from csp_solver import solver
+from nqueens import NQueens
+
+if len(sys.argv) != 2:
+    print "Modo de uso: python nreinas <numero_de_reinas>"
+    sys.exit(0)
+
+solver(NQueens, int(sys.argv[1]))
