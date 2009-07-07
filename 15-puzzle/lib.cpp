@@ -97,6 +97,7 @@ public:
   bool open_;
   state15_t *state_;
   node_t *prev_, *next_;  // to be used in the priority queue
+  //~node_t(){if(state_ != NULL)delete state_;};
 
   node_t( unsigned g = 0, unsigned h = 0, state15_t *state = NULL, bool open = true ) : g_(g), h_(h), open_(open), state_(state), prev_(ZERO), next_(ZERO) { }
   char m() const { return(m_); }
@@ -128,14 +129,13 @@ public:
       successors[i] = NULL;
       if (as & 1 == 1) {
 	// Clone the current state
-	state15_t * clone_st = (state15_t *)malloc(sizeof(state15_t));
-	node_t *clone_nd = new node_t(g() + 1, ZERO, clone_st);
-	clone_st->p1_ = state()->p1_; clone_st->p2_ = state()->p2_;
-
-	if (i == 0)      { clone_st->left(); clone_nd->set_m(*LEFT); }
-	else if (i == 1) { clone_st->right(); clone_nd->set_m(*RIGHT); }
-	else if (i == 2) { clone_st->up(); clone_nd->set_m(*UP); }
-	else if (i == 3) { clone_st->down(); clone_nd->set_m(*DOWN); }
+	state15_t * clone_nt = new state15_t();
+	node_t  * clone_nd = new node_t(g() + 1, ZERO, clone_nt);
+	clone_nt->p1_ = this->state()->p1_; clone_nt->p2_ = this->state()->p2_;
+	if (i == 0)      { clone_nd->state()->left(); clone_nd->set_m(*LEFT); }
+	else if (i == 1) { clone_nd->state()->right(); clone_nd->set_m(*RIGHT); }
+	else if (i == 2) { clone_nd->state()->up(); clone_nd->set_m(*UP); }
+	else if (i == 3) { clone_nd->state()->down(); clone_nd->set_m(*DOWN); }
 	successors[k] = clone_nd; k++;
       }
     }

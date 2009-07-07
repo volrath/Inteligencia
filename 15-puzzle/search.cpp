@@ -121,10 +121,15 @@ bool limited_informed_search2(state15_t initial_state, node_t *root, int *en, in
 bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int limit, int *best_f) {
   if (node->goal_test())
     return(true);
-  if (node->f() > limit) { *best_f = *best_f < node->f() ? *best_f : node->f(); return false; }
-  cout << " " << limit << endl;
-  if (closed->count(*(node->state())))
+  if (node->f() > limit) { *best_f = *best_f < node->f() ? *best_f : node->f(); 
+    delete node->state(); delete node; 
+    return false; }
+  //cout << "BestF" << *best_f << endl;
+  if (closed->count(*(node->state()))){
+    delete node->state();
+    delete node;
     return (false);
+  }
 
   node_t * scs[BR];
   int h = ZERO;
@@ -135,28 +140,30 @@ bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int
 
   node->successors(scs);
   for (int i = ZERO; i < BR && scs[i] != NULL && found != true; i++) {
-    if (closed->count(*(scs[i]->state()))) { free(scs[i]); continue; }
+    if (closed->count(*(scs[i]->state()))) { delete scs[i]->state(); delete scs[i]; continue; }
     node->set_next(scs[i]);
     scs[i]->set_prev(node);
     scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
-    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f);
+    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f);    
   }
-  for (int i = ZERO; i < BR && scs[i] != NULL; i++) cout << scs[i]->f() << " "; cout << endl;
+  //cout << (node->g()); cout << endl;
+  //for (int i = ZERO; i < BR && scs[i] != NULL; i++) if(scs[i]->f() > 200){cout << *(scs[i]->state()) << " " << heuristics[heu](*(scs[i]->state())); cout << endl;}
+  //if(!found){ delete node->state(); delete node; return false;}
   return(found);
 }
 
 bool iterative_deepening_search(node_t *root, int *en, int heu) {
   int limit, best_f;
-  hash_t closed;
   bool find_result = false;
 
   root->set_h(heuristics[heu](*(root->state())));
   limit = root->h();
   while (!find_result) {
-    cout << limit << endl;
     best_f = INT_MAX;
-    find_result = limited_informed_search(root, en, &closed, heu, limit, &best_f);
+    hash_t * closed = new hash_t();
+    find_result = limited_informed_search(root, en, closed, heu, limit, &best_f);
     limit = best_f;
+    delete closed;
   }
 
   return(true);
