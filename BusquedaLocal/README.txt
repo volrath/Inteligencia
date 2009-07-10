@@ -1,3 +1,9 @@
+Integrantes:
+	Daniel Barreto 04-36723
+	Kristoffer Pantic 05-38675
+
+Proyecto 3 - Busqueda Local
+
 Mejor Resultado Overall:
 
 Utilizando nuestro algoritmo:

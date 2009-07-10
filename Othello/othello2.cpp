@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
+#include <vector>
+#include <algorithm>
 #include "othello_cut.cpp"
 
 int main(int argc , char ** argv){

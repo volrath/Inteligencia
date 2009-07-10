@@ -118,7 +118,7 @@ bool limited_informed_search2(state15_t initial_state, node_t *root, int *en, in
   return(false);
 }
 
-bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int limit, int *best_f) {
+bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int limit, int *best_f, bool is_root) {
   if (node->goal_test())
     return(true);
   if (node->f() > limit) { *best_f = *best_f < node->f() ? *best_f : node->f(); 
@@ -144,25 +144,25 @@ bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int
     node->set_next(scs[i]);
     scs[i]->set_prev(node);
     scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
-    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f);    
+    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f, false);    
   }
   //cout << (node->g()); cout << endl;
   //for (int i = ZERO; i < BR && scs[i] != NULL; i++) if(scs[i]->f() > 200){cout << *(scs[i]->state()) << " " << heuristics[heu](*(scs[i]->state())); cout << endl;}
-  //if(!found){ delete node->state(); delete node; return false;}
+  if(!found && !is_root){ delete node->state(); delete node; return false;}
   return(found);
 }
 
 bool iterative_deepening_search(node_t *root, int *en, int heu) {
   int limit, best_f;
   bool find_result = false;
-
   root->set_h(heuristics[heu](*(root->state())));
   limit = root->h();
   while (!find_result) {
     best_f = INT_MAX;
     hash_t * closed = new hash_t();
-    find_result = limited_informed_search(root, en, closed, heu, limit, &best_f);
+    find_result = limited_informed_search(root, en, closed, heu, limit, &best_f, true);
     limit = best_f;
+    cout << "Limit : " << limit << endl;
     delete closed;
   }
 
@@ -184,7 +184,7 @@ void pdb_gen610(state15_t state, pattern_t *p) {
     (*p).p1_ = (*p).p1_ << 4; (*p).p2_ = (*p).p2_ << 4;
     (*p).p1_ = (*p).p1_ + (state.cont(i) < 6 || state.cont(i) > 10 ? ZERO : state.cont(i));
     (*p).p2_ = (*p).p2_ + (state.cont(i+HALF_NUM_TILES) < 6 || state.cont(i+HALF_NUM_TILES) > 10 ? ZERO : state.cont(i+HALF_NUM_TILES));
-  }
+  } 
 }
 
 void pdb_gen1115(state15_t state, pattern_t *p) {

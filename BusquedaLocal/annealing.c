@@ -1,4 +1,4 @@
-#include "ejemplo.h"
+#include "eval.h"
 
 int numeval = 0;
 
@@ -72,12 +72,12 @@ double simulatedAnnealing(int kmax, double ss[10]){
   return eb;
 }
 
-int main(){
+int main() {
   double result;
   double bestsofar = -999;
   double bestA[10];
   double ss[10];
-  srand(time(NULL)
+  srand(time(NULL));
   int i;
   while(result < 10 && numeval <= NUMEVAL){
     srand(time(NULL));  
