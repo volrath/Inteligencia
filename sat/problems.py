@@ -268,11 +268,13 @@ class Solitaire(object):
         """
         clauses = []
         for j in range(1,self.board_size+1):
-            clauses_aux = []
-            for d in range(1,3):
-                clauses_aux = [[-self._solIndex2CNFIndex(i1,j,d), -self._solIndex2CNFIndex(i2,j,d)]
-                               for i1 in range(1,self.board_size) for i2 in range(i1+1,self.board_size+1)]
-                clauses.extend(clauses_aux)
+            clauses_aux = [[-self._solIndex2CNFIndex(i1,j,1), -self._solIndex2CNFIndex(i2,j,2)]
+                           for i1 in range(1,self.board_size) for i2 in range(i1+1,self.board_size+1)]
+            clauses_aux = [[-self._solIndex2CNFIndex(i1,j,2), -self._solIndex2CNFIndex(i2,j,1)]
+                           for i1 in range(1,self.board_size) for i2 in range(i1+1,self.board_size+1)]
+            print [[(i1,j,1), (i2,j,2)]
+                   for i1 in range(1,self.board_size) for i2 in range(i1+1,self.board_size+1)]
+            clauses.extend(clauses_aux)
         return clauses
 
     def write_solution(self, cnf_solution):
