@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "assert.h"
 
 #define MAX(s,t)      ((s)>(t)?(s):(t))
@@ -68,6 +69,17 @@ const int dia2[][7] = { { 4,-1,-1,-1,-1,-1,-1 }, { 5,10,-1,-1,-1,-1,-1 }, { 6,11
 static int PV[] = { 12, 21, 26, 13, 22, 18,  7,  6,  5, 27, 33, 23, 17, 11, 19, 15,
                     14, 31, 20, 32, 30, 10, 25, 24, 34, 28, 16,  4, 29, 35, 36,  8, 9 };
 
+const int valueTablero[] = {50,50,50,50,
+			    1000, -30, 100, 100, -30, 1000,
+			    -30, -50, -30,-30, -50, -30,
+			    100, -30,-30, 100,
+			    100, -30, -30, 100, 
+			    -30, -50, -30, -30, -50, -30,
+			    1000, -30, 100, 100, -30, 1000};
+const int ordenEvaluacion[] = {4, 9, 30, 35,6,7, 16, 19, 20, 23, 32, 33,
+			       12, 13, 17, 18, 21, 22, 26, 27, 5,8, 
+			       10, 15, 24, 29, 31, 34, 11, 14, 25, 28};
+
 class state_t
 {
   unsigned char t_;
@@ -88,7 +100,7 @@ public:
   bool is_free( int pos ) const { return(pos<4?false:!(free_&(1<<(pos-4)))); }
   bool is_full() const { return(~free_==0); }
 
-  unsigned value() const;
+  double value() const;
   bool terminal() const;
   bool outflank( bool color, int pos ) const;
   bool is_black_move( int pos ) const { return( (pos == DIM) || outflank(true,pos) ); }
@@ -99,25 +111,65 @@ public:
   state_t black_move( int pos ) { return(move(true,pos)); }
   state_t white_move( int pos ) { return(move(false,pos)); }
   state_t bestNextMove() const;
-  short maxValue(short int, short int, short int) const;
-  short minValue(short int, short int, short int) const;
+  double maxValue(double, double, short int, short) const;
+  double minValue(double, double, short int, short) const;
 
-  bool operator<( const state_t &s ) const { return( (free_ < s.free_) || ((free_ == s.free_) && (pos_ < s.pos_)) ); }
+  bool operator<( const state_t &s ) const { return(this->value() < s.value());}//(free_ < s.free_) || ((free_ == s.free_) && (pos_ < s.pos_)) ); }
   void print( std::ostream &os, int depth ) const;
   void pretty_print( std::ostream &os, int depth ) const;
   void print_bits( std::ostream &os ) const;
   void set_state(int[]);
+  int nummoves() const;
+  int numfree() const;
 };
 
-inline unsigned
+inline int
+state_t::nummoves() const
+{ 
+  int nummoves = 0; 
+  for(int i = 4; i < DIM; i++){
+    if(outflank(this->player_,i)) 
+      nummoves++; 
+  } 
+  return nummoves;
+} 
+
+inline int
+state_t::numfree() const
+{
+  int numfree = 0;
+  for(int i = 4; i < DIM; i++){
+    if(is_free(i)){
+      numfree++;
+    }
+  }
+  return numfree;
+}
+
+inline double
 state_t::value() const
 {
-  int v = 0;
+  double v = 0;
+  /*double cornervalue = 0;
+  cornervalue += !is_free(4) && is_color(this->player_,4) ? 10 : 0;
+  cornervalue += !is_free(9) && is_color(this->player_,9) ? 10 : 0;
+  cornervalue += !is_free(30) && is_color(this->player_,30) ? 10 : 0;
+  cornervalue += !is_free(35) && is_color(this->player_,35) ? 10 : 0;*/
+  double valuemoves = 0;
+  double valuepos = 0;
   for( int pos = 0; pos < DIM; ++pos ) {
-    if( !is_free(pos) ) v += (is_black(pos)?-1:1);
+    if( !is_free(pos) ) {
+      v += (is_black(pos)? (this->player_ ? 1: 0): (this->player_ ? 0: 1));
+      valuepos += is_color(this->player_,pos)?valueTablero[pos]:0;
+    }
+    if( outflank(this->player_,pos)){
+      valuemoves++;
+    }
   }
-  assert( (-36 <= v) && (v <= 36) );
-  return(36+v);
+  v *= 10;
+  v += valuepos;
+  v += valuemoves * 100;
+  return(v);
 }
 
 inline bool
@@ -333,120 +385,127 @@ state_t::print_bits( std::ostream &os ) const
 inline state_t
 state_t::bestNextMove() const
 {
-	state_t best = *this;
-	state_t temp;
-	short v = -9999;
-	short previousv = v;
-	short alpha = -9999;
-	short beta = 9999;
-	if(this->terminal()){
-		return *this;
+  state_t best = *this;
+  state_t temp;
+  double v = -9999;
+  double previousv = v;
+  double alpha = -9999;
+  double beta = 9999;
+  short limit = this->numfree() <= 12 ? 40 : LIMIT;
+  if(this->terminal()){
+    return *this;
+  }
+  std::vector<state_t> moves;
+  for(int i = 0; i < DIM; i++){
+    if(this->outflank(this->player_,i)){
+      moves.push_back(this->move(this->player_,i));
+    }
+  }
+  if(moves.empty()) {
+    temp = state_t();
+    temp.t_ = this->t_;
+    temp.free_ = this->free_;
+    temp.pos_ = this->pos_;
+    temp.player_ = !this->player_;
+    v = std::max(v, temp.minValue(alpha,beta,1,limit));
+    if(v != previousv) {
+      best = temp;
+      previousv = v;
+    }
+    if(v >= beta) {
+      return temp;
+    }
+    alpha = std::max(alpha, v);
+  }else{
+    int tam = moves.size();
+    for(int i = 0; i < tam; i++){
+      temp = moves.at(i);
+      v = std::max(v, temp.minValue(alpha,beta,1,limit));
+      if(v != previousv){
+	best = temp;
+	previousv = v;
+      }
+      if(v >= beta){
+	return temp;
+      }
+      alpha = std::max(alpha, v);
+    }
+  }
+  return best;
+}
+
+inline double
+state_t::maxValue(double alpha, double beta, short nivel, short limit) const
+{
+	if(this->terminal() || nivel >= limit){
+	  return this->value();
 	}
-	std::vector<state_t> moves;
-	for(int i = 0; i < DIM; i++){
-		if(this->outflank(this->player_,i)){
-			moves.push_back(this->move(this->player_,i));
-		}
+	double v = -9999;
+	std::vector<state_t> moves = std::vector<state_t>();
+	for(int i = 0; i < 32; i++) {
+	  if(this->outflank(this->player_,ordenEvaluacion[i])) {
+	    moves.push_back(this->move(this->player_,ordenEvaluacion[i]));
+	  }
 	}
+       	//std::sort(moves.begin(),moves.end());
 	if(moves.empty()){
-		temp = state_t();
+		state_t temp = state_t();
 		temp.t_ = this->t_;
 		temp.free_ = this->free_;
 		temp.pos_ = this->pos_;
 		temp.player_ = !this->player_;
-		v = std::max(v, temp.minValue(alpha,beta,1));
-		if(v != previousv){
-			best = temp;
-			previousv = v;
-		}
+		v = std::max(v, temp.minValue(alpha,beta,nivel+1,limit));
 		if(v >= beta){
-			return temp;
+			return v;
 		}
 		alpha = std::max(alpha, v);
 	}else{
-		int tam = moves.size();
-		for(int i = 0; i < tam; i++){
-			temp = moves.at(i);
-			v = std::max(v, temp.minValue(alpha,beta,1));
-			if(v != previousv){
-				best = temp;
-				previousv = v;
-			}
-			if(v >= beta){
-				return temp;
-			}
-			alpha = std::max(alpha, v);
-		}
-    }
-	    return best;
-}
-
-inline short
-state_t::maxValue(short alpha, short beta, short nivel) const
-{
-	if(this->terminal() || nivel >= LIMIT){
-		return this->value();
-	}
-	short v = -9999;
-	state_t move;
-	bool hasmove = false;
-	for(int i = 4; i < DIM; i++){
-	  if(this->outflank(this->player_,i)){
-	    move =this->move(this->player_,i);
-	    hasmove = true;
-	    v = std::max(v, move.minValue(alpha,beta,nivel+1));
+	  int tam = moves.size();
+	  for(int i = 0; i < tam; i++){
+	    v = std::max(v, moves.at(i).minValue(alpha,beta,nivel+1,limit));
 	    if(v >= beta) {
 	      return v;
 	    }
 	    alpha = std::max(alpha, v);
 	  }
 	}
-	if(!hasmove){
-		state_t temp = state_t();
-		temp.t_ = this->t_;
-		temp.free_ = this->free_;
-		temp.pos_ = this->pos_;
-		temp.player_ = !this->player_;
-		v = std::max(v, temp.minValue(alpha,beta,nivel+1));
-		if(v >= beta){
-			return v;
-		}
-		alpha = std::max(alpha, v);
-	}
 	return v;
 }
 
-inline short
-state_t::minValue(short alpha, short beta, short nivel) const
+inline double
+state_t::minValue(double alpha, double beta, short nivel, short limit) const
 {
-	if(this->terminal() || nivel >= LIMIT) {
-		return this->value();
+	if(this->terminal() || nivel >= limit) {
+	  return this->value();
 	}
-	short v = 9999;
-	state_t move;
-	bool hasmove = false;
-	for(int i = 4; i < DIM; i++) {
-	  if(this->outflank(this->player_,i)) {
-	    move =this->move(this->player_,i);
-	    hasmove = true;
-	    v = std::min(v,move.maxValue(alpha,beta,nivel+1));
+	double v = 9999;
+	std::vector<state_t> moves = std::vector<state_t>();
+	for(int i = 0; i < 32; i++) {
+	  if(this->outflank(this->player_,ordenEvaluacion[i])) {
+	    moves.push_back(this->move(this->player_,ordenEvaluacion[i]));
+	  }
+	}
+	//std::sort(moves.begin(),moves.end());
+	if(moves.empty()){
+	  state_t temp = state_t();
+	  temp.t_ = this->t_;
+	  temp.free_ = this->free_;
+	  temp.pos_ = this->pos_;
+	  temp.player_ = !this->player_;
+	  v = std::min(v, temp.maxValue(alpha,beta,nivel+1,limit));
+	  if(v <= alpha){
+	    return v;
+	  }
+	  beta = std::min(beta,v);		
+	}else{
+	  int tam = moves.size();
+	  for(int i = 0; i < tam; i++){
+	    v = std::min(v,moves.at(i).maxValue(alpha,beta,nivel+1,limit));
 	    if(v <= alpha){
 	      return v;
 	    }
 	    beta = std::min(beta,v);
 	  }
-	}
-	if(!hasmove){
-		state_t temp = state_t();
-		temp.t_ = this->t_;
-		temp.free_ = this->free_;
-		temp.pos_ = this->pos_;
-		temp.player_ = !this->player_;
-		v = std::min(v, temp.maxValue(alpha,beta,nivel+1));
-		if(v <= alpha){
-			return v;
-		}
-		beta = std::min(beta,v);
 	}
 	return v;
 }

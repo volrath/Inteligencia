@@ -2,7 +2,7 @@
 
 int numeval = 0;
 
-void getRandomNeighbor(double s[10], double sn[10]){
+void getRandomNeighbor(double s[10], double sn[10]) {
   int corte;
   int num = rand()%10;
   int i;
@@ -93,28 +93,38 @@ void getParents(double  poblacion[5000][10], double parents[100][10]){
 
 void reproducir(double padre[10], double madre[10], double hijo[10]){
   int corte = rand()%10;
-  int plus = (rand()%10 < 5? -1: 1) * 0.0001;
+  double plus;
   int i;
   //printf("CORTE:%d",corte);
   for(i = 0; i < corte; i++){
+    plus = (rand()%10 < 5? 1 : -1) *((double)((double)0.1/(double)(10^(rand()%5))));
+    if(padre[i] + plus >= -1 && padre[i] + plus <= 1){
+      hijo[i] = padre[i] + plus;
+    }else{
       hijo[i] = padre[i];
+    }
   }
   for(; i < 10; i++){
-      hijo[i] = madre[i];    
+    plus = (rand()%10 < 5? 1 : -1) *((double)((double)0.1/(double)(10^(rand()%5))));
+    if(madre[i] + plus >= -1 && madre[i] + plus <= 1){
+      hijo[i] = madre[i] + plus;
+    }else{
+      hijo[i] = madre[i];
+    }
   }
 }
 
 void mutar(double hijo[10]){
   int corte = rand()%10;
-  int plus;
+  double plus;
   int i = 0;
-  plus = (rand()%10 < 5? 1 : -1) * 0.0001;
+  plus = (rand()%10 < 5? 1 : -1) *((double)((double)0.1/(double)(10^(rand()%5))));
   if(hijo[corte] + plus <= 1 && hijo[corte] + plus >= -1){
     hijo[corte] = hijo[corte] + plus;
   }
 }
 
-double geneticAlgorithm(double best[10]){
+double geneticAlgorithm(double best[10]) {
   srand(time(NULL));
   double poblacion [5000][10];
   double poblacionN [5000][10];

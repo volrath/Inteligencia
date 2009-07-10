@@ -1,4 +1,4 @@
-#include "ejemplo.h"
+#include "eval.h"
 
 int numeval = 0;
 
@@ -59,7 +59,7 @@ void mutar(double hijo[10]){
   }
 }
 
-double geneticAlgorithm(){
+double geneticAlgorithm(double bestA[10]){
   srand(time(NULL));
   double poblacion [1000][10];
   double poblacionN [1000][10];
@@ -112,11 +112,8 @@ double geneticAlgorithm(){
       }
       printf("BestSoFar: %lf Prev: %lf, Result: %lf \n",bestsofar,prevresult,result);
     }
-    printf("PosBestSoFar: ");
-    for(k = 0; k < 10; k++){
-      printf("bestsofar[%d] : %lf",k,bestsofarP[k]);
-    }
-    return result;
+  memcpy(bestA,bestsofarP,sizeof(double)*10);
+  return result;
 }
 
 int main(){
@@ -125,12 +122,16 @@ int main(){
   double bestA[10];
   double ss[10];
   int i;
+  int k;
   while(result < 9 && numeval <= NUMEVAL){
-    result = geneticAlgorithm();
+    result = geneticAlgorithm(ss);
     if(result > bestsofar) {
       bestsofar = result;
       memcpy(bestA,ss,sizeof(double)*10);
     }
     printf("\nBestSoFarGeneral: %lf No. Eval: %d\n", bestsofar, numeval);
+    for(k = 0; k<10;k++){
+      printf("\nBSF[%d]: %lf",k,bestA[k]);
+    }
   }
 }
