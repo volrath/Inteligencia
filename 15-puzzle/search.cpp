@@ -35,7 +35,7 @@ bool informed_search(state15_t initial_state, node_t *root, int *en, int alg, in
     (*en)++;
     pActual = open.top(); open.pop();
     closed.insert(make_pair(*(pActual->state()), *pActual));
-
+    
     if (pActual->goal_test()) {
       if (pActual == root) return(true);
       pActual->set_next(NULL);
@@ -46,16 +46,29 @@ bool informed_search(state15_t initial_state, node_t *root, int *en, int alg, in
       while (pActual != NULL) { pActual->set_next(pAux); pAux = pActual; pActual = pActual->prev(); }
       return(true);
     }
-
+    int numsucesores = 0;
     pActual->successors(scs);
     for (int i = ZERO; i < BR && scs[i] != NULL; i++) {
+      numsucesores++;
       pAux = scs[i];
 
-      if (closed.count(*(pAux->state()))) continue;
+      if (closed.count(*(pAux->state()))){
+	hash_t::iterator node_found = closed.find(*(pAux->state()));
+	if(node_found->second.g() > pAux->g()){
+	  closed.erase(node_found);
+	}else{
+	  delete pAux->state();
+	  delete pAux;
+	  continue;
+	}
+      }
 
       pAux->set_h(heuristics[heu](*(pAux->state())));
       pAux->set_prev(pActual);
       open.push(pAux);
+    }
+    if(numsucesores == 0){
+      delete pActual;
     }
   }
   return(false);
@@ -71,10 +84,15 @@ bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int
     return false;
   }
   //cout << "BestF" << *best_f << endl;
-  if (closed->count(*(node->state()))){
-    delete node->state();
-    delete node;
-    return (false);
+  if (closed->count(*(node->state()))) {
+    hash_t::iterator node_found = closed->find(*(node->state()));
+    if(node_found->second.g() > node->g()){
+      closed->erase(node_found);
+    }else{
+      delete node->state();
+      delete node;
+      return (false);
+    }
   }
 
   node_t * scs[BR];
@@ -86,14 +104,14 @@ bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int
 
   node->successors(scs);
   for (int i = ZERO; i < BR && scs[i] != NULL && found != true; i++) {
-    if (closed->count(*(scs[i]->state()))) { delete scs[i]->state(); delete scs[i]; continue; }
+    if (closed->count(*(scs[i]->state()))) { delete scs[i]->state(); delete scs[i]; scs[i] = NULL; continue; }
     node->set_next(scs[i]);
     scs[i]->set_prev(node);
     scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
-    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f, false);    
+    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f, false);
   }
-  //cout << (node->g()); cout << endl;
-  //for (int i = ZERO; i < BR && scs[i] != NULL; i++) if(scs[i]->f() > 200){cout << *(scs[i]->state()) << " " << heuristics[heu](*(scs[i]->state())); cout << endl;}
+  //for (int i = ZERO; i < BR && scs[i] != NULL; i++) {cout << *(scs[i]->state()) << " " << heuristics[heu](*(scs[i]->state())); cout << endl;}
+  if(node->g() == 47){ cout << *(node->state()) << endl;}
   if(!found && !is_root){ delete node->state(); delete node; return false;}
   return(found);
 }
@@ -108,7 +126,6 @@ bool iterative_deepening_search(node_t *root, int *en, int heu) {
     hash_t * closed = new hash_t();
     find_result = limited_informed_search(root, en, closed, heu, limit, &best_f, true);
     limit = best_f;
-    cout << "Limit : " << limit << endl;
     delete closed;
   }
 

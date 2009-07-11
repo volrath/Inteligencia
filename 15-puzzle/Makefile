@@ -7,6 +7,7 @@ S_PDB  = pdb-generator.cc
 
 CC = g++
 CFLAGS = -g -o
+CFLAGSH = -g -o -c
 NO_DEPRCT = -Wno-deprecated
 
 all:		15puzzle pdb-generator
@@ -18,7 +19,7 @@ pdb-generator:	${S_PDB} ${O_HELPERS}
 		$(CC) $(NO_DEPRCT) $(CFLAGS) $@ ${O_HELPERS} ${S_PDB}
 
 helpers:	$(S_HELPERS)
-		$(CC) -c $(CFLAGS) $(NO_DEPRCT) ${S_HELPERS}
+		$(CC) -g $(NO_DEPRCT) $(CFLAGSH) $(NO_DEPRCT) ${S_HELPERS}
 
 clean:
 		rm *.o
