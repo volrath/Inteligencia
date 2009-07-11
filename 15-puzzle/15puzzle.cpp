@@ -102,14 +102,14 @@ int main (int argc, char **argv) {
     }
     pdb_file.close();
 
-    cout << "Loading pattern database 6-10" << endl;
-    pdb_file.open(PDB610_FILE, ios::in | ios::binary);
-    while(!pdb_file.eof()) {
-      pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
-      pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
-      pdb610.insert(make_pair(pt, cost));
-    }
-    pdb_file.close();
+//     cout << "Loading pattern database 6-10" << endl;
+//     pdb_file.open(PDB610_FILE, ios::in | ios::binary);
+//     while(!pdb_file.eof()) {
+//       pdb_file.read(reinterpret_cast<char *>(&pt), PATTERN_SIZE);
+//       pdb_file.read(reinterpret_cast<char *>(&cost), INT_SIZE);
+//       pdb610.insert(make_pair(pt, cost));
+//     }
+//     pdb_file.close();
 
     cout << "Loading pattern database 11-15" << endl;
     pdb_file.open(PDB1115_FILE, ios::in | ios::binary);

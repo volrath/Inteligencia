@@ -1,1 +1,25 @@
-thank you..
+=================
+ Proyecto 5: CSP
+=================
+
+Integrantes
+===========
+ + 04-36723 - Daniel Barreto
+ + 05-38675 - Kristoffer Pantic
+
+Como se corre
+=============
+./8puzzle <algoritmo> 0 1 2 3 4 5 6 7 [heuristica]
+./15puzzle <algoritmo> 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 [heuristica]
+
+Sobre la base de datos de patrones
+==================================
+Como daniel es guaro y se quiere ir a su pueblo y vas a corregir lo
+que te entreguemos hasta hoy, te estamos dejando los archivos de la
+base de datos aqui:
+
+http://piscis.ac.labf.usb.ve/~daniel/pdb05.bin
+http://piscis.ac.labf.usb.ve/~daniel/pdb1115.bin
+
+de todas formas en el tar.gz esta el generador de la base de datos.
+
