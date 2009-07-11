@@ -132,7 +132,7 @@ int main (int argc, char **argv) {
   if (did_it) {
     execution_time = time(0) - execution_time;
     //while(path != NULL) { cout << *path << endl; path = path->next(); }
-    while(path != NULL) { cout << path->m() << ", "; path = path->next(); }
+    while(path != NULL) { cout << "[" << path->g() << "," << path->m() << "], "; path = path->next(); }
     cout << endl << "Expanded nodes: " << expanded_nodes;
     cout << endl << "Execution time: " << execution_time << "s";
     cout << endl;
