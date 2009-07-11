@@ -10,4 +10,4 @@ unsigned manhattan(state8_t state);
 
 // Search Algorithms
 bool informed_search(state8_t initial_state, node_t * node, int *en, int alg, int heu);
-bool iterative_deepening_search(state8_t initial_state, node_t *root, int *en, int heu);
+bool iterative_deepening_search(node_t *root, int *en, int heu);

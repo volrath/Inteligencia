@@ -6,6 +6,7 @@
 #define HSTEP 1
 #define VSTEP 3
 #define BR 4
+#define ZERO 0
 #define LEFT   "L"
 #define RIGHT  "R"
 #define UP     "U"
@@ -121,7 +122,6 @@ public:
 	state8_t * clone_st = (state8_t *)malloc(sizeof(state8_t));
 	node_t *clone_nd = new node_t(g() + 1, 0, clone_st);
 	clone_st->p1_ = state()->p1_; clone_st->p2_ = state()->p2_;
-
 	if (i == 0)      { clone_st->left(); clone_nd->set_m(*LEFT); }
 	else if (i == 1) { clone_st->right(); clone_nd->set_m(*RIGHT); }
 	else if (i == 2) { clone_st->up(); clone_nd->set_m(*UP); } 
@@ -135,3 +135,5 @@ protected:
 };
 
 inline std::ostream& operator<<( std::ostream &os, const node_t &n ) { n.print(os); return(os); }
+
+

@@ -3,7 +3,7 @@
 // Author: Blai Bonet
 // Last Revision: 05/17/06
 // Modified by: Kristoffer Pantic 05-38675
-
+ 
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -14,7 +14,7 @@
 #define MAXVALUE      1000
 #define DIM           36
 #define N             6
-#define LIMIT     16
+#define LIMIT     14
 
 const int rows[][7] = { { 4, 5, 6, 7, 8, 9,-1 }, { 4, 5, 6, 7, 8, 9,-1 }, { 4, 5, 6, 7, 8, 9,-1 },
                         { 4, 5, 6, 7, 8, 9,-1 }, { 4, 5, 6, 7, 8, 9,-1 }, { 4, 5, 6, 7, 8, 9,-1 },
@@ -150,11 +150,6 @@ inline double
 state_t::value() const
 {
   double v = 0;
-  /*double cornervalue = 0;
-  cornervalue += !is_free(4) && is_color(this->player_,4) ? 10 : 0;
-  cornervalue += !is_free(9) && is_color(this->player_,9) ? 10 : 0;
-  cornervalue += !is_free(30) && is_color(this->player_,30) ? 10 : 0;
-  cornervalue += !is_free(35) && is_color(this->player_,35) ? 10 : 0;*/
   double valuemoves = 0;
   double valuepos = 0;
   for( int pos = 0; pos < DIM; ++pos ) {
@@ -447,7 +442,6 @@ state_t::maxValue(double alpha, double beta, short nivel, short limit) const
 	    moves.push_back(this->move(this->player_,ordenEvaluacion[i]));
 	  }
 	}
-       	//std::sort(moves.begin(),moves.end());
 	if(moves.empty()){
 		state_t temp = state_t();
 		temp.t_ = this->t_;
@@ -485,7 +479,6 @@ state_t::minValue(double alpha, double beta, short nivel, short limit) const
 	    moves.push_back(this->move(this->player_,ordenEvaluacion[i]));
 	  }
 	}
-	//std::sort(moves.begin(),moves.end());
 	if(moves.empty()){
 	  state_t temp = state_t();
 	  temp.t_ = this->t_;
