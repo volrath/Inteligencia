@@ -7,6 +7,7 @@
 #define HSTEP 1
 #define VSTEP 4
 #define BR 4
+#define ROOT   0xf
 #define LEFT   "L"
 #define RIGHT  "R"
 #define UP     "U"
@@ -99,7 +100,7 @@ public:
   node_t *prev_, *next_;  // to be used in the priority queue
   //~node_t(){if(state_ != NULL)delete state_;};
 
-  node_t( unsigned g = 0, unsigned h = 0, state15_t *state = NULL, bool open = true ) : g_(g), h_(h), open_(open), state_(state), prev_(ZERO), next_(ZERO) { }
+  node_t( unsigned g = 0, unsigned h = 0, state15_t *state = NULL, bool open = true ) : g_(g), h_(h), m_(ROOT), open_(open), state_(state), prev_(ZERO), next_(ZERO) { }
   char m() const { return(m_); }
   unsigned g() const { return(g_); }
   unsigned h() const { return(h_); }

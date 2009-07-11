@@ -8,11 +8,8 @@ extern pt_hash_t pdb05, pdb610, pdb1115;
 
 class value_comparison{
 public:
-  //int alg_;
-  //  value_comparison(int alg = ZERO) : alg_(alg) {}
   value_comparison() {}
   bool operator() (const node_t *lhs, const node_t *rhs) const{
-    //if (alg_ == 1) return(lhs->h() > rhs->h()); else return(lhs->f() > rhs->f());
     return(lhs->f() > rhs->f());
   }
 };
@@ -110,7 +107,6 @@ bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int
     scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
     found = limited_informed_search(scs[i], en, closed, heu, limit, best_f, false);
   }
-  //for (int i = ZERO; i < BR && scs[i] != NULL; i++) {cout << *(scs[i]->state()) << " " << heuristics[heu](*(scs[i]->state())); cout << endl;}
   if(node->g() == 47){ cout << *(node->state()) << endl;}
   if(!found && !is_root){ delete node->state(); delete node; return false;}
   return(found);

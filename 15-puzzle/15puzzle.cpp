@@ -6,21 +6,22 @@
 
 #define CZERO '0'
 
-#define GBFS   "gbfs"
-#define ASTAR  "astar"
-#define IDA    "ida"
+#define GBFS   "GBFS"
+#define ASTAR  "ASTAR"
+#define IDA    "IDA*"
 
 #define H_MAN  "manhattan"
 #define H_MIS  "misplaced"
+#define H_PDB  "pdb"
 
 using namespace std;
 
 extern pt_hash_t pdb05, pdb610, pdb1115;
 
 int construct_initial(char ** input, state15_t *state) {
-  int nums[NUM_TILES];
+  int nums[NUM_TILES], j = 1;
   for (int i = ZERO; i < NUM_TILES; i++) {
-    nums[i] = atoi(input[i+1]);
+    nums[i] = atoi(input[j+1]); j++;
     if (nums[i] < 0 || nums[i] > 15)
       return(0);
   }
@@ -30,25 +31,25 @@ int construct_initial(char ** input, state15_t *state) {
 
 /*
   Use:
-  15puzzle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0 [algorithm] [heuristic]
+  15puzzle [algorithm] 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 [heuristic]
  */
 int main (int argc, char **argv) {
-  int alg = 2, heu = 1, expanded_nodes = 0;
-//   if (argc == 19) {
-//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-//     else if (strcmp(argv[10], IDA) == ZERO) alg = 2;
+  int alg = 0, heu = 1, expanded_nodes = 0;
+  if (argc == 19) {
+    if (strcmp(argv[1], GBFS) == ZERO)     alg = 1;
+    else if (strcmp(argv[1], IDA) == ZERO) alg = 2;
 
-//     if (strcmp(argv[11], H_MIS) == ZERO)   heu = 0;
-//   }
-//   else if (argc == 18) {
-//     if (strcmp(argv[10], GBFS) == ZERO)     alg = 1;
-//     else if (strcmp(argv[10], ASTAR) == ZERO) alg = 0;
-//   }
-//   else if (argc == 17) {}
-//   else {
-//     std::cout << "You dumb ass..." << std::endl;
-//     return(0);
-//   }
+    if (strcmp(argv[18], H_MIS) == ZERO)   heu = 0;
+    if (strcmp(argv[18], H_PDB) == ZERO)   heu = 2;
+  }
+  else if (argc == 18) {
+    if (strcmp(argv[1], GBFS) == ZERO)     alg = 1;
+    else if (strcmp(argv[1], ASTAR) == ZERO) alg = 0;
+  }
+  else {
+    std::cout << "Modo de uso: 15puzzle <algorithm> 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 [heuristic]" << std::endl;
+    return(0);
+  }
 
 // -----------------------------------------------------------------------
 
