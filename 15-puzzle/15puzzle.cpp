@@ -44,7 +44,7 @@ int main (int argc, char **argv) {
   }
   else if (argc == 18) {
     if (strcmp(argv[1], GBFS) == ZERO)     alg = 1;
-    else if (strcmp(argv[1], ASTAR) == ZERO) alg = 0;
+    else if (strcmp(argv[1], IDA) == ZERO) alg = 2;
   }
   else {
     std::cout << "Modo de uso: 15puzzle <algorithm> 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 [heuristic]" << std::endl;

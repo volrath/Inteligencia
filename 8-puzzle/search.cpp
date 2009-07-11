@@ -56,8 +56,17 @@ bool informed_search(state8_t initial_state, node_t *root, int *en, int alg, int
     for (int i = 0; i < BR; i++) {
       if (scs[i] != NULL) {
 	pAux = scs[i];
-
-	if (closed.count(*(pAux->state()))) continue;
+	
+	if (closed.count(*(pAux->state()))){
+	  hash_t::iterator node_found = closed.find(*(pAux->state()));
+	  if(node_found->second.g() > pAux->g()){
+	    closed.erase(node_found);
+	  }else{
+	    delete pAux->state();
+	    delete pAux;
+	    continue;
+	  }
+	}
 
 	pAux->set_h(heuristics[heu](*(pAux->state())));
 	pAux->set_prev(pActual);
@@ -68,70 +77,57 @@ bool informed_search(state8_t initial_state, node_t *root, int *en, int alg, int
   return(false);
 }
 
-bool limited_informed_search(state8_t initial_state, node_t *root, int *en, int heu, int *limit) {
-  hash_t closed;
-  pq_t open(0);
-  unsigned best_f = INT_MAX;
-  int h = 0;
-
-  root->set_h(heuristics[heu](initial_state));
-  root->set_prev(NULL);
-  *en = 0;
-
-  open.push(root);
-  node_t *pActual, *pAux;
-  node_t * scs[BR];
-
-  while(!open.empty()) {
-    (*en)++;
-    pActual = open.top(); open.pop();
-    closed.insert(make_pair(*(pActual->state()), *pActual));
-
-    if (pActual->goal_test()) {
-      pActual->set_next(NULL);
-      pAux = pActual;
-      if (pActual->prev() == NULL)
-	pActual->set_prev(root);
-      pActual = pActual->prev();
-      while (pActual != NULL) { pActual->set_next(pAux); pAux = pActual; pActual = pActual->prev(); }
-      return(true);
-    }
-
-    pActual->successors(scs);
-    if (pActual->f() <= *limit) {
-      for (int i = 0; i < BR; i++) {
-	if (scs[i] != NULL) { 
-	  pAux = scs[i];
-	  
-	  if (closed.count(*(pAux->state()))) continue;
-	  
-	  pAux->set_h(heuristics[heu](*(pAux->state())));
-	  pAux->set_prev(pActual);
-	  open.push(pAux);
-	}
-      }
-    } else {
-      for (int i = 0; i < BR; i++) {
-	if (scs[i] != NULL) {
-	  h = scs[i]->f()+heuristics[heu](*(scs[i]->state()));
-	  best_f = best_f<h ? best_f : h;
-	}
-      }
-      best_f = best_f>pActual->f() ? best_f : h;
+bool limited_informed_search(node_t *node, int *en, hash_t *closed, int heu, int limit, int *best_f, bool is_root) {
+  if (node->goal_test())
+    return(true);
+  if (node->f() > limit) { 
+    *best_f = *best_f < node->f() ? *best_f : node->f(); 
+    delete node->state(); delete node; 
+    return false;
+  }
+  //cout << "BestF" << *best_f << endl;
+  if (closed->count(*(node->state()))) {
+    hash_t::iterator node_found = closed->find(*(node->state()));
+    if(node_found->second.g() > node->g()){
+      closed->erase(node_found);
+    }else{
+      delete node->state();
+      delete node;
+      return (false);
     }
   }
-  *limit = best_f;
-  for (int i = 0; i < BR && scs[i] == NULL; i ++) free(scs[i]);
-  return(false);
+
+  node_t * scs[BR];
+  int h = ZERO;
+  bool found = false;
+
+  closed->insert(make_pair(*(node->state()), *node));
+  (*en)++;
+
+  node->successors(scs);
+  for (int i = ZERO; i < BR && scs[i] != NULL && found != true; i++) {
+    if (closed->count(*(scs[i]->state()))) { delete scs[i]->state(); delete scs[i]; scs[i] = NULL; continue; }
+    node->set_next(scs[i]);
+    scs[i]->set_prev(node);
+    scs[i]->set_h(heuristics[heu](*(scs[i]->state())));
+    found = limited_informed_search(scs[i], en, closed, heu, limit, best_f, false);
+  }
+  if(node->g() == 47){ cout << *(node->state()) << endl;}
+  if(!found && !is_root){ delete node->state(); delete node; return false;}
+  return(found);
 }
 
-
-bool iterative_deepening_search(state8_t initial_state, node_t *root, int *en, int heu) {
-  int *limit = (int *)malloc(sizeof(int)); *limit = 0;
+bool iterative_deepening_search(node_t *root, int *en, int heu) {
+  int limit, best_f;
   bool find_result = false;
-  
+  root->set_h(heuristics[heu](*(root->state())));
+  limit = root->h();
   while (!find_result) {
-    find_result = limited_informed_search(initial_state, root, en, heu, limit);
+    best_f = INT_MAX;
+    hash_t * closed = new hash_t();
+    find_result = limited_informed_search(root, en, closed, heu, limit, &best_f, true);
+    limit = best_f;
+    delete closed;
   }
 
   return(true);
