@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-class Perceptron:
+class Perceptron(object):
     def __init__(self, inputs, learning_rate):
         self.inputs = inputs + 1
         self.weights = [0] * self.inputs # The first one is the bias
@@ -16,10 +16,8 @@ class Perceptron:
         """
         error = 0
         for inputs, target_result in training_set:
-            delta = target_result - self.evaluate(inputs)
-            self.weights = [weight + self.learning_rate * delta * inp
-                            for weight, inp in zip(self.weights, [1] + inputs)]
-            error += delta**2
+            error += (target_result - self.evaluate(inputs))**2
+            self._alter_weight(inputs, target_result)
         return error / 2.
 
     def evaluate(self, inputs):
@@ -31,7 +29,16 @@ class Perceptron:
                              (self.inputs - 1))
         inp = [1] + map(int, inputs)
         #return 1 if sum([w * x for w in self.weights for x in inp]) > 0 else -1
-        return int(sum([w * x for w, x in zip(self.weights, inp)]) > 0)
+        return sum([w * x for w, x in zip(self.weights, inp)])
+
+class BooleanPerceptron(Perceptron):
+    def _alter_weight(self, inputs, target_result):
+        delta = target_result - self.evaluate(inputs)
+        self.weights = [weight + self.learning_rate * delta * inp
+                        for weight, inp in zip(self.weights, [1] + inputs)]
+
+    def evaluate(self, inputs):
+        return int(super(BooleanPerceptron, self).evaluate(inputs) > 0)
 
 def training(perceptron, training_set):
     """
@@ -73,4 +80,4 @@ xor_training_set = [
     ([0,0], 0),
 ]
 if __name__ == '__main__':
-    plot(training(Perceptron(2, 0.5), and_training_set))
+    plot(training(BooleanPerceptron(2, 0.5), and_training_set))
