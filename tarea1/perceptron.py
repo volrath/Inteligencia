@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 class Perceptron:
     def __init__(self, inputs, learning_rate):
         self.inputs = inputs + 1
@@ -48,6 +50,9 @@ def plot(log):
     """
     A matplotlib way to plot the training log
     """
+    import matplotlib.pyplot as plt
+    plt.plot(log)
+    plt.show()
 
 and_training_set = [
     ([1,1], 1),
@@ -68,4 +73,4 @@ xor_training_set = [
     ([0,0], 0),
 ]
 if __name__ == '__main__':
-    plot(training(Perceptron(2, 0.5), or_training_set))
+    plot(training(Perceptron(2, 0.5), and_training_set))
