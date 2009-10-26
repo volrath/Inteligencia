@@ -1,23 +1,29 @@
 #!/usr/bin/env python
 
 class Perceptron(object):
-    def __init__(self, inputs, learning_rate):
+    def __init__(self, inputs):
         self.inputs = inputs + 1
         self.weights = [0] * self.inputs # The first one is the bias
-        self.learning_rate = learning_rate
 
     def __repr__(self):
-        return '<Weights: %s with learning_rate %s>' % \
-               (self.weights, self.learning_rate)
+        return '<Weights: %s>' % self.weights
 
-    def train(self, training_set):
+    # Dont know if this one is really this way
+    def _alter_weight(self, inputs, target_result, learning_rate):
+        """
+        """
+        delta = target_result - self.evaluate(inputs)
+        self.weights = [weight + learning_rate * delta * inp
+                        for weight, inp in zip(self.weights, [1] + inputs)]
+
+    def train(self, training_set, learning_rate):
         """
         Execute the training with all the examples in the training set
         """
         error = 0
         for inputs, target_result in training_set:
             error += (target_result - self.evaluate(inputs))**2
-            self._alter_weight(inputs, target_result)
+            self._alter_weight(inputs, target_result, learning_rate)
         return error / 2.
 
     def evaluate(self, inputs):
@@ -32,26 +38,29 @@ class Perceptron(object):
         return sum([w * x for w, x in zip(self.weights, inp)])
 
 class BooleanPerceptron(Perceptron):
-    def _alter_weight(self, inputs, target_result):
+    def _alter_weight(self, inputs, target_result, learning_rate):
         delta = target_result - self.evaluate(inputs)
-        self.weights = [weight + self.learning_rate * delta * inp
+        self.weights = [weight + learning_rate * delta * inp
                         for weight, inp in zip(self.weights, [1] + inputs)]
 
     def evaluate(self, inputs):
         return int(super(BooleanPerceptron, self).evaluate(inputs) > 0)
 
-def training(perceptron, training_set):
+def training(perceptron, training_set, learning_rate=0.01, reduce_rate=False,
+             max_iterations=31000):
     """
     Trains the perceptron with the given training set over and over until
     the error converge to 0
     """
     it = 0; log = []
-    while True:
-        log.append(perceptron.train(training_set))
+    while it < max_iterations:
+        log.append(perceptron.train(training_set, learning_rate))
         print 'Iteration %s - Error: %s' % (it, log[it])
         if not log[it]:
-            return log
+            break
         it += 1
+        learning_rate = learning_rate / it if reduce_rate else learning_rate
+    return log
 
 def plot(log):
     """
@@ -80,4 +89,4 @@ xor_training_set = [
     ([0,0], 0),
 ]
 if __name__ == '__main__':
-    plot(training(BooleanPerceptron(2, 0.5), and_training_set))
+    plot(training(Perceptron(2), xor_training_set, reduce_rate=False))
