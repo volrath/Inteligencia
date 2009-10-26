@@ -9,18 +9,33 @@ class Perceptron(object):
         return '<Weights: %s>' % self.weights
 
     # Dont know if this one is really this way
-    def _alter_weight(self, inputs, target_result, learning_rate):
+    def _alter_weight(self, inputs, target_result, learning_rate,
+                      acc_error=None):
         """
         """
-        delta = target_result - self.evaluate(inputs)
+        delta = acc_error if acc_error else \
+                target_result - self.evaluate(inputs)
         self.weights = [weight + learning_rate * delta * inp
                         for weight, inp in zip(self.weights, [1] + inputs)]
 
-    def train(self, training_set, learning_rate):
+    def _get_sum_error(self, training_set):
+        """
+        Gets the current error for a given `training_set`
+        """
+        return sum([target_result - self.evaluate(inputs)
+                    for inputs, target_result in training_set])
+
+    def train(self, training_set, learning_rate, pre_error=False):
         """
         Execute the training with all the examples in the training set
         """
         error = 0
+        if pre_error:
+            pe = self._get_sum_error(training_set)
+            for inputs, target_result in training_set:
+                self._alter_weight(inputs, target_result, learning_rate, pe)
+            return pe
+
         for inputs, target_result in training_set:
             error += (target_result - self.evaluate(inputs))**2
             self._alter_weight(inputs, target_result, learning_rate)
@@ -47,19 +62,21 @@ class BooleanPerceptron(Perceptron):
         return int(super(BooleanPerceptron, self).evaluate(inputs) > 0)
 
 def training(perceptron, training_set, learning_rate=0.01, reduce_rate=False,
-             max_iterations=31000):
+             standard_gradient_descent=False, max_iterations=31000):
     """
     Trains the perceptron with the given training set over and over until
     the error converge to 0
     """
     it = 0; log = []
     while it < max_iterations:
-        log.append(perceptron.train(training_set, learning_rate))
+        log.append(perceptron.train(training_set, learning_rate,
+                                    pre_error=standard_gradient_descent))
         print 'Iteration %s - Error: %s' % (it, log[it])
         if not log[it]:
             break
         it += 1
         learning_rate = learning_rate / it if reduce_rate else learning_rate
+    print perceptron.weights
     return log
 
 def plot(log):
@@ -89,4 +106,5 @@ xor_training_set = [
     ([0,0], 0),
 ]
 if __name__ == '__main__':
-    plot(training(Perceptron(2), xor_training_set, reduce_rate=False))
+    plot(training(Perceptron(2), and_training_set, reduce_rate=False,
+                  standard_gradient_descent=False, max_iterations=5000))
