@@ -8,7 +8,6 @@ class Perceptron(object):
     def __repr__(self):
         return '<Weights: %s>' % self.weights
 
-    # Dont know if this one is really this way
     def _alter_weight(self, inputs, target_result, learning_rate,
                       acc_error=None):
         """
@@ -30,15 +29,10 @@ class Perceptron(object):
         Execute the training with all the examples in the training set
         """
         error = 0
-        if pre_error:
-            pe = self._get_sum_error(training_set)
-            for inputs, target_result in training_set:
-                self._alter_weight(inputs, target_result, learning_rate, pe)
-            return pe
-
+        pe = self._get_sum_error(training_set) if pre_error else None
         for inputs, target_result in training_set:
             error += (target_result - self.evaluate(inputs))**2
-            self._alter_weight(inputs, target_result, learning_rate)
+            self._alter_weight(inputs, target_result, learning_rate, pe)
         return error / 2.
 
     def evaluate(self, inputs):
