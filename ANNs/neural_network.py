@@ -52,35 +52,38 @@ class NeuralNetwork(object):
             error += sum([(target_result - op.last_evaluation)**2
                           for target_result, op
                           in zip(target_results, self.outputs)])
-        return error / 2
+        return error / 2.
 
     def evaluate(self, inputs):
         """
         Propagates forward the inputs through the network and return the
         result in a list
         """
-        results = []
-        for op in self.outputs:
-            results.append(op.evaluate([hp.evaluate(inputs) for hp in self.hidden]))
-        return results
+        return [op.evaluate([hp.evaluate(inputs) for hp in self.hidden])
+                for op in self.outputs]
+#         results = []
+#         for op in self.outputs:
+#             results.append(op.evaluate([hp.evaluate(inputs) for hp in self.hidden]))
+#         return results
 
     def backpropagation_train(self, training_set, learning_rate=0.05):
         """
         """
         for inputs, target_results in training_set:
             output_results = self.evaluate(inputs)
-            delta_outputs = [op.last_evaluation * (1 - op.last_evaluation) * \
-                             (target_results[i] - op.last_evaluation)
-                             for i, op in enumerate(self.outputs)]
+            dos = []
             for i, op in enumerate(self.outputs):
-                op.weights = [weight + learning_rate * inp * delta_outputs[i]
+                dos.append(op.last_evaluation * (1 - op.last_evaluation) * \
+                           (target_results[i] - op.last_evaluation))
+                op.weights = [weight + learning_rate * inp * dos[i]
                               for weight, inp in zip(op.weights, op.inputs)]
 
-            # Fuck, too much pasta-code
-            delta_hidden = [hp.last_evaluation * (1 - hp.last_evaluation) * \
-                            sum([op.weights[i] * delta_outputs[j]
-                                 for j, op in enumerate(self.outputs)])
-                            for i, hp in enumerate(self.hidden)]
+            for i, hp in enumerate(self.hidden):
+                dh = hp.last_evaluation * (1 - hp.last_evaluation) * \
+                     sum([op.weights[i] * dos[j]
+                          for j, op in enumerate(self.outputs)])
+                hp.weights = [weight + learning_rate * inp * dh
+                              for weight, inp in zip(hp.weights, hp.inputs)]
 
 def training(neural_network, training_set, learning_rate=.01,
              max_iterations=1000):
@@ -94,7 +97,20 @@ def training(neural_network, training_set, learning_rate=.01,
         if not log[it]:
             break
         it += 1
+    test(neural_network, training_set)
     return log
+
+def test(neural_network, training_set):
+    total = 0; errors = 0
+    for inputs, target_results in training_set:
+        results = neural_network.evaluate(inputs)
+        tresult = 1 if results[0] >= .5 else 0
+        print 'Inputs: %s -> Result: %s [Wanted %s]' % (inputs, tresult, target_results[0])
+        if target_results[0] != tresult:
+            errors +=1
+        total += 1
+    print
+    print 'TOTAL: %s ERRORS: %s | FAILURE: %s %%' % (total, errors, errors * 100. / total)
 
 def load_training_set(file_name):
     """
@@ -111,4 +127,5 @@ def load_training_set(file_name):
     return training_set
 
 if __name__ =='__main__':
-    plot(training(NeuralNetwork(2,5,1), load_training_set('bp_training/500.txt')))
+    plot(training(NeuralNetwork(2,2,1), load_training_set('bp_training/1000.txt'),
+                  learning_rate=0.01, max_iterations=15000))
