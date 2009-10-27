@@ -55,7 +55,7 @@ class BooleanPerceptron(Perceptron):
     def evaluate(self, inputs):
         return int(super(BooleanPerceptron, self).evaluate(inputs) > 0)
 
-def training(perceptron, training_set, learning_rate=0.01, reduce_rate=False,
+def training(perceptron, training_set, learning_rate=0.1, reduce_rate=False,
              standard_gradient_descent=False, max_iterations=31000):
     """
     Trains the perceptron with the given training set over and over until
@@ -101,4 +101,4 @@ xor_training_set = [
 ]
 if __name__ == '__main__':
     plot(training(Perceptron(2), and_training_set, reduce_rate=False,
-                  standard_gradient_descent=False, max_iterations=5000))
+                  standard_gradient_descent=False, max_iterations=50000))

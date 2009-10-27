@@ -1,5 +1,7 @@
+#!/usr/bin/env python
+
 from math import exp
-from random import random
+from random import randrange
 
 from perceptron import Perceptron, plot
 
@@ -12,7 +14,7 @@ class SigmoidPerceptron(Perceptron):
         Initializes all the weights in small random numbers
         between -.05 and .05
         """
-        super(SigmoidPerceptron, self).__init__()
+        super(SigmoidPerceptron, self).__init__(inputs)
         self.weights = [weight + randrange(-5,5) / 100.
                         for weight in self.weights]
         self.last_evaluation = None
@@ -22,7 +24,7 @@ class SigmoidPerceptron(Perceptron):
         Evaluates the Perceptron output according to the sigmoid function
         """
         self.inputs = inputs
-        self.last_evaluation = 1. / (1 + exp(super(SigmoidPerceptron, self).evaluate(inputs)))
+        self.last_evaluation = 1. / (1 + exp(sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
         return self.last_evaluation
 
 
@@ -39,17 +41,18 @@ class NeuralNetwork(object):
         self.outputs = [SigmoidPerceptron(hidden) for i in range(outputs)]
 
     # Check this!
-    def _get_error(self, training_set):
+    def get_error(self, training_set):
         """
         The addition of all the errors for all the outputs in all the examples.
+        assumes at least one previous evaluation.
         """
         error = 0
         for inputs, target_results in training_set:
-            output_results = self.evaluate(inputs)
-            error += sum([(target_result - output_result)
-                          for target_result, output_result
-                          in zip(target_results, output_results)])
-        return error
+            #output_results = self.evaluate(inputs)
+            error += sum([(target_result - op.last_evaluation)**2
+                          for target_result, op
+                          in zip(target_results, self.outputs)])
+        return error / 2
 
     def evaluate(self, inputs):
         """
@@ -75,17 +78,18 @@ class NeuralNetwork(object):
 
             # Fuck, too much pasta-code
             delta_hidden = [hp.last_evaluation * (1 - hp.last_evaluation) * \
-                            sum([0])
+                            sum([op.weights[i] * delta_outputs[j]
+                                 for j, op in enumerate(self.outputs)])
                             for i, hp in enumerate(self.hidden)]
 
 def training(neural_network, training_set, learning_rate=.01,
-             max_iterations=10000):
+             max_iterations=1000):
     """
     """
     it = 0; log = []
     while it < max_iterations:
-        log.append(neural_network.backpropagation_train(training_set,
-                                                        learning_rate))
+        neural_network.backpropagation_train(training_set, learning_rate)
+        log.append(neural_network.get_error(training_set))
         print 'Iteration %s - Error: %s' % (it, log[it])
         if not log[it]:
             break
@@ -97,7 +101,14 @@ def load_training_set(file_name):
     Loads the training set in memory, returns
     [([inputs], [results]), ... , ()]
     """
+    print 'loading training file \'%s\'' % file_name
     f = open(file_name)
+    training_set = []
+    for line in f:
+        p1, p2, area = line.split()
+        training_set.append(([float(p1), float(p2)], [int(area == 'A')]))
+    f.close()
+    return training_set
 
 if __name__ =='__main__':
     plot(training(NeuralNetwork(2,5,1), load_training_set('bp_training/500.txt')))
