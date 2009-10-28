@@ -24,7 +24,7 @@ class SigmoidPerceptron(Perceptron):
         Evaluates the Perceptron output according to the sigmoid function
         """
         self.inputs = inputs
-        self.last_evaluation = 1. / (1 + exp(sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
+        self.last_evaluation = 1. / (1 + exp(-sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
         return self.last_evaluation
 
 
