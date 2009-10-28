@@ -24,7 +24,7 @@ class SigmoidPerceptron(Perceptron):
         Evaluates the Perceptron output according to the sigmoid function
         """
         self.inputs = inputs
-        self.last_evaluation = 1. / (1 + exp(sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
+        self.last_evaluation = 1. / (1 + exp(-sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
         return self.last_evaluation
 
 
@@ -127,5 +127,5 @@ def load_training_set(file_name):
     return training_set
 
 if __name__ =='__main__':
-    plot(training(NeuralNetwork(2,2,1), load_training_set('bp_training/1000.txt'),
-                  learning_rate=0.01, max_iterations=15000))
+    plot(training(NeuralNetwork(2,2,1), load_training_set('bp_training/500.txt'),
+                  learning_rate=0.05, max_iterations=15000))
