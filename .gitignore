@@ -8,3 +8,7 @@ zchaff
 cnf_*
 *.pyc
 *.tar*
+*.log
+*.pdf
+*.aux
+
