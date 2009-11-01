@@ -25,7 +25,7 @@ class SigmoidPerceptron(Perceptron):
         Evaluates the Perceptron output according to the sigmoid function
         """
         self.inputs = inputs
-        self.last_evaluation = 1. / (1 + exp(-sum([w * x for w, x in zip(self.weights, [1] + inputs)])))
+        self.last_evaluation = 1. / (1 + exp(-sum([w * x for w, x in zip(self.weights, inputs + [1])])))
         return self.last_evaluation
 
 
@@ -48,10 +48,10 @@ class NeuralNetwork(object):
         """
         error = 0
         for inputs, target_results in training_set:
-            #output_results = self.evaluate(inputs)
-            error += sum([(target_result - op.last_evaluation)**2
-                          for target_result, op
-                          in zip(target_results, self.outputs)])
+            self.evaluate(inputs);
+            for target_result,op in zip(target_results,self.outputs):                
+                error += ((target_result - op.last_evaluation)**2)
+                
         return error / 2.
 
     def evaluate(self, inputs):
@@ -65,23 +65,25 @@ class NeuralNetwork(object):
     def backpropagation_train(self, training_set, learning_rate=0.05):
         """
         """
+        
         for inputs, target_results in training_set:
             output_results = self.evaluate(inputs)
             dos = []
             for i, op in enumerate(self.outputs):
                 dos.append(op.last_evaluation * (1 - op.last_evaluation) * \
                            (target_results[i] - op.last_evaluation))
-                op.weights = [weight + learning_rate * inp * dos[i]
-                              for weight, inp in zip(op.weights, op.inputs)]
+                op.weights = [weight + (learning_rate * inp * dos[i])
+                              for weight, inp in zip(op.weights, op.inputs + [1])]
 
             for i, hp in enumerate(self.hidden):
                 dh = hp.last_evaluation * (1 - hp.last_evaluation) * \
                      sum([op.weights[i] * dos[j]
                           for j, op in enumerate(self.outputs)])
-                hp.weights = [weight + learning_rate * inp * dh
-                              for weight, inp in zip(hp.weights, hp.inputs)]
+                hp.weights = [weight + (learning_rate * inp * dh)
+                              for weight, inp in zip(hp.weights, hp.inputs + [1])]
 
-def training(neural_network, training_set, learning_rate=.01,
+
+def training(neural_network, training_set, learning_rate=.1,
              max_iterations=1000, reduce_rate=False):
     """
     """
@@ -129,5 +131,5 @@ def load_training_set(file_name):
     return training_set
 
 if __name__ =='__main__':
-    plot(training(NeuralNetwork(2,2,1), load_training_set('bp_training/1000.txt'), #[(inputs, [target_result]) for inputs, target_result in xor_training_set], #
-                  learning_rate=0.01, max_iterations=6000))
+    plot(training(NeuralNetwork(2,10,1), load_training_set('bp_training/1000.txt'), # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
+                  learning_rate=0.1, max_iterations=1500))

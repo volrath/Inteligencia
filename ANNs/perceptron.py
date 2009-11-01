@@ -15,7 +15,7 @@ class Perceptron(object):
         delta = acc_error if acc_error else \
                 target_result - self.evaluate(inputs)
         self.weights = [weight + learning_rate * delta * inp
-                        for weight, inp in zip(self.weights, [1] + inputs)]
+                        for weight, inp in zip(self.weights, inputs + [1])]
 
     def _get_sum_error(self, training_set):
         """
@@ -42,8 +42,8 @@ class Perceptron(object):
         if len(inputs) != (self.inputs - 1):
             raise ValueError("evaluate needs exactly %s inputs" % \
                              (self.inputs - 1))
-        inp = [1] + map(int, inputs)
-        #return 1 if sum([w * x for w in self.weights for x in inp]) > 0 else -1
+        inp = map(int, inputs) + [1]
+        #return 1 if sum([w * x for w,x in zip(self.weights,inp)]) > 0 else -1
         return sum([w * x for w, x in zip(self.weights, inp)])
 
 class BooleanPerceptron(Perceptron):
@@ -62,16 +62,35 @@ def training(perceptron, training_set, learning_rate=0.1, reduce_rate=False,
     the error converge to 0
     """
     it = 0; log = []
-    while it < max_iterations:
-        log.append(perceptron.train(training_set, learning_rate,
-                                    pre_error=standard_gradient_descent))
-        print 'Iteration %s - Error: %s' % (it, log[it])
-        if not log[it]:
-            break
-        it += 1
-        learning_rate = learning_rate / it if reduce_rate else learning_rate
-    print perceptron.weights
+    try:
+        while it < max_iterations:
+            log.append(perceptron.train(training_set, learning_rate,
+                                        pre_error=standard_gradient_descent))
+            print 'Iteration %s - Error: %s' % (it, log[it])
+            if not log[it]:
+                break
+            it += 1
+            learning_rate = learning_rate / it if reduce_rate else learning_rate
+            print perceptron.weights
+    except KeyboardInterrupt:
+        pass
+    test(perceptron, training_set)
     return log
+
+def test(perceptron, training_set):
+    total = 0; errors = 0; zeros = 0
+    print
+    for inputs, target_results in training_set:
+        results = perceptron.evaluate(inputs)
+        tresult = 1 if results >= .5 else 0
+        print 'Inputs: %s -> Result: %s [Wanted %s]' % (inputs, results, target_results)
+        if target_results != tresult:
+            errors +=1
+        if tresult == 0:
+            zeros += 1
+        total += 1
+    print
+    print 'TOTAL: %s ERRORS: %s | FAILURE: %s %% | ZEROS: %s' % (total, errors, errors * 100. / total, zeros)
 
 def plot(log):
     """
@@ -83,9 +102,9 @@ def plot(log):
 
 and_training_set = [
     ([1,1], 1),
-    ([1,0], 0),
-    ([0,1], 0),
-    ([0,0], 0),
+    ([1,0], -1),
+    ([0,1], -1),
+    ([0,0], -1),
 ]
 or_training_set = [
     ([1,1], 1),
@@ -101,4 +120,4 @@ xor_training_set = [
 ]
 if __name__ == '__main__':
     plot(training(Perceptron(2), and_training_set, reduce_rate=False,
-                  standard_gradient_descent=False, max_iterations=50000))
+                  standard_gradient_descent=False, max_iterations=100))
