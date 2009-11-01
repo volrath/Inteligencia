@@ -1,0 +1,45 @@
+\documentclass[12pt, spanish]{article}
+\usepackage[spanish, activeacute]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+
+\begin{document}
+\title{Universidad Simón Bolívar \\ Inteligencia II \\ Tarea 1}
+\author{
+  Daniel Barreto - \#04-36723 \texttt{<daniel.barreto.n@gmail.com>} \\
+  Kristoffer Pantic - \#05-38675 \texttt{<kristoffer.pantic@gmail.com>}
+}
+\maketitle
+
+\section{Resumen}
+\label{sec:resumen}
+blabla
+
+\section{Detalles de Implementación}
+\label{sec:di}
+Para la realización de los puntos de la tarea se crearon tres tipos
+abstractos de datos y algunas funciones auxiliares:
+
+\subsection{Tipos abstractos de datos}
+
+\textbf{Perceptron}\\
+Esta clase representa una red neural sin capaz escondidas y con
+únicamente una neurona de salida, que mantiene un vector de pesos para
+cada input que recibe. En esta clase se encuentran los métodos
+necesarios para evaluar el resultado de un vector de inputs y para
+entrenarse con un conjunto de prueba.
+
+La evaluación devuelve un número real que está dado como el producto
+punto del vector de inputs y el vector de pesos
+
+\textbf{BooleanPerceptron}\\
+Esta clase hereda los métodos de la clase \textbf{Perceptron}, pero
+sobreescribe la forma en la que se realiza la evaluación de los inputs
+para representar la evaluación de una funcion \emph{threshold} y
+devolver únicamente 0 cuando la evaluación real dé un número negativo,
+o 1 en el caso contrario.
+
+\textbf{NeuralNetwork}\\
+Bla...
+
+\end{document}
