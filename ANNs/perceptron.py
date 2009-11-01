@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+from random import randrange
 
 class Perceptron(object):
     def __init__(self, inputs):
         self.inputs = inputs + 1
-        self.weights = [0] * self.inputs # The first one is the bias
+        self.weights = [randrange(-5,5)/100. for i in range(0,self.inputs)] # The first one is the bias
 
     def __repr__(self):
         return '<Weights: %s>' % self.weights
@@ -83,7 +84,7 @@ def test(perceptron, training_set):
     for inputs, target_results in training_set:
         results = perceptron.evaluate(inputs)
         tresult = 1 if results >= .5 else 0
-        print 'Inputs: %s -> Result: %s [Wanted %s]' % (inputs, results, target_results)
+        print 'Inputs: %s -> Result: %s [Wanted %s]' % (inputs, tresult, target_results)
         if target_results != tresult:
             errors +=1
         if tresult == 0:
@@ -101,23 +102,23 @@ def plot(log):
     plt.show()
 
 and_training_set = [
+    ([0,0], 0),
+    ([0,1], 0),
+    ([1,0], 0),    
     ([1,1], 1),
-    ([1,0], -1),
-    ([0,1], -1),
-    ([0,0], -1),
 ]
 or_training_set = [
-    ([1,1], 1),
-    ([1,0], 1),
-    ([0,1], 1),
     ([0,0], 0),
+    ([0,1], 1),
+    ([1,0], 1),    
+    ([1,1], 1),
 ]
 xor_training_set = [
-    ([1,1], 0),
-    ([1,0], 1),
-    ([0,1], 1),
     ([0,0], 0),
+    ([0,1], 1),
+    ([1,0], 1),
+    ([1,1], 0),
 ]
 if __name__ == '__main__':
-    plot(training(Perceptron(2), and_training_set, reduce_rate=False,
+    plot(training(Perceptron(2), or_training_set, learning_rate=0.2, reduce_rate=False,
                   standard_gradient_descent=False, max_iterations=100))
