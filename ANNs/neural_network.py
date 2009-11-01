@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from math import exp
-from random import randrange
+from random import randrange, uniform
 
 from perceptron import Perceptron, plot, and_training_set, xor_training_set, \
      or_training_set
@@ -104,6 +104,8 @@ def training(neural_network, training_set, learning_rate=.1,
 
 def test(neural_network, training_set):
     total = 0; errors = 0; zeros = 0
+    #training_set = load_training_set("bp_training/500p.txt")
+    training_set = get_random_set(10000)
     for inputs, target_results in training_set:
         results = neural_network.evaluate(inputs)
         tresult = 1 if results[0] >= .5 else 0
@@ -115,6 +117,16 @@ def test(neural_network, training_set):
         total += 1
     print
     print 'TOTAL: %s ERRORS: %s | FAILURE: %s %% | ZEROS: %s' % (total, errors, errors * 100. / total, zeros)
+
+def get_random_set(set_size):
+    points = [(uniform(0,20),uniform(0,10)) for i in range(0,set_size)]
+    random_set = []
+    for (x,y) in points:
+        if(((x - 15)**2+(y - 6)**2) <= 9):
+            random_set.append(([float(x),float(y)],[1]))
+        else:
+            random_set.append(([float(x),float(y)],[0]))
+    return random_set
 
 def load_training_set(file_name):
     """
@@ -131,5 +143,5 @@ def load_training_set(file_name):
     return training_set
 
 if __name__ =='__main__':
-    plot(training(NeuralNetwork(2,10,1), load_training_set('bp_training/1000.txt'), # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
+    plot(training(NeuralNetwork(2,10,1), load_training_set('bp_training/500.txt'), # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
                   learning_rate=0.1, max_iterations=1500))
