@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from perceptron import Perceptron, and_training_set, xor_training_set, \
      or_training_set
 
-class SigmoidPerceptron(Perceptron):
+class SigmoidNeuron(Perceptron):
     """
     A sigmoid perceptron =S
     """
@@ -16,7 +16,7 @@ class SigmoidPerceptron(Perceptron):
         Initializes all the weights in small random numbers
         between -.05 and .05
         """
-        super(SigmoidPerceptron, self).__init__(inputs)
+        super(SigmoidNeuron, self).__init__(inputs)
         self.weights = [weight + randrange(-5,5) / 100.
                         for weight in self.weights]
         self.last_evaluation = None
@@ -35,12 +35,12 @@ class NeuralNetwork(object):
         """
         3 attributes:
           + inputs_number: just a number of inputs
-          + hidden: a list of hidden SigmoidPerceptron's
-          + outputs: a list of output SigmoidPerceptron's
+          + hidden: a list of hidden SigmoidNeuron's
+          + outputs: a list of output SigmoidNeuron's
         """
         self.inputs_number = inputs
-        self.hidden = [SigmoidPerceptron(inputs) for i in range(hidden)]
-        self.outputs = [SigmoidPerceptron(hidden) for i in range(outputs)]
+        self.hidden = [SigmoidNeuron(inputs) for i in range(hidden)]
+        self.outputs = [SigmoidNeuron(hidden) for i in range(outputs)]
 
     def get_error(self, training_set):
         """
@@ -66,7 +66,7 @@ class NeuralNetwork(object):
     def backpropagation_train(self, training_set, learning_rate=0.05):
         """
         """
-        
+        error = 0
         for inputs, target_results in training_set:
             output_results = self.evaluate(inputs)
             dos = []
@@ -82,6 +82,10 @@ class NeuralNetwork(object):
                           for j, op in enumerate(self.outputs)])
                 hp.weights = [weight + (learning_rate * inp * dh)
                               for weight, inp in zip(hp.weights, hp.inputs + [1])]
+            # calculates error
+            error += sum([(target_result - op.last_evaluation)**2
+                          for target_result, op in zip(target_results, self.outputs)])
+        return error / 2.
 
 
 def training(neural_network, training_set, learning_rate=.1,
@@ -91,8 +95,8 @@ def training(neural_network, training_set, learning_rate=.1,
     it = 0; log = []
     try:
         while it < max_iterations or (not max_iterations):
-            neural_network.backpropagation_train(training_set, learning_rate)
-            log.append(neural_network.get_error(training_set))
+            log.append(neural_network.backpropagation_train(training_set, learning_rate))
+            #log.append(neural_network.get_error(training_set))
             print 'Iteration %s - Error: %s' % (it, log[it])
             if not log[it]:
                 break
@@ -174,6 +178,6 @@ def plot(error_log, test_log):
 if __name__ =='__main__':
     nn = NeuralNetwork(2,10,1)
     training_set = load_training_set('bp_training/500.txt') # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
-    error_log = training(nn, training_set, max_iterations=1500)
+    error_log = training(nn, training_set, max_iterations=2500)
     test_log = test(nn, training_set)
     plot(error_log, test_log)
