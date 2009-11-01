@@ -2,8 +2,9 @@
 
 from math import exp
 from random import randrange
+import matplotlib.pyplot as plt
 
-from perceptron import Perceptron, plot, and_training_set, xor_training_set, \
+from perceptron import Perceptron, and_training_set, xor_training_set, \
      or_training_set
 
 class SigmoidPerceptron(Perceptron):
@@ -103,11 +104,23 @@ def training(neural_network, training_set, learning_rate=.1,
     return log
 
 def test(neural_network, training_set):
+    """
+    Returns what the neural network think is in the rectangle and what it thinks
+    is on the circle.
+    ([dots on the rectangle], [dots on the circle])
+    """
     total = 0; errors = 0; zeros = 0
+    rect_results = ([],[]); circle_results = ([],[])
     for inputs, target_results in training_set:
         results = neural_network.evaluate(inputs)
-        tresult = 1 if results[0] >= .5 else 0
-        print 'Inputs: %s -> Result: %s [Wanted %s]' % (inputs, tresult, target_results[0])
+        if results[0] >= .5:
+            tresult = 1
+            rect_results[0].append(inputs[0])
+            rect_results[1].append(inputs[1])
+        else:
+            tresult = 0
+            circle_results[0].append(inputs[0])
+            circle_results[1].append(inputs[1])
         if target_results[0] != tresult:
             errors +=1
         if tresult == 0:
@@ -115,6 +128,7 @@ def test(neural_network, training_set):
         total += 1
     print
     print 'TOTAL: %s ERRORS: %s | FAILURE: %s %% | ZEROS: %s' % (total, errors, errors * 100. / total, zeros)
+    return (rect_results, circle_results)
 
 def load_training_set(file_name):
     """
@@ -126,10 +140,29 @@ def load_training_set(file_name):
     training_set = []
     for line in f:
         p1, p2, area = line.split()
-        training_set.append(([float(p1), float(p2)], [int(area != 'A')]))
+        training_set.append(([float(p1), float(p2)], [int(area == 'A')]))
     f.close()
     return training_set
 
+def plot(error_log, test_log):
+    """
+    Makes the plot of the error and the result of the learned points
+    """
+    plt.figure(1)
+    plt.subplot(2,1,1)
+    plt.plot(error_log)
+
+    plt.subplot(2,1,2)
+    plt.axis('equal')
+    rect_results, circle_results = test_log
+    plt.plot(rect_results[0], rect_results[1], 'b+')
+    plt.plot(circle_results[0], circle_results[1], 'ro')
+
+    plt.show()
+
 if __name__ =='__main__':
-    plot(training(NeuralNetwork(2,10,1), load_training_set('bp_training/1000.txt'), # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
-                  learning_rate=0.1, max_iterations=1500))
+    nn = NeuralNetwork(2,10,1)
+    training_set = load_training_set('bp_training/1000.txt') # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
+    error_log = training(nn, training_set, max_iterations=1500)
+    test_log = test(nn, training_set)
+    plot(error_log, test_log)
