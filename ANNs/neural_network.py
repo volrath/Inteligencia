@@ -173,7 +173,7 @@ def plot(error_log, test_log):
 
 if __name__ =='__main__':
     nn = NeuralNetwork(2,10,1)
-    training_set = load_training_set('bp_training/500.txt') # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
-    error_log = training(nn, training_set, max_iterations=1500)
+    training_set = load_training_set('bp_training/2000.txt') # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
+    error_log = training(nn, training_set, learning_rate=.1,max_iterations=1500)
     test_log = test(nn, training_set)
     plot(error_log, test_log)
