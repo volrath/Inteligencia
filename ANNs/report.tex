@@ -13,7 +13,16 @@
 
 \section{Resumen}
 \label{sec:resumen}
-blabla
+En este proyecto nos propusimos realizar la implementación de un perceptrón
+de dos entradas probando el efecto de diferentes algoritmos tanto en el
+cálculo de los pesos de cada entrada así como en la variación de la tasa de
+aprendizaje (delta rule, descending learning rate y standard gradient descent).
+De igual manera para la segunda parte del proyecto nos dispusimos a crear 
+una red neural que pudiera clasificar si un punto dado contenido en un rectángulo
+en el plano xy se encuentra o no dentro de una circunferencia que se encuentra
+dentro del rectángulo. Se realizaron de igual manera pruebas usando un número
+variable de neuronas intermedia. A continuación se presentan los detalles de la
+implementación y los resultados de las pruebas.
 
 \section{Detalles de Implementación}
 \label{sec:di}
@@ -23,7 +32,7 @@ abstractos de datos y algunas funciones auxiliares:
 \subsection{Tipos abstractos de datos}
 
 \textbf{Perceptron}\\
-Esta clase representa una red neural sin capaz escondidas y únicamente
+Esta clase representa una red neural sin capas escondidas y únicamente
 con una neurona de salida, que mantiene un vector de pesos para cada
 input que recibe. En esta clase se encuentran los métodos necesarios
 para evaluar el resultado de un vector de inputs y para entrenarse con
