@@ -97,7 +97,7 @@ desempeño de una red neural, respectivamente.
 
 \subsection{Parte 1: Perceptrones}
 
-\subsubsection{Pregunta 1.1}
+\subsubsection{Pregunta 1}
 Al evaluar los resultados del perceptrón para las funciones booleanas 
 AND, OR y XOR se puede apreciar que tanto AND como OR pueden ser
 simuladas con un perceptrón entrenado en cuestión de pocas iteraciones 
@@ -119,29 +119,30 @@ positivos de los negativos de la función.
   \includegraphics[scale=0.5]{media/p11a-XOR.png}
   \caption{Error en función de la iteración en la función XOR}\label{fig:nodos}
 \end{figure}
-\subsubsection{Pregunta 1.1.a}
-Intentando todos los distintos valores para la tasa de aprendizaje \begin{math}\letter \eta \end{math}
+\subsubsection{Pregunta 1.a}
+Intentando todos los distintos valores para la tasa de aprendizaje $\letter \eta$
 se ve que este no hace ninguna diferencia en cuanto al número de iteraciones
 necesarias para que el error en el perceptrón converga hacia su mínimo.
-\subsubsection{Pregunta 1.2}
+\subsubsection{Pregunta 2}
 Se obtienen resultados similares a los de la pregunta 1 pero si no se establece
 un borde o "threshold" a partir del cual se asigna el valor 0 o 1 a las salidas
 no se obtiene un valor identico a la salida esperada.
-\subsubsection{Pregunta 1.2.a}
+\subsubsection{Pregunta 2.a}
 Se pudo observar que para tasas de aprendizaje pequeñas los resultados 
 eran mucho mejores sin la tasa de aprendizaje decayente pero en el caso
 de tasas de aprendizaje mayores se aprecia como el cambio de la tasa
 permite que a medida que va avanzando el algoritmo cada ejemplo altere
 menos los pesos del perceptrón y en consecuencia que converga más rapido
 e inclusive en algunos casos logra conseguir resultados imposible sin
-una tasa de aprendizaje decreciente como es el caso de \begin{math}\letter \eta \end{math} = 0.5.
+una tasa de aprendizaje decreciente como es el caso de $\letter \eta = 0.5$.
 \begin{figure}[htp]
   \centering
   \includegraphics[scale=0.5]{media/p12a-AND.png}
-  \caption{Comparación del error al usar una tasa de aprendizaje \\
-decreciente con varias tasas iniciales: 0.1, 0.5 y 0.99}\label{fig:nodos}
+  \caption{Comparación del error al usar una tasa de aprendizaje
+    decreciente con varias tasas iniciales: 0.1, 0.5 y
+    0.99}\label{fig:nodos}
 \end{figure}
-\subsubsection{Pregunta 1.2.b}
+\subsubsection{Pregunta 2.b}
 Se puede ver en las gráficas que el aprendizaje por lotes converge más rapido,
 requiere más tiempo de ejecución pero al mismo tiempo requiere menos 
 actualizaciones de pesos que el aprendizaje incremental ya que en el incremental
@@ -163,12 +164,6 @@ hacia un error inmenso.
   \caption{Gráfica del error de AND al usar aprendizaje incremental}\label{fig:nodos}
 \end{figure}
 
-\subsubsection{Pregunta 2.a}
-
-\subsubsection{Pregunta 2.b}
-Se puede ver que utilizando el aprendizaje por lotes converge más
-rápido que el aprendizaje incremental, pero requiere mayor cantidad de
-cómputo por iteración. TIEMPO?
 
 \subsection{Parte 2: Red neural y backpropagation}
 Se realizaron entrenamientos con redes de 2 a 10 neuronas en la capa
@@ -180,6 +175,10 @@ conjuntos utilizados son los siguientes:
   \includegraphics[scale=0.5]{media/500.png}
   \caption{500 puntos uniformemente repartidos}\label{fig:nodos}
 \end{figure}
+
+\newpage
+\newpage
+\newpage
 
 \begin{figure}[htp]
   \centering
