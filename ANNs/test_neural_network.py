@@ -17,7 +17,7 @@ training_sets = [
 #    ('bp_training/2000e.txt', '2000e'), 
 ]
 
-def bar_(points, file_name):
+def bar_plot(points, file_name):
     plt.figure(1)
     plt.xlabel('Numero de neuronas')
     plt.ylabel('Errores en barrido de 10000 puntos')
