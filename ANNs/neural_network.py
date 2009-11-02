@@ -173,6 +173,7 @@ def plot(error_log, test_log, save=None):
 
     if save:
         plt.savefig(save)
+        plt.clf()
     else:
         plt.show()
 

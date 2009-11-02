@@ -7,7 +7,7 @@ from neural_network import NeuralNetwork, load_training_set, training, test, \
      get_random_set, plot
 
 training_sets = [
-    ('bp_training/500.txt',   '500'), 
+#    ('bp_training/500.txt',   '500'), 
     ('bp_training/1000.txt',  '1000'), 
     ('bp_training/2000.txt',  '2000'), 
     ('bp_training/500e.txt',  '500e'), 
