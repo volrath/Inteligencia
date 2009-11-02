@@ -17,29 +17,91 @@ blabla
 
 \section{Detalles de Implementación}
 \label{sec:di}
-Para la realización de los puntos de la tarea se crearon tres tipos
+Para la realización de los puntos de la tarea se crearon cuatro tipos
 abstractos de datos y algunas funciones auxiliares:
 
 \subsection{Tipos abstractos de datos}
 
 \textbf{Perceptron}\\
-Esta clase representa una red neural sin capaz escondidas y con
-únicamente una neurona de salida, que mantiene un vector de pesos para
-cada input que recibe. En esta clase se encuentran los métodos
-necesarios para evaluar el resultado de un vector de inputs y para
-entrenarse con un conjunto de prueba.
+Esta clase representa una red neural sin capaz escondidas y únicamente
+con una neurona de salida, que mantiene un vector de pesos para cada
+input que recibe. En esta clase se encuentran los métodos necesarios
+para evaluar el resultado de un vector de inputs y para entrenarse con
+un conjunto de prueba.
 
 La evaluación devuelve un número real que está dado como el producto
 punto del vector de inputs y el vector de pesos\\
 
 \textbf{BooleanPerceptron}\\
-Esta clase hereda los métodos de la clase \emph{Perceptron}, pero
-sobreescribe la forma en la que se realiza la evaluación de los inputs
-para representar la evaluación de una funcion \emph{threshold} y
-devolver únicamente 0 cuando la evaluación real dé un número negativo,
+Esta clase hereda de la clase \emph{Perceptron}, pero sobreescribe la
+forma en la que se realiza la evaluación de los inputs para
+representar la evaluación de una función \emph{threshold} y devolver
+únicamente 0 cuando la evaluación real dé un número no positivo,
 o 1 en el caso contrario.\\
 
+\textbf{SigmoidNeuron}\\
+Hereda igualmente de la clase \emph{Perceptron} para obtener su
+atributo básico de la lista de pesos asociados a una lista de
+inputs. La diferencia entre \emph{SigmoidNeuron} y \emph{Perceptron}
+se encuentra en la evaluación de un input dado, para el cual
+\emph{SigmoidNeuron} retorna la función sigmoidal aplicada sobre el
+producto punto del vector de pesos y el vector de inputs.\\
+
 \textbf{NeuralNetwork}\\
-Bla...
+Utiliza SigmoidNeuron para generar las instancias de todas las
+neuronas que conforman la red. Posee 3 atributos: \emph{número de
+  inputs}, \emph{lista de neuronas de la capa intermedia}, \emph{lista
+  de neuronas de la capa de salida}.  Con dichos atributos se define
+el entrenamiento con \emph{backpropagation} como un método de la clase
+dónde se utilizan listas de listas de pesos en vez de una matriz de
+pesos para representar las fuerzas de las
+conexiones entre cada neurona.\\
+
+\subsection{Funciones Auxiliares}
+\textbf{\texttt{training(neural\_network, training\_set,
+    learning\_rate=.1,\\ max\_iterations=1000, reduce\_rate=False)}}\\
+Es la función principal del programa al momento de entrenar una red
+neural, se encarga de realizar un máximo de iteraciones
+(\texttt{max\_iterations}) sobre un conjunto de entrenamiento
+(\texttt{training\_set}) dado, dónde en cada iteración se le pide a la
+red neural (\texttt{neural\_network}) que entrene con
+\emph{backpropagation} utilizando una taza de aprendizaje
+(\texttt{learning\_rate}) y posiblemente una reducción de la misma en
+cada iteración (\texttt{reduce\_rate}).\\
+
+\textbf{\texttt{test(neural\_network, test\_set)}}\\
+Prueba el rendimiento de una red neural (\texttt{neural\_network})
+sobre un conjunto de pruebas (\texttt{test\_set}). Devuelve un par de
+listas de puntos; en la primera lista de puntos se encuentran todos
+aquellos puntos que forman parte del \emph{área A}, y en la segunda
+los que forman parte del\emph{área B}.\\
+
+A parte de estas funciones, existen otras menos importantes como:\\
+\texttt{get\_random\_set(set\_size)},
+\texttt{load\_training\_set(file\_name)}, \texttt{plot(error\_log,
+  test\_log)} que se utilizan para generar conjuntos random de pruebas,
+cargar conjuntos de pruebas desde archivos y graficar la salida del
+desempeño de una red neural, respectivamente.
+
+\section{Análisis de Resultados}
+\label{sec:analisis}
+
+\subsection{Parte 1: Perceptrones}
+
+\subsubsection{Pregunta 1.a}
+
+\subsubsection{Pregunta 2.a}
+
+\subsubsection{Pregunta 2.b}
+Se puede ver que utilizando el aprendizaje por lotes converge más
+rápido que el aprendizaje incremental, pero requiere mayor cantidad de
+cómputo por iteración. TIEMPO?
+
+\subsection{Parte 2: Red neural y backpropagation}
+Se realizaron entrenamientos con redes de 2 a 10 neuronas en la capa
+intermedia sobre los 6 conjuntos especificados en el enunciado. Los
+mejores resultados obtenidos en cada conjunto, probando contra
+conjuntos de prueba de 10000 puntos generados aleatoriamente sobre
+toda la superficie, fueron los siguientes:
 
 \end{document}

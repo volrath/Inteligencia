@@ -96,8 +96,8 @@ def training(neural_network, training_set, learning_rate=.1,
     try:
         while it < max_iterations or (not max_iterations):
             log.append(neural_network.backpropagation_train(training_set, learning_rate))
-            #log.append(neural_network.get_error(training_set))
-            print 'Iteration %s - Error: %s' % (it, log[it])
+            if (it + 1) % 500 == 0:
+                print '        Iteration %s' % (it + 1)
             if not log[it]:
                 break
             it += 1
@@ -106,17 +106,15 @@ def training(neural_network, training_set, learning_rate=.1,
         pass
     return log
 
-def test(neural_network, training_set):
+def test(neural_network, test_set):
     """
     Returns what the neural network think is in the rectangle and what it thinks
     is on the circle.
     ([dots on the rectangle], [dots on the circle])
     """
     total = 0; errors = 0; zeros = 0
-    #training_set = load_training_set("bp_training/500p.txt")
-    training_set = get_random_set(10000)
     rect_results = ([],[]); circle_results = ([],[])
-    for inputs, target_results in training_set:
+    for inputs, target_results in test_set:
         results = neural_network.evaluate(inputs)
         if results[0] >= .5:
             tresult = 1
@@ -132,8 +130,8 @@ def test(neural_network, training_set):
             zeros += 1
         total += 1
     print
-    print 'TOTAL: %s ERRORS: %s | FAILURE: %s %% | ZEROS: %s' % (total, errors, errors * 100. / total, zeros)
-    return (rect_results, circle_results)
+    #print 'TOTAL: %s ERRORS: %s | FAILURE: %s %% | ZEROS: %s' % (total, errors, errors * 100. / total, zeros)
+    return (rect_results, circle_results), errors
 
 def get_random_set(set_size):
     points = [(uniform(0,20),uniform(0,10)) for i in range(0,set_size)]
@@ -159,7 +157,7 @@ def load_training_set(file_name):
     f.close()
     return training_set
 
-def plot(error_log, test_log):
+def plot(error_log, test_log, save=None):
     """
     Makes the plot of the error and the result of the learned points
     """
@@ -173,11 +171,14 @@ def plot(error_log, test_log):
     plt.plot(rect_results[0], rect_results[1], 'b+')
     plt.plot(circle_results[0], circle_results[1], 'ro')
 
-    plt.show()
+    if save:
+        plt.savefig(save)
+    else:
+        plt.show()
 
 if __name__ =='__main__':
     nn = NeuralNetwork(2,10,1)
     training_set = load_training_set('bp_training/500.txt') # [(inputs, [target_result]) for inputs, target_result in xor_training_set], #
     error_log = training(nn, training_set, max_iterations=2500)
-    test_log = test(nn, training_set)
+    test_log, total_errors = test(nn, get_random_set(10000))
     plot(error_log, test_log)
