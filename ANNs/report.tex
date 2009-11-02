@@ -23,20 +23,20 @@ abstractos de datos y algunas funciones auxiliares:
 \subsection{Tipos abstractos de datos}
 
 \textbf{Perceptron}\\
-Esta clase representa una red neural sin capaz escondidas y con
-únicamente una neurona de salida, que mantiene un vector de pesos para
-cada input que recibe. En esta clase se encuentran los métodos
-necesarios para evaluar el resultado de un vector de inputs y para
-entrenarse con un conjunto de prueba.
+Esta clase representa una red neural sin capaz escondidas y únicamente
+con una neurona de salida, que mantiene un vector de pesos para cada
+input que recibe. En esta clase se encuentran los métodos necesarios
+para evaluar el resultado de un vector de inputs y para entrenarse con
+un conjunto de prueba.
 
 La evaluación devuelve un número real que está dado como el producto
 punto del vector de inputs y el vector de pesos\\
 
 \textbf{BooleanPerceptron}\\
-Esta clase hereda los métodos de la clase \emph{Perceptron}, pero
-sobreescribe la forma en la que se realiza la evaluación de los inputs
-para representar la evaluación de una funcion \emph{threshold} y
-devolver únicamente 0 cuando la evaluación real dé un número negativo,
+Esta clase hereda de la clase \emph{Perceptron}, pero sobreescribe la
+forma en la que se realiza la evaluación de los inputs para
+representar la evaluación de una función \emph{threshold} y devolver
+únicamente 0 cuando la evaluación real dé un número no positivo,
 o 1 en el caso contrario.\\
 
 \textbf{SigmoidNeuron}\\
@@ -52,9 +52,9 @@ Utiliza SigmoidNeuron para generar las instancias de todas las
 neuronas que conforman la red. Posee 3 atributos: \emph{número de
   inputs}, \emph{lista de neuronas de la capa intermedia}, \emph{lista
   de neuronas de la capa de salida}.  Con dichos atributos se define
-el entrenamiento con backpropagation como un método de la clase dónde
-se utilizan listas de listas de pesos en vez de una matriz de pesos
-para representar las fuerzas de las
+el entrenamiento con \emph{backpropagation} como un método de la clase
+dónde se utilizan listas de listas de pesos en vez de una matriz de
+pesos para representar las fuerzas de las
 conexiones entre cada neurona.\\
 
 \subsection{Funciones Auxiliares}
@@ -86,6 +86,22 @@ desempeño de una red neural, respectivamente.
 \section{Análisis de Resultados}
 \label{sec:analisis}
 
-los resultados...
+\subsection{Parte 1: Perceptrones}
+
+\subsubsection{Pregunta 1.a}
+
+\subsubsection{Pregunta 2.a}
+
+\subsubsection{Pregunta 2.b}
+Se puede ver que utilizando el aprendizaje por lotes converge más
+rápido que el aprendizaje incremental, pero requiere mayor cantidad de
+cómputo por iteración. TIEMPO?
+
+\subsection{Parte 2: Red neural y backpropagation}
+Se realizaron entrenamientos con redes de 2 a 10 neuronas en la capa
+intermedia sobre los 6 conjuntos especificados en el enunciado. Los
+mejores resultados obtenidos en cada conjunto, probando contra
+conjuntos de prueba de 10000 puntos generados aleatoriamente sobre
+toda la superficie, fueron los siguientes:
 
 \end{document}
