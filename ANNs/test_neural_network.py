@@ -43,9 +43,7 @@ for training_set, ts_name in training_sets:
         nn = NeuralNetwork(2, hs, 1)
         error_log = training(nn, training_set, max_iterations=2000)
         test_log, total_error = test(nn, get_random_set(10000))
-        log_file.write('%s ' * 4 % (hs, total_error, error_log, test_log) + \
-                       '\nhidden: %s' % [hn.weights for hn in nn.hidden] + \
-                       '\noutputs: %s' % [on.weights for on in nn.outputs] + '\n\n')
+        log_file.write('%s neurons: %s errors \nhidden:  %s\noutputs: %s\n\n' % (hs, total_error, [hn.weights for hn in nn.hidden], [on.weights for on in nn.outputs]))
         total_error_log.append((hs, total_error, error_log, test_log))
     best = min(total_error_log, key=itemgetter(1))
     print '   lowest error on %s hidden neurons network: %s failures' % (best[0], best[1])
