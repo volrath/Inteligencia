@@ -57,8 +57,8 @@ class Perceptron(object):
             raise ValueError("evaluate needs exactly %s inputs" % \
                              (self.inputs - 1))
         inp = map(int, inputs) + [1]
-        #return 1 if sum([w * x for w,x in zip(self.weights,inp)]) > 0 else 0
-        return sum([w * x for w, x in zip(self.weights, inp)])
+        return 1 if sum([w * x for w,x in zip(self.weights,inp)]) > 0 else 0
+        #return sum([w * x for w, x in zip(self.weights, inp)])
 
 class BooleanPerceptron(Perceptron):
     def _alter_weight(self, inputs, target_result, learning_rate):
@@ -81,8 +81,8 @@ def training(perceptron, training_set, learning_rate=0.1, reduce_rate=False,
             log.append(perceptron.train(training_set, learning_rate,
                                         pre_error=standard_gradient_descent))
             print 'Iteration %s - Error: %s' % (it, log[it])
-            if not log[it]:
-                break
+#            if not log[it]:
+#                break
             it += 1
             learning_rate = learning_rate / it if reduce_rate else learning_rate
             print perceptron.weights
@@ -134,5 +134,5 @@ xor_training_set = [
     ([1,1], 0),
 ]
 if __name__ == '__main__':    
-    plot(training(Perceptron(2), and_training_set, learning_rate=0.3, reduce_rate=False,
-                  standard_gradient_descent=False, max_iterations=1000))
+    plot(training(Perceptron(2), or_training_set, learning_rate=0.3, reduce_rate=False,
+                  standard_gradient_descent=True, max_iterations=20))
