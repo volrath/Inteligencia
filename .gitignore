@@ -8,7 +8,12 @@ zchaff
 cnf_*
 *.pyc
 *.tar*
+
 *.log
 *.pdf
 *.aux
-
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
