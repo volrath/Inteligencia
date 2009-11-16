@@ -117,6 +117,26 @@
 
 \begin{frame}{Ejemplos de enfoques actuales}
   \begin{center}
+    \textbf{Quake III}
+  \end{center}
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.3]{media/quake3.jpg}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Ejemplos de enfoques actuales}
+  \begin{center}
+    \textbf{Black and White}
+  \end{center}
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.2]{media/black-and-white.jpg}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Ejemplos de enfoques actuales}
+  \begin{center}
     \textbf{Creatures}
   \end{center}
   \begin{figure}[htp]
@@ -136,11 +156,63 @@
 \end{frame}
 
 \begin{frame}{Aprendizaje en vivo (\emph{Online Learning})}
-  
+
+  \emph{Online Learning:} Entrenar la red neural con los datos
+  recibidos por el jugador, una vez que el juego ya ha sido totalmente
+  desarrollado.
+
+  \begin{itemize}
+  \item \textbf{Ganancias de desarrollar ésta técnica}
+    \begin{itemize}
+    \item Adaptación dinámica al comportamiento de los jugadores.
+    \item Adaptación dinámica al nivel de juego de los jugadores.
+    \item Puede ser usado para contrarrestar los jugadores que
+      obtienen puntos en el juego haciendo trampa.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Aprendizaje en vivo (\emph{Online Learning})}
+  \begin{itemize}
+  \item \textbf{Obstáculos para desarrollarla}
+    \begin{itemize}
+    \item Resultados impredecibles.
+    \item Introducción dinámica de bugs en el juego.
+    \item El entrenamiento puede ser requerido muchas veces para poder
+      adaptar la red neural y balancearla a los requerimientos del
+      juego.
+    \item El entrenamiento puede llegar a ser muy lento.
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Aproximaciones centradas en el jugador}
-  
+  \begin{itemize}
+  \item Aproximaciones de aprendizaje sobre el jugador en si, para
+    buscar mejorar la ``Experiencia de juego''.
+  \item Se busca usar el poder que tienen las redes neurales para
+    reconocer patrones y utilizarlos en las actuaciones de los
+    jugadores.
+  \item Se busca hacer que los juegos puedan tener un rango mas ancho
+    de preferencias de los usuarios.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Aproximaciones centradas en el jugador}
+  Algunas aproximaciones que se pueden tomar son las siguiente:
+
+  \begin{itemize}
+  \item Usar los tiempos de juego de un jugador, sus reacciones, sus
+    decisiones tomadas, estilo de juego, precision de sus disparos,
+    promedio de vida, etc. como parte de los inputs de una red neural
+    que se entrena \emph{offline} para determinar ciertos modelos de
+    jugadores, y en base a esto ajustar el entorno de juego.
+
+  \item Aprovechar la capacidad de las redes neurales para realizar
+    ``Algorítmos de Clustering'' y agrupar a diferentes tipos de
+    jugadores usando datos de su participacion dentro del juego,
+    ajustandolos a ciertos perfiles de usuarios pre-establecidos.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Animación inteligente de personajes}
