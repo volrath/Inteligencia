@@ -25,7 +25,7 @@
 
   \item Enfoques actuales
   
-  \item Aplicaciones en estudio
+  \item Aplicaciones y potenciales futuros
     \begin{itemize}
     \item Aprendizaje en vivo (\emph{Online Learning})
     \item Aproximaciones centradas en el jugador
@@ -33,6 +33,11 @@
     \item Predicciones
     \item Estudios a nivel de inteligencia humana
     \end{itemize}
+
+  \item Evolucionando redes neurales para aprender con datos ``en
+    bruto''
+
+  \item Caso de estudio
   \end{itemize}
 \end{frame}
 
@@ -283,6 +288,87 @@
   sistema y que se pueda adaptar a cualquier juego donde sea configurado 
   lo cual permitiría que dicho entrenamiento pueda formar parte del
   perfil de un jugador para una plataforma de juego.
+\end{frame}
+
+\begin{frame}{Evolucionando redes neurales}
+  El algorítmo más común para construir la topología de una red neural
+  es \emph{backpropagation}, sin embargo existen otras aproximaciones
+  que se pueden tomar para resolver este problema:
+
+  \begin{center}
+    \textbf{Algorítmos Evolutivos}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Evolucionando redes neurales}
+  La idea principal es evolucionar los pesos de los inputs en las
+  neuronas, utilizando como fitness una función sobre la salida de la
+  red neural, buscando optimizar el resultado de la salida.
+\end{frame}
+
+\begin{frame}{Caso de estudio}
+  \begin{center}
+    \textbf{Ms. Pacman}
+  \end{center}
+
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.4]{media/mspacman.png}
+  \end{figure}
+
+  \textbf{Enfoque:} Optimizar el controlador de toma de decisiones del
+  agente \emph{Pacman}.
+\end{frame}
+
+\begin{frame}{Caso de estudio}
+  \textbf{¿Por qué Pacman?}
+
+  \begin{itemize}
+  \item \textbf{Problema:} Un agente \emph{Pacman} puede recibir un
+    input muy grande y variado, según el estado del mundo.
+
+  \item \textbf{Posible solución:} Se busca realizar una relajación
+    del problema para ser atacado de forma más tratable pero con
+    eficiencia.
+
+  \item La red neural intentará reducir la complejidad de tomar
+    decisiones con árboles de decisión o reglas pre-fabricadas.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Caso de estudio}
+  El algorítmo evolutivo que entrena a la red neural buscará
+  \textbf{optimizar} el score que el agente \emph{Pacman} puede
+  lograr, y para esto usará:
+
+  \begin{itemize}
+  \item \textbf{Fitness:} el score que logra obtener el agente al
+    final de un juego o el score average al final de una secuencia de
+    juegos, utilizando la red neural como controlador de decisiones.
+
+  \item \textbf{Individuos:} Secuencia de pesos que tienen las
+    neuronas de la red neural.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Preguntas}
+  \begin{center}
+    \huge
+    ¿Alguna Pregunta?
+  \end{center}
+
+  \vskip15pt
+
+  \begin{center}
+    \small
+    Daniel Barreto \texttt{<daniel.barreto.n@gmail.com> - @volrath}
+    Kristoffer Pantic \texttt{<kristoffer.pantic@gmail.com> - @kpantic}
+
+    \vskip10pt
+
+    \scriptsize
+    Presentación en: \texttt{http://gia.usb.ve/\textasciitilde daniel/redes\_neurales\_juegos.pdf}
+  \end{center}
 \end{frame}
 
 \end{document}
