@@ -1,4 +1,4 @@
-S_HELPERS = genetics.cpp
+S_HELPERS = genetics.cpp ga_variants.cpp
 O_HELPERS = $(S_HELPERS:.cpp=.o)
 HEADER = gabil.h
 

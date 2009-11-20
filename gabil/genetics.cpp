@@ -1,24 +1,50 @@
 #include "gabil.h"
 
+using namespace std;
+
 bool compare(hypothesis_t *a, hypothesis_t *b) {
-	return a->fitness > b->fitness;
+  return a->fitness > b->fitness;
 }
 
 /*
  *         POPULATION
  */
-population_t::population_t() {};
+// Generates a random population and initializes everything needed for
+// the population
+population_t::population_t() {
+  for (int i = 0; i < POP_SIZE; i++)
+    hypos[i] = new hypothesis_t();
 
+  // Maybe read the data, parser the data, whatever
+};
+
+// Handles the selection, then commands the crossover and posible
+// mutation
 void population_t::next_generation() {};
 
-hypothesis_t* population_t::get_fittest() {};
+// Return the fittest of the current population
+hypothesis_t* population_t::get_fittest() {
+  sort(hypos, hypos + POP_SIZE, compare); // dont remember why this works, but it do...
+  return hypos[0];
+};
 
 /*
  *         HYPOTHESIS
  */
-hypothesis_t::hypothesis_t() {};
+// Creates a new random hypothesis
+hypothesis_t::hypothesis_t() {
+  rules = new rule_t[RULES_PER_DNA];
+  for (int i = 0; i < RULES_PER_DNA; i++) {
+    rules[i].p1_ = LONG_RAND;
+    rules[i].p2_ = LONG_RAND;
+  }
+};
 
-hypothesis_t::hypothesis_t(rule_t *parent1, rule_t *parent2) {};
+// Creates a new hypothesis, doing crossover between the parents
+hypothesis_t::hypothesis_t(rule_t *parent1, rule_t *parent2) {
+  two_point_crossover(rules);
+};
+
+void hypothesis_t::mutate() {};
 
 float hypothesis_t::calc_fitness() {};
-
