@@ -11,8 +11,11 @@ LDFLAGS =
 main:		${S_MAIN} ${O_HELPERS}
 		${CC} ${CFLAGS} ${O_HELPERS} ${S_MAIN} -o $@ ${LDFLAGS}
 
-genetics.o:	${S_HELPERS} ${HEADER}
+genetics.o:	${S_HELPERS} ${HEADER} encode
 		${CC} ${CFLAGS} -c ${S_HELPERS} ${LDFLAGS}
 
+encode:
+		python data_parsing.py
+
 clean:
-		rm *.o
+		rm *.o data/adult.bin main

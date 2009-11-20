@@ -16,7 +16,6 @@
 
 #define RAND ((unsigned double) (rand() % 10000 / 10000.))
 #define LONG_RAND ((unsigned long)rand() << 32 | (unsigned long)rand())
-#define XOR(a,b) ((a || b) && !(a && b))
 
 struct rule_t {
   unsigned long p1_, p2_;

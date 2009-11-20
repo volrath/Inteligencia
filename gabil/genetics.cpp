@@ -20,7 +20,9 @@ population_t::population_t() {
 
 // Handles the selection, then commands the crossover and posible
 // mutation
-void population_t::next_generation() {};
+void population_t::next_generation() {
+
+};
 
 // Return the fittest of the current population
 hypothesis_t* population_t::get_fittest() {
@@ -50,9 +52,9 @@ void hypothesis_t::mutate() {
   int rand_bit = rand() % 124;
 
   if (rand_bit < 64)
-    XOR(rules[rand() % RULES_PER_DNA].p1_, 1 << rand_bit);
+    rules[rand() % RULES_PER_DNA].p1_ ^ (1 << rand_bit);
   else
-    XOR(rules[rand() % RULES_PER_DNA].p2_, 1 << rand_bit % 64);
+    rules[rand() % RULES_PER_DNA].p2_ ^ (1 << rand_bit % 64);
 };
 
 float hypothesis_t::calc_fitness() {};
