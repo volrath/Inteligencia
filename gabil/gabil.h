@@ -9,12 +9,14 @@
 
 #define POP_SIZE 100
 #define RULES_PER_DNA 1
+#define RULE_LENGTH 124
 
 #define MUTATE_CHANCE .02
 #define NEW_CHILDREN_PERC .6
 
 #define RAND ((unsigned double) (rand() % 10000 / 10000.))
 #define LONG_RAND ((unsigned long)rand() << 32 | (unsigned long)rand())
+#define XOR(a,b) ((a || b) && !(a && b))
 
 struct rule_t {
   unsigned long p1_, p2_;
@@ -42,7 +44,7 @@ public:
 };
 
 /*
- *  LIBRARY    ga_variants.cpp
+ *  ALGORITHMS LIBRARY    ga_variants.cpp
  */
 // Crossovers
 void two_point_crossover(rule_t*);

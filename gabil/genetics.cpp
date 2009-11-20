@@ -45,6 +45,14 @@ hypothesis_t::hypothesis_t(rule_t *parent1, rule_t *parent2) {
   two_point_crossover(rules);
 };
 
-void hypothesis_t::mutate() {};
+// Does a simple point mutation
+void hypothesis_t::mutate() {
+  int rand_bit = rand() % 124;
+
+  if (rand_bit < 64)
+    XOR(rules[rand() % RULES_PER_DNA].p1_, 1 << rand_bit);
+  else
+    XOR(rules[rand() % RULES_PER_DNA].p2_, 1 << rand_bit % 64);
+};
 
 float hypothesis_t::calc_fitness() {};
