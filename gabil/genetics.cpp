@@ -4,6 +4,9 @@ using namespace std;
 
 int attributesP1[] = {4,8,4,16,5,7,14,6};
 int attributesP2[] = {5,2,4,3,4,41};
+long xorP1 = {15,4080,61440,4294901760,133143986176,17454747090944,288212783965667328
+              ,18158513697557839872};
+long xorP2 = {31,96,1920,14336,245760,576460752303161344};
 
 bool compare(hypothesis_t *a, hypothesis_t *b) {
   return a->fitness > b->fitness;
