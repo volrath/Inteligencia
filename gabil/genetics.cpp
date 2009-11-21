@@ -83,6 +83,6 @@ float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
 	correct = correct && (and_p2 ^ xorP2[j] != 0);
       corrects += (int)correct;
     }
-    fitness = ((double)corrects / (double)(ts_size / 2));
+    fitness = pow(((double)corrects / (double)(ts_size / 2)), 2);
   }
 };
