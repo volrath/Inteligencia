@@ -2,6 +2,9 @@
 
 using namespace std;
 
+int attributesP1[] = {4,8,4,16,5,7,14,6};
+int attributesP2[] = {5,2,4,3,4,41};
+
 bool compare(hypothesis_t *a, hypothesis_t *b) {
   return a->fitness > b->fitness;
 }
@@ -26,7 +29,7 @@ void population_t::next_generation() {
 
 // Return the fittest of the current population
 hypothesis_t* population_t::get_fittest() {
-  sort(hypos, hypos + POP_SIZE, compare); // dont remember why this works, but it do...
+  sort(hypos, hypos + POP_SIZE, compare); // dont remember why this works, but it does...
   return hypos[0];
 };
 
@@ -52,9 +55,9 @@ void hypothesis_t::mutate() {
   int rand_bit = rand() % 124;
 
   if (rand_bit < 64)
-    rules[rand() % RULES_PER_DNA].p1_ ^ (1 << rand_bit);
+    rules[rand() % RULES_PER_DNA].p1_ ^ (1 << rand_bit); //XOR en vez de ^
   else
-    rules[rand() % RULES_PER_DNA].p2_ ^ (1 << rand_bit % 64);
+    rules[rand() % RULES_PER_DNA].p2_ ^ (1 << rand_bit % 64);//XOR en vez de ^
 };
 
 float hypothesis_t::calc_fitness() {};
