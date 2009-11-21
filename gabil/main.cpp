@@ -26,14 +26,13 @@ int main(int argc, char **argv) {
 
   population = new population_t(creprs, size);
 
+  while (true) { // dont know which stop condition =S
+    cout << "Generando poblacion " << ++it << endl;
+    fittest = population->get_fittest();
+    if (fittest->fitness > best_fitness)
+      best_fitness = fittest->fitness;
 
-//   while (true) { // dont know which stop condition =S
-//     cout << "Generando poblacion " << ++it << endl;
-//     fittest = population->get_fittest();
-//     if (fittest->fitness > best_fitness)
-//       best_fitness = fittest->fitness;
-
-//     cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
-//     cout << "    Best so far: " << (float)best_fitness * 100 << " %%" << endl;
-//  }
+    cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
+    cout << "    Best so far: " << (float)best_fitness * 100 << " %%" << endl;
+ }
 }
