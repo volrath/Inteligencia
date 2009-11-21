@@ -52,7 +52,7 @@ public:
  *  ALGORITHMS LIBRARY    ga_variants.cpp
  */
 // Crossovers
-void two_point_crossover(rule_t*);
+void two_point_crossover(rule_t*, rule_t*);
 // ...
 
 // Selections
