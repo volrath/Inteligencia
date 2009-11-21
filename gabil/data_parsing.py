@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import struct
 
-AGE = [30, 55, 56, 90]
+AGE = [30, 55, 72, 90]
 WORKCLASS = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
 FNLWFTS = [86500, 15000, 245000, 1484705]
 EDUCATION = ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
@@ -101,11 +101,11 @@ def parse(example):
     except ValueError:
         p2[5] = 0x1ffffffffff
     p2[5] <<= 18
-    
-    try:
-        p2[6] = 1 << CLASSIFICATION.index(example[14])
-    except ValueError:
-        p2[6] = 0x3
+
+    #
+    # CLASSIFICATION
+    #
+    p2[6] = 1 if example[14] == '>50K' else 0
     p2[6] <<= 59
 
     return (sum(p1), sum(p2))
