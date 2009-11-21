@@ -17,7 +17,6 @@ public class ConnectedSet implements Drawable {
 
     public void draw(Graphics g, int w, int h) {
         // int div = 1;
-	System.out.println("what");
         validate();
         g.setColor(c);
         if (ghostLike()) {

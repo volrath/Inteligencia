@@ -38,7 +38,6 @@ public class SimpleExtractor {
         ArrayList<Drawable> objects = new ArrayList<Drawable>();
 
         for (int p = 0; p < pix.length; p++) {
-	    System.out.println(pix[p]);
             if ((pix[p] & 0xFFFFFF) != BG && colors.contains(pix[p])) {
 		System.out.println(" adding " + pix[p]);
                 ConnectedSet cs = consume(pix, p, pix[p]);

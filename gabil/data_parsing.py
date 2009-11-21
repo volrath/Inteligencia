@@ -50,28 +50,28 @@ def parse(example):
         p1[3] = 1 << EDUCATION.index(example[3])
     except ValueError:
         p1[3] = 0xffff
-    p1[3] <<= 20
+    p1[3] <<= 16
 
     p1[4] = 1 << lower_index(EDUCATION_NUM, example[4])
-    p1[4] <<= 36
+    p1[4] <<= 32
 
     try:
         p1[5] = 1 << MARITAL_STATUS.index(example[5])
     except ValueError:
         p1[5] = 0x7f
-    p1[5] <<= 41
+    p1[5] <<= 37
 
     try:
         p1[6] = 1 << OCCUPATION.index(example[6])
     except ValueError:
         p1[6] = 0x3fff
-    p1[6] <<= 48
+    p1[6] <<= 44
 
     try:
         p1[7] = 1 << RELATIONSHIP.index(example[7])
     except ValueError:
         p1[7] = 0x3f
-    p1[7] <<= 62
+    p1[7] <<= 58
 
     #
     # P2
