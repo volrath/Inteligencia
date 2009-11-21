@@ -31,49 +31,82 @@ def parse(example):
     integers that represents the binary encoding of the example.
     """
     p1 = [0] * 8; p2 = [0] * 7;
+
+    #
+    # P1
+    #
     p1[0] = 1 << lower_index(AGE, example[0])
+
     try:
         p1[1] = 1 << WORKCLASS.index(example[1])
     except ValueError:
         p1[1] = 0xff
+    p1[1] <<= 4
+
     p1[2] = 1 << lower_index(FNLWFTS, example[2])
+    p1[2] <<= 12
+
     try:
         p1[3] = 1 << EDUCATION.index(example[3])
     except ValueError:
         p1[3] = 0xffff
+    p1[3] <<= 20
+
     p1[4] = 1 << lower_index(EDUCATION_NUM, example[4])
+    p1[4] <<= 36
+
     try:
         p1[5] = 1 << MARITAL_STATUS.index(example[5])
     except ValueError:
         p1[5] = 0x7f
+    p1[5] <<= 41
+
     try:
         p1[6] = 1 << OCCUPATION.index(example[6])
     except ValueError:
         p1[6] = 0x3fff
+    p1[6] <<= 48
+
     try:
         p1[7] = 1 << RELATIONSHIP.index(example[7])
     except ValueError:
         p1[7] = 0x3f
+    p1[7] <<= 62
 
+    #
+    # P2
+    #
     try:
         p2[0] = 1 << RACE.index(example[8])
     except ValueError:
         p2[0] = 0x1f
+
     try:
         p2[1] = 1 << SEX.index(example[9])
     except ValueError:
         p2[1] = 0x3
+    p2[1] <<= 5
+
     p2[2] = 1 << lower_index(CAPITAL_GAIN, example[10])
+    p2[2] <<= 7
+
     p2[3] = 1 << lower_index(CAPITAL_LOSS, example[11])
+    p2[3] <<= 11
+
     p2[4] = 1 << lower_index(HOURS_PER_WEEK, example[12])
+    p2[4] <<= 14
+
     try:
         p2[5] = 1 << NATIVE_COUNTRY.index(example[13])
     except ValueError:
         p2[5] = 0x1ffffffffff
+    p2[5] <<= 18
+    
     try:
         p2[6] = 1 << CLASSIFICATION.index(example[14])
     except ValueError:
         p2[6] = 0x3
+    p2[6] <<= 59
 
     return (sum(p1), sum(p2))
 
