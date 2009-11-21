@@ -19,6 +19,8 @@
 #define RAND ((unsigned double) (rand() % 10000 / 10000.))
 #define LONG_RAND ((unsigned long)rand() << 32 | (unsigned long)rand())
 
+using namespace std;
+
 struct rule_t {
   unsigned long p1_, p2_;
 };
@@ -50,7 +52,7 @@ public:
  *  ALGORITHMS LIBRARY    ga_variants.cpp
  */
 // Crossovers
-void two_point_crossover(rule_t*);
+void two_point_crossover(rule_t*, rule_t*);
 // ...
 
 // Selections
