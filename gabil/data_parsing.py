@@ -112,7 +112,7 @@ def parse(example):
 
 def main():
     f = open('data/adult.data', 'r')
-    parsed = [parse(line.split()) for line in f]
+    parsed = [parse(line.split()) for line in f if '?' not in line.split()]
     f.close()
     f = open('data/adult.bin','wb')
     for p in parsed:

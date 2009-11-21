@@ -14,7 +14,9 @@ bool compare(hypothesis_t *a, hypothesis_t *b) {
  */
 // Generates a random population and initializes everything needed for
 // the population
-population_t::population_t() {
+population_t::population_t(long *ts, int size) {
+  training_set = ts; ts_size = size;
+
   for (int i = 0; i < POP_SIZE; i++)
     hypos[i] = new hypothesis_t();
 
@@ -38,10 +40,11 @@ hypothesis_t* population_t::get_fittest() {
  */
 // Creates a new random hypothesis
 hypothesis_t::hypothesis_t() {
-  rules = new rule_t[RULES_PER_DNA];
   for (int i = 0; i < RULES_PER_DNA; i++) {
-    rules[i].p1_ = LONG_RAND;
-    rules[i].p2_ = LONG_RAND;
+    rule_t rule;
+    rule.p1_ = LONG_RAND;
+    rule.p2_ = LONG_RAND;
+    rules.push_back(rule);
   }
 };
 
@@ -55,9 +58,28 @@ void hypothesis_t::mutate() {
   int rand_bit = rand() % 124;
 
   if (rand_bit < 64)
-    rules[rand() % RULES_PER_DNA].p1_ ^ (1 << rand_bit); //XOR en vez de ^
+    rules[rand() % RULES_PER_DNA].p1_ ^ (1 << rand_bit);
   else
-    rules[rand() % RULES_PER_DNA].p2_ ^ (1 << rand_bit % 64);//XOR en vez de ^
+    rules[rand() % RULES_PER_DNA].p2_ ^ (1 << rand_bit % 64);
 };
 
-float hypothesis_t::calc_fitness() {};
+float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
+  vector<rule_t *>::iterator it;
+  unsigned long and_p1, and_p2;
+  int corrects = 0; bool correct;
+  
+  for (int i = 0; i < ts_size; i += 2) {
+    for (it = rules.begin(); it < rules.end(); it++) {
+      and_p1 = it.p1_ & training_set[i];
+      and_p2 = it.p2_ & training_set[i+1];
+
+      correct = true;
+      for (int j = 0; j < NUM_ATTRS_P1; j++)
+	correct = correct && (and_p1 ^ xorP1[j] != 0);
+      for (int j = 0; j < NUM_ATTRS_P2; J++)
+	correct = correct && (and_p2 ^ xorP2[j] != 0);
+      corrects += (int)correct;
+    }
+    fitness = ((double)corrects / (double)(ts_size / 2));
+  }
+};
