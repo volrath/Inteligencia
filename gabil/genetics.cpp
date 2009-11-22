@@ -4,8 +4,8 @@ using namespace std;
 
 int attributesP1[] = {4,8,4,16,5,7,14,6};
 int attributesP2[] = {5,2,4,3,4,41};
-unsigned long int xorP1[] = {15,4080,61440,4294901760,133143986176,17454747090944,288212783965667328,18158513697557839872u};
-unsigned long int xorP2[] = {31,96,1920,14336,245760,576460752303161344};
+unsigned long int andP1[] = {15,4080,61440,133143986176,17454747090944,288212783965667328,18158513697557839872u};
+unsigned long int andP2[] = {31,96,1920,14336,245760,576460752303161344};
 
 bool compare(hypothesis_t *a, hypothesis_t *b) {
   return a->fitness > b->fitness;
@@ -77,11 +77,11 @@ float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
 
       correct = true;
       for (int j = 0; j < NUM_ATTRS_P1; j++)
-	correct = correct && (and_p1 ^ xorP1[j] != 0);
+        correct = correct && (and_p1 & andP1[j] != 0);
       for (int j = 0; j < NUM_ATTRS_P2; j++)
-	correct = correct && (and_p2 ^ xorP2[j] != 0);
-      corrects += (int)correct;
+        correct = correct && (and_p2 & andP2[j] != 0);
     }
-    fitness = ((double)corrects / (double)(ts_size / 2));
+    corrects += (int)correct;
   }
+  fitness = ((double)corrects / (double)(ts_size / 2));
 };
