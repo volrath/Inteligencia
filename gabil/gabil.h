@@ -31,8 +31,8 @@ public:
   vector <rule_t *> rules;
   double fitness;
 
-  hypothesis_t();
-  hypothesis_t(rule_t*, rule_t*);
+  hypothesis_t(long *, int);
+  hypothesis_t(rule_t*, rule_t*, long*, int);
   void mutate();
   float calc_fitness(long *, int);
 };

@@ -11,6 +11,9 @@ int main(int argc, char **argv) {
   int size;
   float best_fitness = 0.;
   int it = 0;
+ 
+  srand(time(NULL));
+ 
   
   // read file, parsed if possible.
   if (stat("data/adult.bin", &results) == 0){
@@ -26,13 +29,20 @@ int main(int argc, char **argv) {
 
   population = new population_t(creprs, size);
 
-  while (true) { // dont know which stop condition =S
-    cout << "Generando poblacion " << ++it << endl;
-    fittest = population->get_fittest();
-    if (fittest->fitness > best_fitness)
-      best_fitness = fittest->fitness;
+  fittest = population->get_fittest();
 
-    cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
-    cout << "    Best so far: " << (float)best_fitness * 100 << " %%" << endl;
- }
+  cout << "Individuo " << fittest->rules[0]->p1_ << " " << fittest->rules[0]->p2_ << endl;
+  cout << "Ejemplos " << endl << creprs[0] << " " << creprs[1] << endl << creprs[2] << " " << creprs[3] << endl;
+
+  cout << "Fitness: " << fittest->fitness << endl;
+
+//   while (true) { // dont know which stop condition =S
+//     cout << "Generando poblacion " << ++it << endl;
+//     fittest = population->get_fittest();
+//     if (fittest->fitness > best_fitness)
+//       best_fitness = fittest->fitness;
+
+//     cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
+//     cout << "    Best so far: " << (float)best_fitness * 100 << " %%" << endl;
+//  }
 }

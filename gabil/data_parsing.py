@@ -111,7 +111,7 @@ def parse(example):
     return (sum(p1), sum(p2))
 
 def main():
-    f = open('data/adult.data', 'r')
+    f = open('data/adult.data2', 'r')
     parsed = [parse(line.split()) for line in f if '?' not in line.split()]
     f.close()
     f = open('data/adult.bin','wb')
