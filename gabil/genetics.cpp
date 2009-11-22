@@ -34,13 +34,16 @@ void population_t::next_generation() {
   top_percent_selection(hypos, new_population);
 
   for (int i = 0; i < floor(NEW_CHILDREN_PERC * POP_SIZE); i++) {
-    vector<rule_t *> parent1, parent2, child1, child2;
+    vector<rule_t *> parent1, parent2;
+    vector<rule_t *> * child1 = new vector<rule_t *>();
+    vector<rule_t *> * child2 = new vector<rule_t *>();
     basic_probabilistic_selection(new_population, parent1);
     basic_probabilistic_selection(new_population, parent2);
 
-    gabil_crossover(parent1, parent2, &child1, &child2);
-    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(child1, training_set, ts_size);
-    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(child1, training_set, ts_size);
+    cout << parent1.size() << endl;
+    gabil_crossover(parent1, parent2, child1, child2);
+    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
+    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(*child2, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
       new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)]->mutate();
     if (RAND < MUTATE_CHANCE)
@@ -68,7 +71,6 @@ hypothesis_t::hypothesis_t(long *training_set, int ts_size) {
     rule->p2_ = LONG_RAND;
     rules.push_back(rule);
   }
-
   calc_fitness(training_set, ts_size);
 };
 
@@ -105,16 +107,18 @@ float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
       and_p2 = (*it)->p2_ & training_set[i+1];
 
       for (int j = 0; j < NUM_ATTRS_P1; j++) {
-	if ((and_p1 & andP1[j]) == 0)
-	  goto loop;
+        if ((and_p1 & andP1[j]) == 0)
+          goto loop;
       }
       for (int j = 0; j < NUM_ATTRS_P2; j++) {
-	if ((and_p2 & andP2[j]) == 0)
-	  goto loop;
+        if ((and_p2 & andP2[j]) == 0)
+          goto loop;
       }
+      if (((*it)->p2_ << 59) != (training_set[i+1] << 59))
+        goto loop;
     }
-    if (((*it)->p2_ << 59) == (training_set[i+1] << 59))
-      corrects += 1;
+
+    corrects += 1;
   loop:
     continue;
   }
