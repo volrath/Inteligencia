@@ -34,14 +34,18 @@ void population_t::next_generation() {
   top_percent_selection(hypos, new_population);
 
   for (int i = 0; i < floor(NEW_CHILDREN_PERC * POP_SIZE); i++) {
-    vector<rule_t *> parent1, parent2;
+    vector<rule_t *> * parent1 = new vector<rule_t*>();
+    vector<rule_t *> * parent2 = new vector<rule_t*>();
     vector<rule_t *> * child1 = new vector<rule_t *>();
     vector<rule_t *> * child2 = new vector<rule_t *>();
     basic_probabilistic_selection(new_population, parent1);
     basic_probabilistic_selection(new_population, parent2);
 
-    cout << parent1.size() << endl;
-    gabil_crossover(parent1, parent2, child1, child2);
+    //cout << "ALGO" << endl;
+    //cout << parent1->size() << endl;
+    //cout << parent2->size() << endl;
+    gabil_crossover(*parent1, *parent2, child1, child2);
+    cout << "Floor " << floor(NEW_CHILDREN_PERC * POP_SIZE) << " i: " << i <<endl;
     new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
     new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(*child2, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
@@ -51,7 +55,7 @@ void population_t::next_generation() {
   }
 
   delete [] hypos;
-  memcpy(new_population, hypos, sizeof(hypothesis_t*) * POP_SIZE);
+  memcpy(hypos, new_population, sizeof(hypothesis_t*) * POP_SIZE);
 };
 
 // Return the fittest of the current population
