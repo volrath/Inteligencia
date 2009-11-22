@@ -12,9 +12,6 @@ int main(int argc, char **argv) {
   float best_fitness = 0.;
   int it = 0;
  
-  srand(time(NULL));
- 
-  
   // read file, parsed if possible.
   if (stat("data/adult.bin", &results) == 0){
     size = results.st_size/sizeof(long);

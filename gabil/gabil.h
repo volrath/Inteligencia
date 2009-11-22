@@ -7,7 +7,7 @@
 #include <vector>
 #include <list>
 
-#define POP_SIZE 1
+#define POP_SIZE 1000
 #define RULES_PER_DNA 1
 #define RULE_LENGTH 124
 #define NUM_ATTRS_P1 8
@@ -16,7 +16,7 @@
 #define MUTATE_CHANCE .02
 #define NEW_CHILDREN_PERC .6
 
-#define RAND ((unsigned double) (rand() % 10000 / 10000.))
+#define RAND ((double) (rand() % 100000)) / 100000.
 #define LONG_RAND ((unsigned long)rand() << 32 | (unsigned long)rand())
 
 using namespace std;
@@ -32,7 +32,7 @@ public:
   double fitness;
 
   hypothesis_t(long *, int);
-  hypothesis_t(rule_t*, rule_t*, long*, int);
+  hypothesis_t(vector<rule_t*>, vector<rule_t*>, long*, int);
   void mutate();
   float calc_fitness(long *, int);
 };
@@ -52,8 +52,10 @@ public:
  *  ALGORITHMS LIBRARY    ga_variants.cpp
  */
 // Crossovers
-void two_point_crossover(rule_t*, rule_t*);
+void gabil_crossover(vector<rule_t*>, vector<rule_t*>);
 // ...
 
 // Selections
+void top_percent_selection(hypothesis_t**, hypothesis_t**);
+void basic_probabilistic_selection(hypothesis_t**, vector<rule_t*>);
 // ...
