@@ -32,6 +32,7 @@ public:
   double fitness;
 
   hypothesis_t(long *, int);
+  hypothesis_t(vector<rule_t*>, long*, int);
   hypothesis_t(vector<rule_t*>, vector<rule_t*>, long*, int);
   void mutate();
   float calc_fitness(long *, int);
@@ -54,7 +55,7 @@ public:
 bool compare(hypothesis_t *a, hypothesis_t *b);
 
 // Crossovers
-void gabil_crossover(vector<rule_t*>, vector<rule_t*>);
+void gabil_crossover(vector<rule_t*>, vector<rule_t*>, vector<rule_t*>, vector<rule_t*>);
 // ...
 
 // Selections

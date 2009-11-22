@@ -34,13 +34,17 @@ void population_t::next_generation() {
   top_percent_selection(hypos, new_population);
 
   for (int i = 0; i < floor(NEW_CHILDREN_PERC * POP_SIZE); i++) {
-    vector<rule_t *> parent1, parent2;
+    vector<rule_t *> parent1, parent2, child1, child2;
     basic_probabilistic_selection(new_population, parent1);
     basic_probabilistic_selection(new_population, parent2);
 
-    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(parent1, parent2, training_set, ts_size);
+    gabil_crossover(parent1, parent2, child1, child2);
+    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(child1, training_set, ts_size);
+    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(child1, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
       new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)]->mutate();
+    if (RAND < MUTATE_CHANCE)
+      new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)]->mutate();
   }
 
   delete [] hypos;
@@ -68,10 +72,15 @@ hypothesis_t::hypothesis_t(long *training_set, int ts_size) {
   calc_fitness(training_set, ts_size);
 };
 
+// Creates a new hypothesis given a set of rules
+hypothesis_t::hypothesis_t(vector<rule_t *>rs, long *training_set, int ts_size) {
+  rules = rs;
+  calc_fitness(training_set, ts_size);
+}
+
 // Creates a new hypothesis, doing crossover between the parents
 hypothesis_t::hypothesis_t(vector<rule_t*> parent1, vector<rule_t*> parent2, long *training_set, int ts_size) {
-  gabil_crossover(parent1, parent2);
-
+  //gabil_crossover(parent1, parent2);
   calc_fitness(training_set, ts_size);
 };
 

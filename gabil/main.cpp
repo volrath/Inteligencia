@@ -5,11 +5,10 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-  hypothesis_t *fittest;
+  hypothesis_t *fittest, *best_so_far;
   population_t *population;
   struct stat results;
   int size;
-  float best_fitness = 0.;
   int it = 0;
  
   // read file, parsed if possible.
@@ -26,20 +25,13 @@ int main(int argc, char **argv) {
 
   population = new population_t(creprs, size);
 
-  fittest = population->get_fittest();
+  while (true) { // dont know which stop condition =S
+    cout << "Generando poblacion " << ++it << endl;
+    fittest = population->get_fittest();
+    if (fittest->fitness > best_so_far->fitness)
+      best_so_far = fittest;
 
-  cout << "Individuo " << fittest->rules[0]->p1_ << " " << fittest->rules[0]->p2_ << endl;
-  cout << "Ejemplos " << endl << creprs[0] << " " << creprs[1] << endl << creprs[2] << " " << creprs[3] << endl;
-
-  cout << "Fitness: " << fittest->fitness << endl;
-
-//   while (true) { // dont know which stop condition =S
-//     cout << "Generando poblacion " << ++it << endl;
-//     fittest = population->get_fittest();
-//     if (fittest->fitness > best_fitness)
-//       best_fitness = fittest->fitness;
-
-//     cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
-//     cout << "    Best so far: " << (float)best_fitness * 100 << " %%" << endl;
-//  }
+    cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
+    cout << "    Best so far: " << (float)best_so_far->fitness * 100 << " %%" << endl;
+ }
 }
