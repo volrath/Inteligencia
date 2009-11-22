@@ -38,7 +38,7 @@ void population_t::next_generation() {
     basic_probabilistic_selection(new_population, parent1);
     basic_probabilistic_selection(new_population, parent2);
 
-    gabil_crossover(parent1, parent2, child1, child2);
+    gabil_crossover(parent1, parent2, &child1, &child2);
     new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(child1, training_set, ts_size);
     new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(child1, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
@@ -63,7 +63,7 @@ hypothesis_t* population_t::get_fittest() {
 // Creates a new random hypothesis
 hypothesis_t::hypothesis_t(long *training_set, int ts_size) {
   for (int i = 0; i < RULES_PER_DNA; i++) {
-    rule_t *rule = new rule_t();
+    rule_t * rule = new rule_t();
     rule->p1_ = LONG_RAND;
     rule->p2_ = LONG_RAND;
     rules.push_back(rule);
@@ -118,5 +118,5 @@ float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
   loop:
     continue;
   }
-  fitness = pow(((double)corrects / (double)(ts_size / 2)), 2);}
-;
+  fitness = ((double)corrects / (double)(ts_size / 2));
+};
