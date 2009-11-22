@@ -28,10 +28,23 @@ int main(int argc, char **argv) {
 
   fittest = population->get_fittest();
 
-  cout << "Individuo " << fittest->rules[0]->p1_ << " " << fittest->rules[0]->p2_ << endl;
-  cout << "Ejemplos " << endl << creprs[0] << " " << creprs[1] << endl << creprs[2] << " " << creprs[3] << endl;
+  vector<rule_t*> parent1 = vector<rule_t*>();
+  vector<rule_t*> parent2 = vector<rule_t*>();
+  vector<rule_t*> * offspring1 = new vector<rule_t*>();
+  vector<rule_t*> * offspring2 = new vector<rule_t*>();
 
-  cout << "Fitness: " << fittest->fitness << endl;
+  parent1.push_back(population->hypos[0]->rules[0]);
+  parent2.push_back(population->hypos[1]->rules[0]);
+
+  cout << "Individuo 1:" << parent1[0]->p1_ << " " << parent1[0]->p2_ << endl;
+  cout << "Individuo 2:" << parent2[0]->p1_ << " " << parent2[0]->p2_ << endl;
+  
+  gabil_crossover(parent1,parent2,offspring1,offspring2);
+
+  //cout << "Hijo 1:" << offspring1->size() << endl;
+  //cout << "Hijo 2:" << offspring2->size() << endl;
+  cout << "Hijo 1:" << (*offspring1)[0]->p1_ << " " << (*offspring1)[0]->p2_ << endl;
+  cout << "Hijo 2:" << (*offspring2)[0]->p1_ << " " << (*offspring2)[0]->p2_ << endl;
 
 //   while (true) { // dont know which stop condition =S
 //     cout << "Generando poblacion " << ++it << endl;

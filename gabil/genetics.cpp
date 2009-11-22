@@ -70,7 +70,8 @@ hypothesis_t::hypothesis_t(long *training_set, int ts_size) {
 
 // Creates a new hypothesis, doing crossover between the parents
 hypothesis_t::hypothesis_t(vector<rule_t*> parent1, vector<rule_t*> parent2, long *training_set, int ts_size) {
-  gabil_crossover(parent1, parent2);
+  
+  //gabil_crossover(parent1, parent2);
 
   calc_fitness(training_set, ts_size);
 };

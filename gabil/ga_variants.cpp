@@ -3,7 +3,7 @@
 using namespace std;
 
 // Crossovers...
-void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<rule_t*> offspring1, vector<rule_t*> offspring2) {
+void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<rule_t*> * offspring1, vector<rule_t*> * offspring2) {
   int d1,d2,r1,r2,r3 = 0,r4 = 0;
   d1 = rand() % 124;
   d2 = rand() % 124;
@@ -24,8 +24,10 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
     r4 = rand() % parent2.size();
   }
   
+  cout << "d1: "<< d1 << " d2: " << d2 << " r1: " << r1 << " r2: " << r2 << " r3: " << r3 << " r4:" << r4 << endl;
+
   for(int i = 0; i < r1; i++){
-    offspring1.push_back(parent1[i]);
+    offspring1->push_back(parent1[i]);
   }
   rule_t * offspring1_rule1 = new rule_t();
   offspring1_rule1->p1_ = 0;
@@ -49,11 +51,11 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
       offspring1_rule1->p1_ |= ((0xffffffffffffffff << d2) & parent1[r2]->p1_);
       offspring1_rule1->p2_ = parent1[r2]->p2_;
     }
-    offspring1.push_back(offspring1_rule1);
+    offspring1->push_back(offspring1_rule1);   
   }else{
-    offspring1.push_back(offspring1_rule1);
+    offspring1->push_back(offspring1_rule1);
     for(int i = r3+1; i < r4; i++) {
-      offspring1.push_back(parent2[i]);
+      offspring1->push_back(parent2[i]);
     }
     rule_t * offspring1_rule2 = new rule_t();
     if(d2 >= 64){
@@ -65,15 +67,15 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
       offspring1_rule2->p1_ |= ((0xffffffffffffffff << d1) & parent1[r2]->p1_);
       offspring1_rule2->p2_ = parent1[r2]->p2_;
     }
-    offspring1.push_back(offspring1_rule2);
+    offspring1->push_back(offspring1_rule2);
   }
   for(int i = r2+1; i < parent1.size(); i++){
-    offspring1.push_back(parent1[i]);
+    offspring1->push_back(parent1[i]);
   }
 
 
   for(int i = 0; i < r3; i++){
-    offspring2.push_back(parent2[i]);
+    offspring2->push_back(parent2[i]);
   }
   rule_t * offspring2_rule1 = new rule_t();
   offspring2_rule1->p1_ = 0;
@@ -97,11 +99,11 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
       offspring2_rule1->p1_ |= ((0xffffffffffffffff << d2) & parent2[r4]->p1_);
       offspring2_rule1->p2_ = parent2[r4]->p2_;
     }
-    offspring2.push_back(offspring2_rule1);
+    offspring2->push_back(offspring2_rule1);
   }else{
-    offspring2.push_back(offspring2_rule1);
+    offspring2->push_back(offspring2_rule1);
     for(int i = r1+1; i < r2; i++) {
-      offspring2.push_back(parent1[i]);
+      offspring2->push_back(parent1[i]);
     }
     rule_t * offspring2_rule2 = new rule_t();
     if(d2 >= 64){
@@ -113,10 +115,10 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
       offspring2_rule2->p1_ |= ((0xffffffffffffffff << d1) & parent2[r4]->p1_);
       offspring2_rule2->p2_ = parent2[r4]->p2_;
     }
-    offspring2.push_back(offspring2_rule2);
+    offspring2->push_back(offspring2_rule2);
   }
   for(int i = r2+1; i < parent1.size(); i++){
-    offspring2.push_back(parent2[i]);
+    offspring2->push_back(parent2[i]);
   }
   
 };
