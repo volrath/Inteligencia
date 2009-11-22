@@ -7,7 +7,8 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
   int d1,d2,r1,r2,r3 = 0,r4 = 0;
   d1 = rand() % 124;
   d2 = rand() % 124;
-  while(d1 > d2){
+  while(d1 > d2 || (d1 == d2 && (parent1.size() == 1 || parent2.size() == 1))){
+    //    cout << "d1 > d2" << endl;
     d1 = rand() % 124;
     d2 = rand() % 124;
   }
@@ -16,15 +17,17 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
   while(r1 > r2){
     r1 = rand() % parent1.size();
     r2 = rand() % parent1.size();
+    //cout << "r1 > r2" << endl;
   }
   r3 = rand() % parent2.size();
   r4 = rand() % parent2.size();
   while((d1 == d2 && r3 == r4) || (r3 > r4)){
+    //cout << "r3 == r4" << endl;
     r3 = rand() % parent2.size();
     r4 = rand() % parent2.size();
   }
   
-  cout << "d1: "<< d1 << " d2: " << d2 << " r1: " << r1 << " r2: " << r2 << " r3: " << r3 << " r4:" << r4 << endl;
+  //  cout << "d1: "<< d1 << " d2: " << d2 << " r1: " << r1 << " r2: " << r2 << " r3: " << r3 << " r4:" << r4 << endl;
 
   for(int i = 0; i < r1; i++){
     offspring1->push_back(parent1[i]);
@@ -129,7 +132,7 @@ void top_percent_selection(hypothesis_t** origin, hypothesis_t** destination) {
   memcpy(destination, origin, sizeof(hypothesis_t*) * ceil((1 - NEW_CHILDREN_PERC) * POP_SIZE));
 };
 
-void basic_probabilistic_selection(hypothesis_t**origin, vector<rule_t*>selected) {
+void basic_probabilistic_selection(hypothesis_t**origin, vector<rule_t*> *selected) {
   // Assumes that the origin is sorted
   double sum_fitness = 0;
   for (int i = 0; i < (int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE))); i++)
@@ -137,10 +140,13 @@ void basic_probabilistic_selection(hypothesis_t**origin, vector<rule_t*>selected
 
   for (int i = 0; i < (int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE))); i++) {
     if (RAND < (origin[i]->fitness / sum_fitness)) {
-      selected = origin[i]->rules;
-      break;
+      //      cout << origin[i]->rules.size() << endl;
+      for(int j = 0; j < origin[i]->rules.size(); j++)
+        selected->push_back(origin[i]->rules[j]);
+      return;
     }
   }
-
-  selected = origin[rand() % (int)ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE))]->rules;
+  int pos = rand() % (int)ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE));
+  for(int j = 0; j < origin[pos]->rules.size(); j++)
+    selected->push_back(origin[pos]->rules[j]);
 };

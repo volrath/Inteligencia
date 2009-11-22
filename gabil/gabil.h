@@ -60,5 +60,5 @@ void gabil_crossover(vector<rule_t*>, vector<rule_t*>, vector<rule_t*>*, vector<
 
 // Selections
 void top_percent_selection(hypothesis_t**, hypothesis_t**);
-void basic_probabilistic_selection(hypothesis_t**, vector<rule_t*>);
+void basic_probabilistic_selection(hypothesis_t**, vector<rule_t*> *);
 // ...
