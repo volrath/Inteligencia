@@ -17,6 +17,8 @@ bool compare(hypothesis_t *a, hypothesis_t *b) {
 // Generates a random population and initializes everything needed for
 // the population
 population_t::population_t(long *ts, int size) {
+  srand(time(NULL));
+  
   training_set = ts; ts_size = size;
 
   for (int i = 0; i < POP_SIZE; i++)
@@ -28,7 +30,21 @@ population_t::population_t(long *ts, int size) {
 // Handles the selection, then commands the crossover and posible
 // mutation
 void population_t::next_generation() {
+  hypothesis_t* new_population[POP_SIZE];
+  top_percent_selection(hypos, new_population);
 
+  for (int i = 0; i < floor(NEW_CHILDREN_PERC * POP_SIZE); i++) {
+    vector<rule_t *> parent1, parent2;
+    basic_probabilistic_selection(new_population, parent1);
+    basic_probabilistic_selection(new_population, parent2);
+
+    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(parent1, parent2, training_set, ts_size);
+    if (RAND < MUTATE_CHANCE)
+      new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)]->mutate();
+  }
+
+  delete [] hypos;
+  memcpy(new_population, hypos, sizeof(hypothesis_t*) * POP_SIZE);
 };
 
 // Return the fittest of the current population
@@ -53,8 +69,8 @@ hypothesis_t::hypothesis_t(long *training_set, int ts_size) {
 };
 
 // Creates a new hypothesis, doing crossover between the parents
-hypothesis_t::hypothesis_t(rule_t *parent1, rule_t *parent2, long *training_set, int ts_size) {
-  two_point_crossover(parent1, parent2);
+hypothesis_t::hypothesis_t(vector<rule_t*> parent1, vector<rule_t*> parent2, long *training_set, int ts_size) {
+  gabil_crossover(parent1, parent2);
 
   calc_fitness(training_set, ts_size);
 };
@@ -72,26 +88,26 @@ void hypothesis_t::mutate() {
 float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
   vector<rule_t *>::iterator it;
   unsigned long and_p1, and_p2;
-  int corrects = 0;
-  bool correct;
+  int corrects = 0; bool cont = true;
   
   for (int i = 0; i < ts_size; i += 2) {
-    correct = true;
     for (it = rules.begin(); it < rules.end(); it++) {
       and_p1 = (*it)->p1_ & training_set[i];
       and_p2 = (*it)->p2_ & training_set[i+1];
-      for (int j = 0; j < NUM_ATTRS_P1; j++){
-        correct = correct && ((and_p1 & andP1[j]) != 0);
-        cout << "Valor and i = "<< i << "y j = " << j << endl << ((and_p1 & andP1[j]) != 0) << endl;
-        cout << correct << endl;
+
+      for (int j = 0; j < NUM_ATTRS_P1; j++) {
+	if ((and_p1 & andP1[j]) == 0)
+	  goto loop;
       }
-      for (int j = 0; j < NUM_ATTRS_P2; j++){
-        cout << "Valor and i = "<< i << "y j = " << j << endl << ((and_p2 & andP2[j]) != 0) << endl;
-        cout << correct << endl;
-        correct = correct && ((and_p2 & andP2[j]) != 0);
+      for (int j = 0; j < NUM_ATTRS_P2; j++) {
+	if ((and_p2 & andP2[j]) == 0)
+	  goto loop;
       }
     }
-    corrects += (int)correct;
+    if (((*it)->p2_ << 59) == (training_set[i+1] << 59))
+      corrects += 1;
+  loop:
+    continue;
   }
   fitness = ((double)corrects / (double)(ts_size / 2));
 };
