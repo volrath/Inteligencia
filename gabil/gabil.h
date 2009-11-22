@@ -51,6 +51,8 @@ public:
 /*
  *  ALGORITHMS LIBRARY    ga_variants.cpp
  */
+bool compare(hypothesis_t *a, hypothesis_t *b);
+
 // Crossovers
 void gabil_crossover(vector<rule_t*>, vector<rule_t*>);
 // ...
