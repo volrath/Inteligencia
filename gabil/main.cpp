@@ -22,16 +22,16 @@ int main(int argc, char **argv) {
 
   file.read((char*)creprs,sizeof(long)*size);
   file.close();
-
   population = new population_t(creprs, size);
 
   while (true) { // dont know which stop condition =S
     cout << "Generando poblacion " << ++it << endl;
     fittest = population->get_fittest();
     if (fittest->fitness > best_so_far->fitness)
-      best_so_far = fittest;
-
+    best_so_far = fittest;
+    
     cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
     cout << "    Best so far: " << (float)best_so_far->fitness * 100 << " %%" << endl;
+    population->next_generation();
  }
 }
