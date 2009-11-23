@@ -16,52 +16,56 @@ bool compare(hypothesis_t *a, hypothesis_t *b) {
  */
 // Generates a random population and initializes everything needed for
 // the population
-population_t::population_t(long *ts, int size) {
+population_t::population_t(const char *f_name, int ps, float mc, float ncp) {
   srand(time(NULL));
-  
-  training_set = ts; ts_size = size;
 
-  for (int i = 0; i < POP_SIZE; i++)
+  pop_size = ps; mutate_chance = mc; new_children_perc = ncp;
+  hypos = new hypothesis_t*[pop_size];
+
+  // read the data
+  struct stat results;
+  if (stat(f_name, &results) == 0)
+    ts_size = results.st_size/sizeof(long);
+  ifstream file(f_name, ios::in | ios::binary);
+  training_set = new long[ts_size];
+
+  file.read((char*)training_set,sizeof(long)*ts_size);
+  file.close();
+
+  for (int i = 0; i < pop_size; i++)
     hypos[i] = new hypothesis_t(training_set, ts_size);
-
-  // Maybe read the data, parser the data, whatever
 };
 
 // Handles the selection, then commands the crossover and posible
 // mutation
 void population_t::next_generation() {
-  hypothesis_t* new_population[POP_SIZE];
-  top_percent_selection(hypos, new_population);
+  hypothesis_t* new_population[pop_size];
+  top_percent_selection(pop_size, new_children_perc, hypos, new_population);
 
-  for (int i = 0; i < floor(NEW_CHILDREN_PERC * POP_SIZE); i++) {
+  for (int i = 0; i < floor(new_children_perc * pop_size); i++) {
     vector<rule_t *> * parent1 = new vector<rule_t*>();
     vector<rule_t *> * parent2 = new vector<rule_t*>();
     vector<rule_t *> * child1 = new vector<rule_t *>();
     vector<rule_t *> * child2 = new vector<rule_t *>();
-    basic_probabilistic_selection(new_population, parent1);
-    basic_probabilistic_selection(new_population, parent2);
+    basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent1);
+    basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent2);
 
-    //cout << "ALGO" << endl;
-    //cout << parent1->size() << endl;
-    //cout << parent2->size() << endl;
     gabil_crossover(*parent1, *parent2, child1, child2);
-    //cout << "Parent1 Size: " << parent1->size() << " Parent2 Size:" << parent2->size() << " Child1 Size:" << child1->size() << " Child2 Size: " << child2->size() << endl;
-    //cout << "Floor " << floor(NEW_CHILDREN_PERC * POP_SIZE) << " i: " << i <<endl;
-    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
-    new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)] = new hypothesis_t(*child2, training_set, ts_size);
+    new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
+    new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)] = new hypothesis_t(*child2, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
-      new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i)]->mutate();
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->mutate();
     if (RAND < MUTATE_CHANCE)
-      new_population[(int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE)) + i + 1)]->mutate();
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->mutate();
   }
 
   //delete [] hypos;
-  memcpy(hypos, new_population, sizeof(hypothesis_t*) * POP_SIZE);
+  memcpy(hypos, new_population, sizeof(hypothesis_t*) * pop_size);
 };
 
 // Return the fittest of the current population
 hypothesis_t* population_t::get_fittest() {
-  sort(hypos, hypos + POP_SIZE, compare); // dont remember why this works, but it does...
+  sort(hypos, hypos + pop_size, compare); // dont remember why this works, but it does...
   return hypos[0];
 };
 

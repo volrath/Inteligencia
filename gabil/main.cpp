@@ -1,29 +1,29 @@
 #include "gabil.h"
-#include <sys/stat.h>
-#include <fstream>
 
 using namespace std;
 
 int main(int argc, char **argv) {
   hypothesis_t *fittest, *best_so_far;
   population_t *population;
-  struct stat results;
-  int size;
   int it = 0;
  
-  // read file, parsed if possible.
-  if (stat("data/adult.bin", &results) == 0){
-    size = results.st_size/sizeof(long);
+  /*
+   * Args
+   */
+  int pop_size;
+  float mutate_chance, new_children_perc;
+  if (argc != 1) {
+    pop_size = atoi(argv[1]);
+    sscanf(argv[2], "%f", &mutate_chance);
+    sscanf(argv[3], "%f", &new_children_perc);
+  } else {    
+    pop_size = POP_SIZE;
+    mutate_chance = MUTATE_CHANCE;
+    new_children_perc = NEW_CHILDREN_PERC;
   }
-  else{}
-    // An error occurred
-  ifstream file("data/adult.bin", ios::in | ios::binary);
-  long * creprs = new long[size];
 
-  file.read((char*)creprs,sizeof(long)*size);
-  file.close();
-  population = new population_t(creprs, size);
-
+  population = new population_t("data/adult.bin", pop_size, mutate_chance, new_children_perc);
+  fittest = population->get_fittest(); best_so_far = fittest;
   while (true) { // dont know which stop condition =S
     cout << "Generando poblacion " << ++it << endl;
     fittest = population->get_fittest();

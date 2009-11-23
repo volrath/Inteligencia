@@ -1,3 +1,5 @@
+#include <sys/stat.h>
+#include <fstream>
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
@@ -40,11 +42,14 @@ public:
 
 class population_t {
 public:
-  hypothesis_t* hypos[POP_SIZE];
+  hypothesis_t** hypos;
   long *training_set;
   int ts_size;
+  int pop_size;
+  float mutate_chance;
+  float new_children_perc;
   
-  population_t(long *, int);
+  population_t(const char *, int, float, float);
   void next_generation();
   hypothesis_t *get_fittest();
 };
@@ -59,6 +64,6 @@ void gabil_crossover(vector<rule_t*>, vector<rule_t*>, vector<rule_t*>*, vector<
 // ...
 
 // Selections
-void top_percent_selection(hypothesis_t**, hypothesis_t**);
-void basic_probabilistic_selection(hypothesis_t**, vector<rule_t*> *);
+void top_percent_selection(int, float, hypothesis_t**, hypothesis_t**);
+void basic_probabilistic_selection(int, float, hypothesis_t**, vector<rule_t*> *);
 // ...

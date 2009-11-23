@@ -128,18 +128,18 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
 };
 
 // Selections...
-void top_percent_selection(hypothesis_t** origin, hypothesis_t** destination) {
-  sort(origin, origin + POP_SIZE, compare);
-  memcpy(destination, origin, sizeof(hypothesis_t*) * ceil((1 - NEW_CHILDREN_PERC) * POP_SIZE));
+void top_percent_selection(int pop_size, float new_children_perc, hypothesis_t** origin, hypothesis_t** destination) {
+  sort(origin, origin + pop_size, compare);
+  memcpy(destination, origin, sizeof(hypothesis_t*) * ceil((1 - new_children_perc) * pop_size));
 };
 
-void basic_probabilistic_selection(hypothesis_t**origin, vector<rule_t*> *selected) {
+void basic_probabilistic_selection(int pop_size, float new_children_perc, hypothesis_t**origin, vector<rule_t*> *selected) {
   // Assumes that the origin is sorted
   double sum_fitness = 0;
-  for (int i = 0; i < (int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE))); i++)
+  for (int i = 0; i < (int)(ceil(((1 - new_children_perc) * pop_size))); i++)
     sum_fitness += origin[i]->fitness;
 
-  for (int i = 0; i < (int)(ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE))); i++) {
+  for (int i = 0; i < (int)(ceil(((1 - new_children_perc) * pop_size))); i++) {
     if (RAND < (origin[i]->fitness / sum_fitness)) {
       //      cout << origin[i]->rules.size() << endl;
       for(int j = 0; j < origin[i]->rules.size(); j++)
@@ -147,7 +147,7 @@ void basic_probabilistic_selection(hypothesis_t**origin, vector<rule_t*> *select
       return;
     }
   }
-  int pos = rand() % (int)ceil(((1 - NEW_CHILDREN_PERC) * POP_SIZE));
+  int pos = rand() % (int)ceil(((1 - new_children_perc) * pop_size));
   for(int j = 0; j < origin[pos]->rules.size(); j++)
     selected->push_back(origin[pos]->rules[j]);
 };
