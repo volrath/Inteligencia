@@ -7,7 +7,7 @@
 #include <vector>
 #include <list>
 
-#define POP_SIZE 1000
+#define POP_SIZE 200
 #define RULES_PER_DNA 5
 #define RULE_LENGTH 124
 #define NUM_ATTRS_P1 8
