@@ -133,6 +133,40 @@ void top_percent_selection(int pop_size, float new_children_perc, hypothesis_t**
   memcpy(destination, origin, sizeof(hypothesis_t*) * ceil((1 - new_children_perc) * pop_size));
 };
 
+void roulette_wheel_selection(int pop_size, float new_children_perc, hypothesis_t ** origin, hypothesis_t ** destination) { 
+  sort(origin, origin + pop_size, compare);
+  double sum_fitness = 0;
+  int j = 0;
+  int top = (int)(ceil(((1 - new_children_perc) * pop_size)));
+  for (int i = 0; i < pop_size; i++)
+    sum_fitness += origin[i]->fitness;
+  
+  while(j < top){
+    for (int i = 0; i < pop_size && j < top; i++){
+      if (RAND < (origin[i]->fitness / sum_fitness)) {
+        //cout << destination[j]->rules[0]->p1_ << endl;
+        destination[j] = origin[i];
+        j++;
+      }
+    }
+  }
+}
+
+void rank_selection(int pop_size, float new_children_perc, hypothesis_t ** origin, hypothesis_t ** destination) {
+  int top = (int)(ceil(((1 - new_children_perc) * pop_size)));
+  int j = 0;
+  double sum_fitness = 0;
+  sort(origin, origin + pop_size, compare);  
+  while(j < top){
+    for (int i = 0; i < pop_size && j < top; i++){
+      if (RAND < ((origin[i]->fitness / sum_fitness)*pow((1-(origin[i]->fitness / sum_fitness)),i))) {
+        destination[j] = origin[i];
+        j++;
+      }
+    }
+  }
+}
+
 void basic_probabilistic_selection(int pop_size, float new_children_perc, hypothesis_t**origin, vector<rule_t*> *selected) {
   // Assumes that the origin is sorted
   double sum_fitness = 0;

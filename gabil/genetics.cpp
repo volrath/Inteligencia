@@ -1,10 +1,12 @@
 #include "gabil.h"
 
 using namespace std;
+int bits_attributesP1[] = {4,8,/*4,16,*/5,7,14,6};
+int bits_attributesP2[] = {5,2,4,3,4,41};
 
-int attributesP1[] = {4,8,4,16,5,7,14,6};
-int attributesP2[] = {5,2,4,3,4,41};
-unsigned long int andP1[] = {15,4080,61440,4294901760,133143986176,17454747090944,288212783965667328,18158513697557839872u};
+int shift_attributesP1[] = {0,4,/*12,16,*/32,37,44,58};
+int shift_attributesP2[] = {0,5,7,11,14,18};
+unsigned long int andP1[] = {15,4080,/*61440,4294901760,*/133143986176,17454747090944,288212783965667328,18158513697557839872u};
 unsigned long int andP2[] = {31,96,1920,14336,245760,576460752303161344};
 
 bool compare(hypothesis_t *a, hypothesis_t *b) {
@@ -40,7 +42,14 @@ population_t::population_t(const char *f_name, int ps, float mc, float ncp) {
 // mutation
 void population_t::next_generation() {
   hypothesis_t* new_population[pop_size];
-  top_percent_selection(pop_size, new_children_perc, hypos, new_population);
+  switch(SELECTION_TYPE){
+  case 0: top_percent_selection(pop_size, new_children_perc, hypos, new_population);
+    break;
+  case 1: roulette_wheel_selection(pop_size, new_children_perc, hypos, new_population);
+    break;
+  case 2: rank_selection(pop_size, new_children_perc, hypos, new_population);
+    break;
+  }
 
   for (int i = 0; i < floor(new_children_perc * pop_size); i++) {
     vector<rule_t *> * parent1 = new vector<rule_t*>();
@@ -65,7 +74,7 @@ void population_t::next_generation() {
 
 // Return the fittest of the current population
 hypothesis_t* population_t::get_fittest() {
-  sort(hypos, hypos + pop_size, compare); // dont remember why this works, but it does...
+  sort(hypos, hypos + pop_size, compare);
   return hypos[0];
 };
 
@@ -105,6 +114,32 @@ void hypothesis_t::mutate() {
   else
     rules[rand() % RULES_PER_DNA]->p2_ ^ (1 << rand_bit % 64);
 };
+
+// Applies the add alternative operator
+void hypothesis_t::add_alternative() {
+  int rand_rule = rand()%(rules.size());
+  int rand_attribute = rand()%(NUM_ATTRS_P1 + NUM_ATTRS_P2);
+  int rand_bit = 0;
+  if(rand_attribute < NUM_ATTRS_P1) {
+    rand_bit = rand()%bits_attributesP1[rand_attribute];
+    rules[rand_rule]->p1_ &= (1 << (shift_attributesP1[rand_attribute] + rand_bit));
+  }else{
+    rand_attribute -= NUM_ATTRS_P1;
+    rand_bit = rand()%bits_attributesP2[rand_attribute];
+    rules[rand_rule]->p2_ &= (1 << (shift_attributesP2[rand_attribute] + rand_bit));
+  }
+};
+
+void hypothesis_t::drop_condition(){
+  int rand_rule = rand()%(rules.size());
+  int rand_attribute = rand()%(NUM_ATTRS_P1 + NUM_ATTRS_P2);
+  if(rand_attribute < NUM_ATTRS_P1) {
+    rules[rand_rule]->p1_ &= ((0xffffffffffffffff >> (64 - bits_attributesP1[rand_attribute])) << shift_attributesP1[rand_attribute]);
+  }else{
+    rand_attribute -= NUM_ATTRS_P1;
+    rules[rand_rule]->p2_ &= ((0xffffffffffffffff >> (64 - bits_attributesP2[rand_attribute])) << shift_attributesP2[rand_attribute]);
+  }
+}
 
 float hypothesis_t::calc_fitness(long *training_set, int ts_size) {
   vector<rule_t *>::iterator it;
