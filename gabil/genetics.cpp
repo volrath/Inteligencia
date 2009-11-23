@@ -22,19 +22,18 @@ population_t::population_t(const char *f_name, int ps, float mc, float ncp) {
   pop_size = ps; mutate_chance = mc; new_children_perc = ncp;
   hypos = new hypothesis_t*[pop_size];
 
-  for (int i = 0; i < pop_size; i++)
-    hypos[i] = new hypothesis_t(training_set, ts_size);
-
   // read the data
   struct stat results;
-  int size;
   if (stat(f_name, &results) == 0)
     ts_size = results.st_size/sizeof(long);
-  ifstream file("data/adult.bin", ios::in | ios::binary);
-  training_set = new long[size];
+  ifstream file(f_name, ios::in | ios::binary);
+  training_set = new long[ts_size];
 
-  file.read((char*)training_set,sizeof(long)*size);
+  file.read((char*)training_set,sizeof(long)*ts_size);
   file.close();
+
+  for (int i = 0; i < pop_size; i++)
+    hypos[i] = new hypothesis_t(training_set, ts_size);
 };
 
 // Handles the selection, then commands the crossover and posible
@@ -51,12 +50,7 @@ void population_t::next_generation() {
     basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent1);
     basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent2);
 
-    //cout << "ALGO" << endl;
-    //cout << parent1->size() << endl;
-    //cout << parent2->size() << endl;
     gabil_crossover(*parent1, *parent2, child1, child2);
-    //cout << "Parent1 Size: " << parent1->size() << " Parent2 Size:" << parent2->size() << " Child1 Size:" << child1->size() << " Child2 Size: " << child2->size() << endl;
-    //cout << "Floor " << floor(new_children_perc * pop_size) << " i: " << i <<endl;
     new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
     new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)] = new hypothesis_t(*child2, training_set, ts_size);
     if (RAND < MUTATE_CHANCE)
