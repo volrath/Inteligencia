@@ -12,9 +12,11 @@
 #define POP_SIZE 200
 #define RULES_PER_DNA 5
 #define RULE_LENGTH 124
-#define NUM_ATTRS_P1 8
+#define NUM_ATTRS_P1 6
 #define NUM_ATTRS_P2 6
+#define SELECTION_TYPE 0
 
+#define ADD_ALTERNATIVE_CHANCE .01
 #define MUTATE_CHANCE .02
 #define NEW_CHILDREN_PERC .6
 
@@ -37,6 +39,8 @@ public:
   hypothesis_t(vector<rule_t*>, long*, int);
   hypothesis_t(vector<rule_t*>, vector<rule_t*>, long*, int);
   void mutate();
+  void add_alternative();
+  void drop_condition();
   float calc_fitness(long *, int);
 };
 
@@ -65,5 +69,7 @@ void gabil_crossover(vector<rule_t*>, vector<rule_t*>, vector<rule_t*>*, vector<
 
 // Selections
 void top_percent_selection(int, float, hypothesis_t**, hypothesis_t**);
+void roulette_wheel_selection(int, float, hypothesis_t**, hypothesis_t**);
+void rank_selection(int, float, hypothesis_t**, hypothesis_t**);
 void basic_probabilistic_selection(int, float, hypothesis_t**, vector<rule_t*> *);
 // ...
