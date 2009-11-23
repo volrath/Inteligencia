@@ -21,14 +21,15 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
   }
   r3 = rand() % parent2.size();
   r4 = rand() % parent2.size();
-  while((d1 == d2 && r3 == r4) || (r3 > r4)){
+  while((d1 == d2 && r3 == r4) || (r3 > r4)) {
     //cout << "r3 == r4" << endl;
     r3 = rand() % parent2.size();
     r4 = rand() % parent2.size();
   }
   
-  //  cout << "d1: "<< d1 << " d2: " << d2 << " r1: " << r1 << " r2: " << r2 << " r3: " << r3 << " r4:" << r4 << endl;
-
+  //cout << "d1: "<< d1 << " d2: " << d2 << " r1: " << r1 << " r2: " << r2 << " r3: " << r3 << " r4:" << r4 << endl;
+  //  cout << "Parent1P1: " << parent1.p1_ << " Parent1P2: " << parent1.p2_ << " Parent2P1: " << parent2.p1_ << " Parent2P2: " << parent2.p2_ << endl;
+  //  cout << "Child1P1: " << offspring1.p1_ << " Parent1P2: " << parent1.p2_ << " Parent2P1: " << parent2.p1_ << " Parent2P2: " << parent2.p2_ << endl;
   for(int i = 0; i < r1; i++){
     offspring1->push_back(parent1[i]);
   }
@@ -120,7 +121,7 @@ void gabil_crossover(vector<rule_t*> parent1, vector<rule_t*> parent2, vector<ru
     }
     offspring2->push_back(offspring2_rule2);
   }
-  for(int i = r2+1; i < parent1.size(); i++){
+  for(int i = r4+1; i < parent2.size(); i++){
     offspring2->push_back(parent2[i]);
   }
   

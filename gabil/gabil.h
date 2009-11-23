@@ -8,7 +8,7 @@
 #include <list>
 
 #define POP_SIZE 1000
-#define RULES_PER_DNA 1
+#define RULES_PER_DNA 5
 #define RULE_LENGTH 124
 #define NUM_ATTRS_P1 8
 #define NUM_ATTRS_P2 6
