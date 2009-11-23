@@ -35,5 +35,5 @@ int main(int argc, char **argv) {
     cout << "    Fitness:     " << (float)fittest->fitness * 100 << " %%" << endl;
     cout << "    Best so far: " << (float)best_so_far->fitness * 100 << " %%" << endl;
     population->next_generation();
- }
+  }
 }
