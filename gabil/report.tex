@@ -16,26 +16,82 @@
 \subsection{Descripción de la implementación}
 \label{sec:impl}
 
+
 \subsection{Descripción de los parámetros base}
 \label{sec:parambase}
 
 \section{Experimentos Realizados}
 \label{sec:experimentos}
-
+Para determinar cuál es la mejor configuración posible de operadores de selección,
+tasas de mutación, tasas de crossover y operadores de extensión se realizaron 3 fases
+de experimentos las cuales son descritas a continuación.
 \subsection{Descripción}
 \label{sec:exp-desc}
 
+\textbf{Fase 1: }\\
+Se realizaron pruebas con cada operador de selección para determinar cuál retornaba
+el mejor valor promedio de fitness luego de realizar 10 corridas del algoritmo
+limitando el número de generaciones producidas a 40. \\
+Estas pruebas se realizaron utilizando 3 operadores de selección: 
+\begin{itemize}
+  \item \textbf{Roulette Wheel Selection: }Se seleccionan los individuos de la población
+    de acuerdo a una probabilidad dada al dividir el fitness de un individuo entre
+    la sumatoria del fitness de todos los individuos de la población.
+  \item \textbf{Rank Selection: }Se ordena de forma descendente la lista de individuos 
+    de la población según su fitness y se selecciona un individuo de acuerdo a una 
+    probabilidad que depende de su posición en el arreglo y un valor fijado previamente 
+    usando la siguiente fórmula $\ p*(1-p)^{i} $ donde i es la posición del individuo 
+    en la lista y p la probabilidad selecionada.
+  \item \textbf{Top Percent Selection: }Se ordena de forma descendente la lista de individuos
+    de la población según su fitness y se toman del principio de la lista la cantidad
+    de inviduos a seleccionar.
+\end{itemize}
+   \textbf{Fase 2: }\\
+Una vez seleccionado el mejor operador de selección se procedió a calcular cuál combinación 
+de tasas de mutación y de crossover retornaban los mejores resultados en cuanto al fitness
+de la población final por lo tanto se tomaron tres valores distintos para cada tasa y se
+realizó la prueba con todas las combinaciones posibles.\\
+Se consideraron los valores 0.02, 0.06 y 0.1 para la tasa de mutación y los valores 0.4,
+0.6 y 0.9 para la tasa de crossover y se utilizó el mismo esquema de corridas que en la
+Fase 1.\\
+\newline
+\textbf{Fase 3: }\\
+Al tener las mejores tasas seleccionadas así como el mejor algoritmo de selección era necesario
+considerar las extensiones al algoritmo GABIL y su uso y utilidad en función del promedio de fitness
+resultantes. 
+Para éste experimento consideramos los mejores fitness promedios de la población resultante al aplicar
+cada una de las extensiones individualmente y al usar las dos para analizar su efecto sobre la evolución.
+En este caso se realizaron menos corridas, se utilizó una población más pequeña y se generaron
+menos generaciones por falta de tiempo y recursos.
 \subsection{Análisis de resultados}
 \label{sec:analisis-resultados}
+\textbf{Fase 1}\\
+De la experimentación con los tres tipos de selección se obtuvieron los siguientes promedios de fitness:
+\begin{itemize}
+  \item Roulette Wheel: 56.01%
+  \item Top Percent: 52.01%
+  \item Rank Selection: 25.5%
+\end{itemize}
+De estos resultados y del tiempo de ejecución de cada algoritmo pudimos concluir que debido a la superioridad
+en cuanto al fitness generado en el caso de Roulette Wheel así como su poco tiempo de ejecución comparado
+con el requerido por Top Percent el primero es la mejor opción para ser usado como algoritmo de selección.
+\\
+\newline
+\textbf{Fase 2}\\
+\textbf{Fase 3}
 
 \section{Conclusiones}
 \label{sec:conclusiones}
 
-\subsection{¿Cuál es la mejor configuración del agorítmo genético para clasificar los datos estudiados?}
+\subsection{¿Cuál es la mejor configuración del algorítmo genético para clasificar los datos estudiados?}
 \label{sec:preg1}
 
 \subsection{¿Son útiles los operadores de extensión?}
 \label{sec:preg2}
+En función de los resultados obtenidos podemos concluir que los operadores de extensión
+no mejoran el fitness de nuestro algoritmo genético en nuestros casos de prueba. 
+Se puede ver además por los resultados que el efecto del operador Add Alternative es mucho 
+mejor al que provee el operador Drop Condition.
 
 \subsection{¿Cuál es el mejor conjunto de reglas hallado por el algorítmo genético?}
 \label{sec:preg3}
