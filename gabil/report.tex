@@ -15,9 +15,91 @@
 
 \subsection{Descripción de la implementación}
 \label{sec:impl}
+Se realizó una implementación completa del algorítmo genético, sin
+utilizar ninguna librería con alguna implementación.\\
+
+La implementación fué estrucutrada principalmente de la siguiente
+forma:
+
+\begin{itemize}
+\item Un controlador de corridas del algorítmo (\emph{main.cpp})
+  encargado de iniciar la población base y correr iteraciones para ir
+  evolucionando dicha población, reportando los mejores fitness
+  obtenidos en cada iteración y manteniendo el mejor fitness obtenido
+  en toda la corrida.
+
+\item Dos estructuras \textbf{\texttt{population\_t}} y
+  \textbf{\texttt{hypothesis\_t}} que modelan una población y una
+  hipótesis (conjunto de reglas) respectivamente. La primera se
+  encarga de mantener un arreglo de hipótesis e ir produciendo nuevas
+  generaciones conservando cierta cantidad de padres y generando el
+  resto de hijos con algún algorítmo de \emph{crossover}. Por otra
+  parte \texttt{hypothesis\_t} mantiene un arreglo de reglas y tiene
+  métodos para calcular su \emph{fitness}, para mutarlas y aplicarle
+  las extensiones que son operadores genéticos relativos a una sola
+  hipótesis.
+
+\item Una estructura base de regla llamado \textbf{\texttt{rule\_t}}
+  que posee únicamente dos \texttt{unsigned long} los cuales se
+  utilizan para mantener los bits que representan en ADN de la
+  regla. La representación de una regla es explicada más adelante en
+  la sección \ref{sec:reglas}.
+
+\item Una librería con los algorítmos de selección implementados, la
+  cual se encuentra en el archivo \emph{ga\_variants.cpp}.
+\end{itemize}
 
 \subsection{Descripción de los parámetros base}
 \label{sec:parambase}
+El algorítmo se corrió con varios parámetros inicialmente, pero al
+momento de realizar los experimentos reportados se tomó una población
+de 200 individuos y la condición de parada de las iteraciones se
+estableció como un máximo de 40 iteraciones.
+
+\subsection{Representación de las reglas}
+\label{sec:reglas}
+Las reglas son una modelación de los 12 atributos estudiados: Age(4),
+Workclass(8), Education-num(5), Marital-status(7), Occupation(14),
+Relationship(6), Race(5), Sex(2), Capital-gain(4), Capital-loss(3),
+Hours-per-week(4) y Native-country(41), unido con la classificación
+del individuo(1). Los números en paréntesis al lado derecho de cada
+atributo representan la cantidad de bits necesaria para almacenarlo,
+lo que dá un total de 104 bits por regla.
+
+Para los atributos contínuos se generaron gráficas que describen la
+cantidad de personas que ganan mas de \$50K mensualmente y con esto se
+crearon intervalos discretos que se describen a continuación:
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/concentrations_age.png}
+  \caption{Age: Intervalos (0,30), (31,55), (56,72), (73,90)}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/concentrations_educ.png}
+  \caption{Education-num: Intervalos (0,8), (9,10), (11,12), (13,14), (15,16)}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/concentrations_gain.png}
+  \caption{Capital-gain: Intervalos (0,6000), (6001,11600), (11601,18000), (18001,99999)}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/concentrations_loss.png}
+  \caption{Capital-loss: Intervalos (0,1500), (1501,2500), (2501,4356)}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/concentrations_hpw.png}
+  \caption{Hours-per-week: Intervalos (0,39), (40), (41,52), (53,99)}\label{fig:nodos}
+\end{figure}
+
 
 \section{Experimentos Realizados}
 \label{sec:experimentos}
@@ -28,16 +110,113 @@
 \subsection{Análisis de resultados}
 \label{sec:analisis-resultados}
 
+Se realizaron pruebas para los siguientes conjuntos de tasas de
+mutación y de tasa de \emph{crossover}:
+
+\begin{itemize}
+\item \textbf{Tasa de mutación (mc): [0.02, 0.06, 0.1]}
+\item \textbf{Tasa de crossover (ncp): [0.4, 0.6, 0.9]}
+\end{itemize}
+
+Los resultados, agrupados para cada tasa de mutación se muestran a
+continuación:
+
+\emph{Tasa de mutación 0.02}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-02-0-4.png}
+  \caption{Mejor fitness obtenido: 0.087313836}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-02-0-6.png}
+  \caption{Mejor fitness obtenido: 0.049098863946}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-02-0-9.png}
+  \caption{Mejor fitness obtenido: 0.083127128}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/0-02all.png}
+  \caption{Las tres tasas de crossover con tasa de mutación 0.02}\label{fig:nodos}
+\end{figure}
+
+\emph{Tasa de mutación 0.06}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-06-0-4.png}
+  \caption{Mejor fitness obtenido: 0.087313836}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-06-0-6.png}
+  \caption{Mejor fitness obtenido: 0.049098863946}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-06-0-9.png}
+  \caption{Mejor fitness obtenido: 0.083127128}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/0-06all.png}
+  \caption{Las tres tasas de crossover con tasa de mutación 0.02}\label{fig:nodos}
+\end{figure}
+
+\emph{Tasa de mutación 0.1}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-1-0-4.png}
+  \caption{Mejor fitness obtenido: 0.087313836}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-1-0-6.png}
+  \caption{Mejor fitness obtenido: 0.049098863946}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/200-0-1-0-9.png}
+  \caption{Mejor fitness obtenido: 0.083127128}\label{fig:nodos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.5]{media/0-1all.png}
+  \caption{Las tres tasas de crossover con tasa de mutación 0.02}\label{fig:nodos}
+\end{figure}
+
+Después de analizar los resultados obtuvimos que la mejor combinación
+de tasas mutación y crossover es 0.02 y 0.9 respectivamente.
+
 \section{Conclusiones}
 \label{sec:conclusiones}
 
 \subsection{¿Cuál es la mejor configuración del agorítmo genético para clasificar los datos estudiados?}
 \label{sec:preg1}
+La mejor configuración conseguida fué utilizar tasa de mutación
+\emph{0.02}, tasa de crossover \emph{0.9} y ninguna de las
+extensiones.
 
 \subsection{¿Son útiles los operadores de extensión?}
 \label{sec:preg2}
 
 \subsection{¿Cuál es el mejor conjunto de reglas hallado por el algorítmo genético?}
 \label{sec:preg3}
+El mejor conjunto de reglas hallado fué el siguiente:
+
+El resultado obtenido sobre el conjunto de prueba fué: \% de
+clasificados correctamente.
 
 \end{document}

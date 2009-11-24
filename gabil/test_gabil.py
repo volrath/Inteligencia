@@ -5,7 +5,7 @@ from commands import getoutput
 import matplotlib.pyplot as plt
 
 POP_SIZE = 200
-MUTATE_CHANCEs = [.02]
+MUTATE_CHANCEs = [.1]
 NEW_CHILDREN_PERCs = [.4, .6, .9]
 
 def plot_one(output, mc, ncp):
@@ -38,10 +38,16 @@ def main():
         i += 1
         print '[%s] plotting ./main %s %s %s' % (i, POP_SIZE, mc, ncp)
         results = []
+        f = open('logs/log-%s-%s-%s.log' % (POP_SIZE, mc, ncp), 'w')
         for j in range(10):
             print '      ', j
-            results.append(getoutput('./main %s %s %s' % (POP_SIZE, mc, ncp)).split())
+            cr = getoutput('./main %s %s %s' % (POP_SIZE, mc, ncp))
+            results.append(cr.split())
+            print '        Logging iteration %s ----------------------------------' % j
+            f.write('        Logging iteration %s ----------------------------------' % j)
+            f.write(cr)
         result = average(results)
+        f.close()
         outputs.update({'mc: %s ncp: %s' % (mc, ncp): result})
         plot_one(result, mc, ncp)
     plot_pop(outputs)
