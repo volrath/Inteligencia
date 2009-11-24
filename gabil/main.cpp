@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
   population = new population_t("data/adult.bin", pop_size, mutate_chance, new_children_perc);
   fittest = population->get_fittest(); best_so_far = fittest;
-  while (it < 30) {
+  while (it < 40) {
     it++;
     population->next_generation();
     if (verbose)

@@ -5,7 +5,7 @@ from commands import getoutput
 import matplotlib.pyplot as plt
 
 POP_SIZE = 200
-MUTATE_CHANCEs = [.02, .06, .1]
+MUTATE_CHANCEs = [.06]
 NEW_CHILDREN_PERCs = [.4, .6, .9]
 
 def plot_one(output, mc, ncp):
