@@ -4,7 +4,7 @@ from os import remove, error, path
 from commands import getoutput
 import matplotlib.pyplot as plt
 
-POP_SIZE = 50
+POP_SIZE = 200
 MUTATE_CHANCEs = [.02, .06, .1]
 NEW_CHILDREN_PERCs = [.4, .6, .9]
 
@@ -38,7 +38,7 @@ def main():
         i += 1
         print '[%s] plotting ./main %s %s %s' % (i, POP_SIZE, mc, ncp)
         results = []
-        for j in range(2):
+        for j in range(10):
             print '      ', j
             results.append(getoutput('./main %s %s %s' % (POP_SIZE, mc, ncp)).split())
         result = average(results)

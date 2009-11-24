@@ -160,6 +160,7 @@ void rank_selection(int pop_size, float new_children_perc, hypothesis_t ** origi
   while(j < top){
     for (int i = 0; i < pop_size && j < top; i++){
       if (RAND < ((origin[i]->fitness / sum_fitness)*pow((1-(origin[i]->fitness / sum_fitness)),i))) {
+        //if (RAND < ((RANK_CHANCE)*pow((1-RANK_CHANCE),i))) {
         destination[j] = origin[i];
         j++;
       }
