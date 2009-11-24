@@ -5,8 +5,9 @@ from commands import getoutput
 import matplotlib.pyplot as plt
 
 POP_SIZE = 200
-MUTATE_CHANCEs = [.06]
+MUTATE_CHANCEs = [.02, .06, .1]
 NEW_CHILDREN_PERCs = [.4, .6, .9]
+RANGE = 10
 
 def plot_one(output, mc, ncp):
     plt.figure(1)
@@ -39,12 +40,12 @@ def main():
         print '[%s] plotting ./main %s %s %s' % (i, POP_SIZE, mc, ncp)
         results = []
         f = open('logs/log-%s-%s-%s.log' % (POP_SIZE, mc, ncp), 'w')
-        for j in range(10):
+        for j in range(RANGE):
             print '      ', j
             cr = getoutput('./main %s %s %s' % (POP_SIZE, mc, ncp))
             results.append(cr.split())
             print '        Logging iteration %s ----------------------------------' % j
-            f.write('        Logging iteration %s ----------------------------------' % j)
+            f.write('\n        Logging iteration %s ----------------------------------\n' % j)
             f.write(cr)
         result = average(results)
         f.close()
@@ -56,7 +57,7 @@ def main():
 def average(results):
     result = []
     for i in range(len(results[0])):
-        result.append(sum([float(r[i]) for r in results]) / float(len(results[0]) - 1.))
+        result.append(sum([float(r[i]) for r in results]) / RANGE)
     return result
 
 def save_bf(outputs):
