@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     sscanf(argv[2], "%f", &mutate_chance);
     sscanf(argv[3], "%f", &new_children_perc);
     verbose = false;
-  } else {    
+  } else {
     pop_size = POP_SIZE;
     mutate_chance = MUTATE_CHANCE;
     new_children_perc = NEW_CHILDREN_PERC;
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
   population = new population_t("data/adult.bin", pop_size, mutate_chance, new_children_perc);
   fittest = population->get_fittest(); best_so_far = fittest;
-  while (it < 50) {
+  while (it < 40) {
     it++;
     population->next_generation();
     if (verbose)
