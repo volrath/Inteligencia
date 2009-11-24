@@ -56,8 +56,8 @@ void population_t::next_generation() {
     vector<rule_t *> * parent2 = new vector<rule_t*>();
     vector<rule_t *> * child1 = new vector<rule_t *>();
     vector<rule_t *> * child2 = new vector<rule_t *>();
-    basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent1);
-    basic_probabilistic_selection(pop_size, new_children_perc, new_population, parent2);
+    basic_probabilistic_selection(pop_size, new_children_perc, hypos, parent1);
+    basic_probabilistic_selection(pop_size, new_children_perc, hypos, parent2);
 
     gabil_crossover(*parent1, *parent2, child1, child2);
     new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)] = new hypothesis_t(*child1, training_set, ts_size);
@@ -66,6 +66,15 @@ void population_t::next_generation() {
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->mutate();
     if (RAND < MUTATE_CHANCE)
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->mutate();
+    if (RAND < ADD_ALTERNATIVE_CHANCE)
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->add_alternative();
+    /*    if (RAND < ADD_ALTERNATIVE_CHANCE)
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->add_alternative();
+    if (RAND < DROP_CONDITION_CHANCE)
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->drop_condition();
+    if (RAND < DROP_CONDITION_CHANCE)
+    new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->drop_condition();*/
+
   }
 
   //delete [] hypos;
