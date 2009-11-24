@@ -150,9 +150,9 @@ menos generaciones por falta de tiempo y recursos.
 \textbf{Fase 1}\\
 De la experimentación con los tres tipos de selección se obtuvieron los siguientes promedios de fitness:
 \begin{itemize}
-  \item Roulette Wheel: 56.01%
-  \item Top Percent: 52.01%
-  \item Rank Selection: 25.5%
+  \item Roulette Wheel: 56.01\%
+  \item Top Percent: 52.01\%
+  \item Rank Selection: 25.5\%
 \end{itemize}
 De estos resultados y del tiempo de ejecución de cada algoritmo pudimos concluir que debido a la superioridad
 en cuanto al fitness generado en el caso de Roulette Wheel así como su poco tiempo de ejecución comparado
@@ -200,50 +200,50 @@ continuación:
 \emph{Tasa de mutación 0.06}
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-06-0-4.png}
+%  \includegraphics[scale=0.5]{media/200-0-06-0-4.png}
   \caption{Mejor fitness obtenido: 0.077313836}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-06-0-6.png}
+ % \includegraphics[scale=0.5]{media/200-0-06-0-6.png}
   \caption{Mejor fitness obtenido: 0.07906946}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-06-0-9.png}
+  %\includegraphics[scale=0.5]{media/200-0-06-0-9.png}
   \caption{Mejor fitness obtenido: 0.082127128}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/0-06all.png}
+  %\includegraphics[scale=0.5]{media/0-06all.png}
   \caption{Las tres tasas de crossover con tasa de mutación 0.06}\label{fig:nodos}
 \end{figure}
 
 \emph{Tasa de mutación 0.1}
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-1-0-4.png}
+  %\includegraphics[scale=0.5]{media/200-0-1-0-4.png}
   \caption{Mejor fitness obtenido: 0.03913476}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-1-0-6.png}
+  %\includegraphics[scale=0.5]{media/200-0-1-0-6.png}
   \caption{Mejor fitness obtenido: 0.059093477}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-1-0-9.png}
+  %\includegraphics[scale=0.5]{media/200-0-1-0-9.png}
   \caption{Mejor fitness obtenido: 0.080094328}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/0-1all.png}
+  %\includegraphics[scale=0.5]{media/0-1all.png}
   \caption{Las tres tasas de crossover con tasa de mutación 0.1}\label{fig:nodos}
 \end{figure}
 
@@ -256,19 +256,19 @@ y con las dos al mismo tiempo fueron los siguientes:
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-02-0-9-add-alternative.png}
+  %\includegraphics[scale=0.5]{media/200-0-02-0-9-add-alternative.png}
   \caption{Usando el operador \emph{AddAlternative}}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/200-0-02-0-9-drop-condition.png}
+  %\includegraphics[scale=0.5]{media/200-0-02-0-9-drop-condition.png}
   \caption{Usando el operador \emph{DropCondition}}\label{fig:nodos}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.5]{media/both-extensions.png}
+  %\includegraphics[scale=0.5]{media/both-extensions.png}
   \caption{Usando ambos operadores}\label{fig:nodos}
 \end{figure}
 
@@ -291,8 +291,111 @@ mejor al que provee el operador Drop Condition.
 \subsection{¿Cuál es el mejor conjunto de reglas hallado por el algorítmo genético?}
 \label{sec:preg3}
 El mejor conjunto de reglas hallado fué el siguiente:
-
-El resultado obtenido sobre el conjunto de prueba fué: \% de
+\newline
+El resultado obtenido sobre el conjunto de prueba fué: 58.51\% de
 clasificados correctamente.
+\newpage
+\begin{verbatim}
+Regla0: p1_ = 8779741078549245919 p2 = 4660554968710733537              
+Regla1: p1_ = 3751345646246976735 p2 = 6932518533492325064              
+Regla2: p1_ = 8521425960735050762 p2 = 5801565261465785974              
+Regla3: p1_ = 8962154459926125200 p2 = 2806380010285285089              
+Regla4: p1_ = 8363031664675333599 p2 = 4660554969343727222              
+Regla5: p1_ = 8962154459871542751 p2 = 2806380010285285089              
+Regla6: p1_ = 8774639275272644063 p2 = 4660554968715181764              
+Regla7: p1_ = 8525173354630995151 p2 = 5801565261465785974              
+Regla8: p1_ = 9223372030124457983 p2 = 7421896783161196257              
+Regla9: p1_ = 6340889511464084959 p2 = 4660554968710733537              
+Regla10: p1_ = 6365530130076556493 p2 = 6023832933409709793             
+Regla11: p1_ = 6365530133946039540 p2 = 8683868976262897377             
+Regla12: p1_ = 6365530124369287824 p2 = 6891492448011214847             
+Regla13: p1_ = 9223334010469767824 p2 = 5801565261465788129             
+Regla14: p1_ = 6365530124369287824 p2 = 3230970285598663917             
+Regla15: p1_ = 9223334629549237759 p2 = 3230970285598662369             
+Regla16: p1_ = 9223334629549237759 p2 = 7421896783161196257             
+Regla17: p1_ = 6340889511464084959 p2 = 4660554968710733537             
+Regla18: p1_ = 9223369835396169215 p2 = 4660554968710733537             
+Regla19: p1_ = 8525173354630995151 p2 = 3230924667911542390             
+Regla20: p1_ = 9223334629549237759 p2 = 4660554968710733537             
+Regla21: p1_ = 9223372030066810063 p2 = 3230970285283827425             
+Regla22: p1_ = 8962154459867604479 p2 = 2806380010285285089             
+Regla23: p1_ = 8363031664675333599 p2 = 3230970285916821110             
+Regla24: p1_ = 9223334629549237759 p2 = 7421896783161196257             
+Regla25: p1_ = 6340889511464084959 p2 = 4660554968710733537             
+Regla26: p1_ = 8646735360197909983 p2 = 7421896783161196257             
+Regla27: p1_ = 6340889511464084959 p2 = 4660554968710733537             
+Regla28: p1_ = 3751345646246976717 p2 = 6932518533492325064             
+Regla29: p1_ = 8521425960735050762 p2 = 8683869022982903414             
+Regla30: p1_ = 6365530124369287824 p2 = 6891492448011214847             
+Regla31: p1_ = 9223334010469767824 p2 = 5801565261465788129             
+Regla32: p1_ = 5828080307870653072 p2 = 3230970225154285281             
+Regla33: p1_ = 8962154459867604479 p2 = 2806380010285285089             
+Regla34: p1_ = 8363031664675333599 p2 = 6932518533547562614             
+Regla35: p1_ = 8521425960735050762 p2 = 3230970285598663916             
+Regla36: p1_ = 9223334629549237759 p2 = 7421896783161196257             
+Regla37: p1_ = 9223372030066810063 p2 = 3230970285283827425             
+Regla38: p1_ = 8962154459867604479 p2 = 2806380010285285089             
+Regla39: p1_ = 8363031664675333599 p2 = 3230970285916821110             
+Regla40: p1_ = 9223334629549237759 p2 = 7421896783161196257             
+Regla41: p1_ = 6340889511464084959 p2 = 2806380066193235681             
+Regla42: p1_ = 6365530124369274335 p2 = 3230970285598663917             
+Regla43: p1_ = 9223334629549237759 p2 = 7762516822467763937             
+Regla44: p1_ = 8521425952410124682 p2 = 8683869022982903414             
+Regla45: p1_ = 6365530124369287824 p2 = 6891492448011214847             
+Regla46: p1_ = 9223334010469767824 p2 = 5801565261465788129             
+Regla47: p1_ = 9106278444118302431 p2 = 2806380010285285089             
+Regla48: p1_ = 8774639275272644063 p2 = 4660554968714952388             
+Regla49: p1_ = 8779741078549265871 p2 = 4660554968710733537             
+Regla50: p1_ = 8962154459871542751 p2 = 6023202054567761521             
+Regla51: p1_ = 6441526891196579060 p2 = 4660554968710733537             
+Regla52: p1_ = 8962154459871542751 p2 = 2806380010285285089             
+Regla53: p1_ = 6365530134007931959 p2 = 4072182957835509473             
+Regla54: p1_ = 9223334629549237759 p2 = 7762516822467763937             
+Regla55: p1_ = 5828080307872678282 p2 = 4660554968710733537             
+Regla56: p1_ = 3751345646246976717 p2 = 6932518533492325064             
+Regla57: p1_ = 8521425960735050762 p2 = 5801565261465785974             
+Regla58: p1_ = 6365530124369287824 p2 = 3230970285598663917             
+Regla59: p1_ = 8962154459871542783 p2 = 2806380010285285089             
+Regla60: p1_ = 8962154459871653855 p2 = 4072182957835509473             
+Regla61: p1_ = 9223334629549237759 p2 = 7762516822467763937             
+Regla62: p1_ = 5828080307872678282 p2 = 4660554968710733537             
+Regla63: p1_ = 3751345646246976717 p2 = 6932518533492325064             
+Regla64: p1_ = 8521425960735050762 p2 = 5801565261465785974             
+Regla65: p1_ = 6365530124369287824 p2 = 3230970285598663917             
+Regla66: p1_ = 8962154459871542783 p2 = 2806380010285285089             
+Regla67: p1_ = 8962154459871653855 p2 = 2806380010285285089             
+Regla68: p1_ = 6340889511464084959 p2 = 4660554968710733537             
+Regla69: p1_ = 9223369835396169215 p2 = 7759031512341634785             
+Regla70: p1_ = 5828080307872678282 p2 = 6932518533492326113             
+Regla71: p1_ = 8521425960735050762 p2 = 5801565261465785974             
+Regla72: p1_ = 8779741009292918751 p2 = 2806380010285285060             
+Regla73: p1_ = 8521425960735049183 p2 = 8683868976262897398             
+Regla74: p1_ = 6365530124369287824 p2 = 6891492448011214847             
+Regla75: p1_ = 9223334010469767824 p2 = 5801565261465788129             
+Regla76: p1_ = 6365530124369287824 p2 = 3230970285598663917             
+Regla77: p1_ = 9223334629549237759 p2 = 4660554968740134625             
+Regla78: p1_ = 6365530130230009039 p2 = 3230970285598663917             
+Regla79: p1_ = 9223334629549237759 p2 = 7421896783161196257             
+Regla80: p1_ = 6340889511464084959 p2 = 4660554968710733537             
+Regla81: p1_ = 6365530130076556493 p2 = 7762516822467763937
+Regla82: p1_ = 5828080307872678282 p2 = 4660554965043854025
+Regla83: p1_ = 3751345646246976717 p2 = 6932518533492325064
+Regla84: p1_ = 8521425960735050762 p2 = 6932518533547562614
+Regla85: p1_ = 8521425960735050762 p2 = 3230970285598663916
+Regla86: p1_ = 8521425960735057407 p2 = 5801565261465785974
+Regla87: p1_ = 6365530124369287824 p2 = 3230970285598663917
+Regla88: p1_ = 8962154459871542783 p2 = 2806380010285285089
+Regla89: p1_ = 8962154459871653855 p2 = 2806380010285285089
+Regla90: p1_ = 6340889511464084959 p2 = 4660554968710733537
+Regla91: p1_ = 9223369835396169215 p2 = 6894340383886499553
+Regla92: p1_ = 9223334010469767824 p2 = 5801565261465788129
+Regla93: p1_ = 6365530124369287824 p2 = 3230970285598663917
+Regla94: p1_ = 9223334629549237759 p2 = 7421896783161196257
+Regla95: p1_ = 6340889511464084959 p2 = 6985720464485105377
+Regla96: p1_ = 8521425960735050762 p2 = 8683869022982903414
+Regla97: p1_ = 6365530124369287824 p2 = 3230970285598663917
+Regla98: p1_ = 8962154459867604479 p2 = 1664503238123060961
+Fitness Test: 0.585134
 
+\end{verbatim}
 \end{document}
