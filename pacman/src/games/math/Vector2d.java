@@ -83,10 +83,6 @@ public class Vector2d {
         y = ny;
     }
 
-    public double scalarProduct(Vector2d v) {
-        return x * v.x + y * v.y;
-    }
-
     public void contraRotate(Vector2d start, Vector2d end) {
         // rotate this vector by the opposite angle made to the horizontal by this line
         double r = start.dist(end);
@@ -98,6 +94,10 @@ public class Vector2d {
 
         x = nx;
         y = ny;
+    }
+
+    public double scalarProduct(Vector2d v) {
+        return x * v.x + y * v.y;
     }
 
     public void set(Vector2d v) {

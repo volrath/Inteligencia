@@ -75,15 +75,6 @@ public class JEasyFrame extends JFrame {
         }
     }
 
-//  I no longer like inner classes!
-//
-//    WindowAdapter() {
-//      public void windowClosing(WindowEvent e) {
-//        tryClose();
-//      }
-//    });
-
-
 
 
     public JEasyFrame(Component comp, String title, boolean exit) {
@@ -91,7 +82,8 @@ public class JEasyFrame extends JFrame {
         this.comp = comp;
         getContentPane().add(BorderLayout.CENTER, comp);
         pack();
-        show();
+        // show();
+        this.setVisible(true);
         repaint();
     }
 
@@ -103,26 +95,5 @@ public class JEasyFrame extends JFrame {
             else
                 dispose();
         }
-    }
-
-    static class GreenComponent extends Component {
-        Dimension d = new Dimension(160, 90);
-
-        public void paint(Graphics g) {
-            g.setColor(Color.green);
-            g.fillRect(0, 0, d.width, d.height);
-        }
-
-        public Dimension getPreferredSize() {
-            return d;
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        // test it!!
-
-        new JEasyFrame(
-                new GreenComponent(), "Closeable Frame Test", true).center();
-
     }
 }
