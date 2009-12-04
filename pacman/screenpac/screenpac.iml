@@ -8,6 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Pacman" />
+    <orderEntry type="library" name="NeuralJ" level="project" />
   </component>
 </module>
 

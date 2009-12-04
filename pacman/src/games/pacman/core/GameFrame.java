@@ -3,6 +3,7 @@ package games.pacman.core;
 import utilities.JEasyFrame;
 import games.pacman.controllers.KeyController;
 import games.pacman.controllers.PacController;
+import games.pacman.controllers.SmartController;
 import games.pacman.ghost.Ghost;
 import games.pacman.view.DisplayComponent;
 import games.pacman.core.FullGame;
@@ -28,7 +29,7 @@ public class GameFrame extends Thread {
 
         // FullGame game = new FullGame();
         GameFrame game = new GameFrame();
-        // game.game.setController(new SimpleAvoidance(game.game));
+        //game.game.setController(new SmartController());
         game.start();
     }
 

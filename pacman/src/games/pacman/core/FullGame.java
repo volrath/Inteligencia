@@ -11,6 +11,8 @@ import games.pacman.maze.MazeNode;
 import games.pacman.core.PacMan;
 import games.pacman.core.GameFrame;
 import utilities.ElapsedTimer;
+import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
+import neuralj.networks.feedforward.learning.genetic.GeneticAlgorithm;
 
 
 public class FullGame {
@@ -40,7 +42,9 @@ public class FullGame {
     int score; // game score
 
     public static void main(String[] args) {
-
+        int[] hidden_neurons = {4};
+        FeedForwardNeuralNetwork ne = new FeedForwardNeuralNetwork(2,hidden_neurons,1);
+        GeneticAlgorithm ga = new GeneticAlgorithm(ne);
         FullGame game = new FullGame();
         PacController pc;
         pc = new RandomController();
@@ -52,7 +56,7 @@ public class FullGame {
         int score = game.runModel( lives, maxIts );
         System.out.println(t);
         System.out.println("Score = " + score);
-    }
+    }       
 
     public void setController(PacController controller) {
         this.controller = controller;
