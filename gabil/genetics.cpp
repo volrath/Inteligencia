@@ -66,9 +66,9 @@ void population_t::next_generation() {
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->mutate();
     if (RAND < MUTATE_CHANCE)
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->mutate();
-    if (RAND < ADD_ALTERNATIVE_CHANCE)
-      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->add_alternative();
     /*    if (RAND < ADD_ALTERNATIVE_CHANCE)
+      new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->add_alternative();
+    if (RAND < ADD_ALTERNATIVE_CHANCE)
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i + 1)]->add_alternative();
     if (RAND < DROP_CONDITION_CHANCE)
       new_population[(int)(ceil(((1 - new_children_perc) * pop_size)) + i)]->drop_condition();

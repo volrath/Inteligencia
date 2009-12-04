@@ -3,6 +3,7 @@ package games.pacman.core;
 import utilities.JEasyFrame;
 import games.pacman.controllers.KeyController;
 import games.pacman.controllers.PacController;
+import games.pacman.controllers.SmartController;
 import games.pacman.ghost.Ghost;
 import games.pacman.view.DisplayComponent;
 import games.pacman.core.FullGame;
@@ -28,7 +29,7 @@ public class GameFrame extends Thread {
 
         // FullGame game = new FullGame();
         GameFrame game = new GameFrame();
-        // game.game.setController(new SimpleAvoidance(game.game));
+        //game.game.setController(new SmartController());
         game.start();
     }
 
@@ -55,19 +56,20 @@ public class GameFrame extends Thread {
 
     public void run() {
         int lives = 3;
-        System.out.println("Started!");
+        //System.out.println("Started!");
         while (true) {
             try {
                 game.modelCycle();
                 dc.repaint();
                 frame.setTitle("Score: " + game.score);
                 if (game.eaten()) {
+                    //System.out.println("Pacman pos: "+game.pacman.current.ix);
                     lives--;
                     game.initialPositions();
-                    System.out.println("Lives left: " + lives);
+                    //System.out.println("Lives left: " + lives);
                     if (lives == 0) {
-                        System.out.println("Game over: " + game.score);
-                        System.out.println("nSteps: " + game.nSteps);
+                        //System.out.println("Game over: " + game.score);
+                        //System.out.println("nSteps: " + game.nSteps);
                         break;
                     }
                 }

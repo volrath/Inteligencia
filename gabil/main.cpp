@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
   population = new population_t("data/adult.bin", pop_size, mutate_chance, new_children_perc);
   fittest = population->get_fittest(); best_so_far = fittest;
-  while (it < 40) {
+  while (it < 100) {
     it++;
     population->next_generation();
     if (verbose)
@@ -44,4 +44,21 @@ int main(int argc, char **argv) {
       cout << "    Best so far: " << (float)best_so_far->fitness * 100 << " %%" << endl;
   }
   cout << (float)best_so_far->fitness << endl;
+  for(int i = 0; i < best_so_far->rules.size(); i++){
+    cout << "Regla" << i << ": p1_ = "<< best_so_far->rules[i]->p1_ << " p2 = " << best_so_far->rules[i]->p2_ <<endl;
+  }
+
+  string  f_name = "data/adulttest.bin";
+  struct stat results;
+  int ts_size = 0;
+  if (stat(f_name.c_str(), &results) == 0)
+    ts_size = results.st_size/sizeof(long);
+  ifstream file(f_name.c_str(), ios::in | ios::binary);
+  long * training_set = new long[ts_size];
+
+  file.read((char*)training_set,sizeof(long)*ts_size);
+  file.close();
+  
+  best_so_far->calc_fitness(training_set, ts_size);
+  cout << "Fitness Test: " << best_so_far->fitness << endl;
 }

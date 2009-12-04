@@ -1,0 +1,14 @@
+neuralj
+neuralj.conditioncheckers
+neuralj.datasets
+neuralj.networks.feedforward
+neuralj.networks.feedforward.activation
+neuralj.networks.feedforward.learning
+neuralj.networks.feedforward.learning.bprop
+neuralj.networks.feedforward.learning.genetic
+neuralj.networks.feedforward.learning.genetic.crossover
+neuralj.networks.feedforward.learning.genetic.mutation
+neuralj.networks.feedforward.learning.genetic.selection
+neuralj.networks.feedforward.learning.rprop
+neuralj.testers
+neuralj.watchers

@@ -5,10 +5,7 @@ import utilities.JEasyFrame;
 import utilities.ElapsedTimer;
 import utilities.StatSummary;
 import screenpac.extract.Constants;
-import screenpac.controllers.AgentInterface;
-import screenpac.controllers.SimplePillEater;
-import screenpac.controllers.RandomAgent;
-import screenpac.controllers.RandomNonReverseAgent;
+import screenpac.controllers.*;
 import screenpac.ghosts.GhostTeamController;
 import screenpac.ghosts.RandTeam;
 import screenpac.ghosts.PincerTeam;
@@ -26,9 +23,9 @@ public class Game implements Constants {
         AgentInterface agent = null; // new SimplePillEater();
         agent = new SimplePillEater();
         GhostTeamController ghostTeam;
-        ghostTeam = new RandTeam();
-        //ghostTeam = new LegacyTeam();
-        ghostTeam = new PincerTeam();
+        //ghostTeam = new RandTeam();
+        ghostTeam = new LegacyTeam();
+        // ghostTeam = new PincerTeam();
 
         if (visual) runVisual(agent, ghostTeam);
         else runDark(agent, ghostTeam);

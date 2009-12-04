@@ -126,7 +126,7 @@ public class Ghost extends Mobile {
         if (edible == 0 || (edible > 0 && (edible % 2) == 0)) {
 
             MazeNode next = null;
-            System.out.println("Moving ghost: " + eval);
+            //System.out.println("Moving ghost: " + eval);
             if (controller != null) {
                 int dir = controller.preferredMove();
                 // check it's legal
