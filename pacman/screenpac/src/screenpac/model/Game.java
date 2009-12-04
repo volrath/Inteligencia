@@ -24,11 +24,11 @@ public class Game implements Constants {
 
     public static void main(String[] args) throws Exception {
         AgentInterface agent = null; // new SimplePillEater();
-        // agent = new RandomNonReverseAgent();
+        agent = new SimplePillEater();
         GhostTeamController ghostTeam;
         ghostTeam = new RandTeam();
-        ghostTeam = new LegacyTeam();
-        // ghostTeam = new PincerTeam();
+        //ghostTeam = new LegacyTeam();
+        ghostTeam = new PincerTeam();
 
         if (visual) runVisual(agent, ghostTeam);
         else runDark(agent, ghostTeam);

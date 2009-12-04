@@ -5,8 +5,8 @@ from commands import getoutput
 import matplotlib.pyplot as plt
 
 POP_SIZE = 200
-MUTATE_CHANCEs = [.02, .06, .1]
-NEW_CHILDREN_PERCs = [.4, .6, .9]
+MUTATE_CHANCEs = [.1]
+NEW_CHILDREN_PERCs = [.75]
 RANGE = 10
 
 def plot_one(output, mc, ncp):
