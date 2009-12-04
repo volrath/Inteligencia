@@ -56,19 +56,20 @@ public class GameFrame extends Thread {
 
     public void run() {
         int lives = 3;
-        System.out.println("Started!");
+        //System.out.println("Started!");
         while (true) {
             try {
                 game.modelCycle();
                 dc.repaint();
                 frame.setTitle("Score: " + game.score);
                 if (game.eaten()) {
+                    //System.out.println("Pacman pos: "+game.pacman.current.ix);
                     lives--;
                     game.initialPositions();
-                    System.out.println("Lives left: " + lives);
+                    //System.out.println("Lives left: " + lives);
                     if (lives == 0) {
-                        System.out.println("Game over: " + game.score);
-                        System.out.println("nSteps: " + game.nSteps);
+                        //System.out.println("Game over: " + game.score);
+                        //System.out.println("nSteps: " + game.nSteps);
                         break;
                     }
                 }

@@ -71,7 +71,7 @@ public class FullGame {
             ghosts[i] = new Ghost(maze, pacman, ghosts);
             maze.lines.add(ghosts[i]);
             maze.place(ghosts[i]);
-            System.out.println(ghosts[i].eval);
+            //System.out.println(ghosts[i].eval);
         }
         maze.place(pacman);
         // maze.print(System.out);
@@ -187,7 +187,7 @@ public class FullGame {
         }
         // System.out.println("Moving ghosts: " + ghosts.length);
         for (int i = 0; i < ghosts.length; i++) {
-            System.out.println("Processing ghost: " + i);
+            //System.out.println("Processing ghost: " + i);
             if ((nSteps) % reversalTime == 0) {
                 ghosts[i].reverse();
             } else {

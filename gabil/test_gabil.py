@@ -5,8 +5,8 @@ from commands import getoutput
 import matplotlib.pyplot as plt
 
 POP_SIZE = 200
-MUTATE_CHANCEs = [.02, .06, .1]
-NEW_CHILDREN_PERCs = [.4, .6, .9]
+MUTATE_CHANCEs = [.02]
+NEW_CHILDREN_PERCs = [.6]
 RANGE = 10
 
 def plot_one(output, mc, ncp):
@@ -16,7 +16,7 @@ def plot_one(output, mc, ncp):
     plt.grid(True)
     plt.plot([fitness for fitness in output[:-1]], label='mc: %s ncp: %s' % (mc, ncp))
     plt.legend()
-    plt.savefig('media/%s-%s-%s.png' % (POP_SIZE, mc, ncp))
+    plt.savefig('media/DC%s-%s-%s.png' % (POP_SIZE, mc, ncp))
     plt.clf()
 
 def plot_pop(outputs):
@@ -29,7 +29,7 @@ def plot_pop(outputs):
     for label, output in outputs.iteritems():
         plt.plot([fitness for fitness in output[:-1]], label=label)
     plt.legend()
-    plt.savefig('media/all.png')
+    plt.savefig('media/DCall.png')
     plt.clf()
 
 def main():
@@ -39,7 +39,7 @@ def main():
         i += 1
         print '[%s] plotting ./main %s %s %s' % (i, POP_SIZE, mc, ncp)
         results = []
-        f = open('logs/log-%s-%s-%s.log' % (POP_SIZE, mc, ncp), 'w')
+        f = open('logs/DClog-%s-%s-%s.log' % (POP_SIZE, mc, ncp), 'w')
         for j in range(RANGE):
             print '      ', j
             cr = getoutput('./main %s %s %s' % (POP_SIZE, mc, ncp))

@@ -44,7 +44,7 @@ public class PacmanRouletteWheel extends RouletteWheel {
         double score = 0;
         ElapsedTimer t = new ElapsedTimer();
         int lives = 3;
-        int maxIts = 10000;
+        int maxIts = 10000;        
         for(int i = 0; i < numIter; i++) {
             score += this.game.runModel( lives, maxIts );
         }

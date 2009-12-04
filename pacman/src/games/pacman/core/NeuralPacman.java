@@ -1,7 +1,9 @@
 package games.pacman.core;
 
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
+import neuralj.networks.feedforward.SynapseLayer;
 import neuralj.networks.feedforward.learning.genetic.GeneticAlgorithm;
+import neuralj.networks.feedforward.learning.genetic.PacmanGeneticAlgorithm;
 import neuralj.networks.feedforward.learning.genetic.mutation.MutationRandom;
 import neuralj.networks.feedforward.learning.genetic.selection.SelectionRouletteWheel;
 import neuralj.networks.feedforward.learning.genetic.crossover.CrossoverDoublePoint;
@@ -9,10 +11,14 @@ import neuralj.networks.feedforward.learning.FeedForwardNetworkLearningAlgorithm
 import neuralj.datasets.PatternSet;
 import neuralj.datasets.Pattern;
 import neuralj.watchers.ConsoleWatcher;
+import neuralj.Serializer;
 import games.pacman.features.PacmanSelectionRouletteWheel;
 import games.pacman.controllers.SmartController;
 import games.pacman.controllers.RandomController;
 import games.pacman.controllers.NeuroticPacmanController;
+import games.pacman.controllers.PacController;
+import games.pacman.maze.OldMaze;
+import games.pacman.maze.MazeNode;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,12 +34,12 @@ public class NeuralPacman {
         Pattern.split_token = ",";
         pattern_set.loadPatterns("uselesspacman.patterns", 13);
         pattern_set.generateSets();
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(13, new int[] { 10 }, 1);
-        GeneticAlgorithm ga = new GeneticAlgorithm(net);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(13, new int[] { 15 }, 1);
+        PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(net);
         ga.pattern_set = pattern_set;
         ga.learning_strategy = FeedForwardNetworkLearningAlgorithm.LearningStrategy.Generalization;
         ga.desired_error = 0;
-		ga.maximum_epochs = 1000;
+		ga.maximum_epochs = 10;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
 		ga.mutation_operator = new MutationRandom();
@@ -42,9 +48,23 @@ public class NeuralPacman {
 		ga.start();
         while (ga.is_running)
 			Thread.sleep(1000);
-        GameFrame game = new GameFrame();
-        FullGame fg = new FullGame();
-        game.controller = new NeuroticPacmanController(fg,net);
+        Serializer.saveObject(net, "network.net");
+        int i = 0;
+        for(SynapseLayer sl: net.synapse_layers){
+            System.out.println("Capa de Sinapsis "+i+": ");
+            for(int j = 0; j < sl.getWeightVector().size(); j++){
+                System.out.println("j: "+j+ " Peso: "+sl.getWeightVector().get(j));
+            }
+            i++;
+        }
+        // Restore the network
+        net = (FeedForwardNeuralNetwork) Serializer.loadObject("network.net");
+        //        System.out.println(net.);
+        // Test the results again
+        NeuroticPacmanController pc = new NeuroticPacmanController(net);
+        pc.verbose = true;
+        GameFrame game = new GameFrame(pc);
+        pc.setGame(game.game);
         game.run();
     }
 }
