@@ -2,6 +2,7 @@ package games.pacman.controllers;
 
 import games.pacman.core.FullGame;
 import games.pacman.core.GameData;
+import games.pacman.core.GameFrame;
 import games.pacman.ghost.Ghost;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 
@@ -15,7 +16,7 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class NeuroticPacmanController implements PacController{
-    public static final double MAXDIST = 158/2; 
+    public static final double MAXDIST = 158; 
     FullGame game;
     FeedForwardNeuralNetwork net;
     public boolean verbose = false;

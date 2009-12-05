@@ -3,6 +3,7 @@ package games.pacman.features;
 import java.util.Random;
 import java.util.Vector;
 import neuralj.datasets.Pattern;
+import neuralj.datasets.PatternSet;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 import neuralj.networks.feedforward.activation.ActivationFunctionSigmoid;
 import neuralj.networks.feedforward.learning.FeedForwardNetworkLearningAlgorithm;
@@ -29,10 +30,10 @@ import games.pacman.features.PacmanRouletteWheel;
 public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 {
 	// The default crossover rate for the genetic algorithm
-	public static final double	DEFAULT_CROSSOVER_RATE		= 0.60;
+	public static final double	DEFAULT_CROSSOVER_RATE		= 0;
 
 	// The default mutation rate for the genetic algorithm
-	public static final double	DEFAULT_MUTATION_RATE		= 0.01;
+	public static final double	DEFAULT_MUTATION_RATE		= 0.5;
 
 	// The default population size for the genetic algorithm
 	public static final int		DEFAULT_POPULATION_SIZE		= 20;
@@ -48,7 +49,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	public double				crossover_rate				= DEFAULT_CROSSOVER_RATE;
 
 	// Genetic algorithm mutation operator
-	public IMutationOperator	mutation_operator			= new MutationRandom();
+	public IMutationOperator	mutation_operator			= new PacmanMutationRandom(); 
 
     public double               mutation_rate               = DEFAULT_MUTATION_RATE;
 
@@ -70,13 +71,14 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	 *            The neural network the algorithm will use
 	 */
 	@SuppressWarnings("unchecked")
-	public PacmanGeneticAlgorithm(FeedForwardNeuralNetwork p_network)
+	public PacmanGeneticAlgorithm(PacmanFeedForwardNeuralNetwork p_network)
 	{
 		super(p_network);
+        System.out.println("Network: "+this.network);
 		this.network.setActivationFunction(new ActivationFunctionSigmoid());
 		this.population.addMember(this.network);
         for(int i = 0; i < this.population_size; i++){
-            FeedForwardNeuralNetwork new_net = new FeedForwardNeuralNetwork(13, new int[] { 15 }, 1);
+            FeedForwardNeuralNetwork new_net = new FeedForwardNeuralNetwork(13, new int[] { 20 }, 1);
             this.population.addMember(new_net);
         }
 	}
@@ -99,17 +101,24 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 			member1 = this.selection_operator.select(this.population);
 			member2 = this.selection_operator.select(this.population);
 			// Crossover or copy
-			if (value <= this.crossover_rate)
+			/*if (value < this.crossover_rate)
 			{
 		        new_population.add(this.mutation_operator.mutate(this.crossover_operator.cross(member1, member2)));
 			    new_population.add(this.mutation_operator.mutate(this.crossover_operator.cross(member1, member2)));
 			}
 			else
-			{
-				new_population.add(member1);
-				new_population.add(member2);
-			}
-		}
+			{      */
+            
+				double value2 = Math.random();//double) rnd.nextInt(100)/100;
+			    if(value2 <= this.mutation_rate){
+                    new_population.add(this.mutation_operator.mutate(member1));
+				    new_population.add(this.mutation_operator.mutate(member2));
+			    }else{
+				    new_population.add(member1);
+				    new_population.add(member2);
+				}
+			//}
+		}                                              
 		this.population.setPopulation(new_population);
 	}
 
@@ -122,4 +131,5 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 		this.current_epoch++;
 		// return 1.0 - this.population.getEliteFitness();
 	}
+    
 }

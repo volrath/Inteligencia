@@ -3,7 +3,7 @@ package games.pacman.core;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 import neuralj.networks.feedforward.SynapseLayer;
 import neuralj.networks.feedforward.learning.genetic.GeneticAlgorithm;
-import neuralj.networks.feedforward.learning.genetic.PacmanGeneticAlgorithm;
+import games.pacman.features.PacmanGeneticAlgorithm;
 import neuralj.networks.feedforward.learning.genetic.mutation.MutationRandom;
 import neuralj.networks.feedforward.learning.genetic.selection.SelectionRouletteWheel;
 import neuralj.networks.feedforward.learning.genetic.crossover.CrossoverDoublePoint;
@@ -13,6 +13,8 @@ import neuralj.datasets.Pattern;
 import neuralj.watchers.ConsoleWatcher;
 import neuralj.Serializer;
 import games.pacman.features.PacmanSelectionRouletteWheel;
+import games.pacman.features.PacmanMutationRandom;
+import games.pacman.features.PacmanFeedForwardNeuralNetwork;
 import games.pacman.controllers.SmartController;
 import games.pacman.controllers.RandomController;
 import games.pacman.controllers.NeuroticPacmanController;
@@ -34,15 +36,15 @@ public class NeuralPacman {
         Pattern.split_token = ",";
         pattern_set.loadPatterns("uselesspacman.patterns", 13);
         pattern_set.generateSets();
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(13, new int[] { 15 }, 1);
+        PacmanFeedForwardNeuralNetwork net = new PacmanFeedForwardNeuralNetwork(13, new int[] { 20 }, 1);
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(net);
         ga.pattern_set = pattern_set;
         ga.learning_strategy = FeedForwardNetworkLearningAlgorithm.LearningStrategy.Generalization;
         ga.desired_error = 0;
-		ga.maximum_epochs = 10;
+		ga.maximum_epochs = 50;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
-		ga.mutation_operator = new MutationRandom();
+		ga.mutation_operator = new PacmanMutationRandom();
 		ga.watcher = new ConsoleWatcher(ga);
 		ga.is_running = true;
 		ga.start();
@@ -58,7 +60,7 @@ public class NeuralPacman {
             i++;
         }
         // Restore the network
-        net = (FeedForwardNeuralNetwork) Serializer.loadObject("network.net");
+        net = (PacmanFeedForwardNeuralNetwork) Serializer.loadObject("network.net");
         //        System.out.println(net.);
         // Test the results again
         NeuroticPacmanController pc = new NeuroticPacmanController(net);
