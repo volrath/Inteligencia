@@ -8,6 +8,7 @@ import games.pacman.maze.MazeNode;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 
 import java.util.Vector;
+import java.util.Collections;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,24 +68,33 @@ public class NeuroticPacmanController implements PacController{
     }
 
     public int getDirection() {
-        Vector<Double> inputs, outputs = new Vector<Double>();
-//        if (verbose > 0) System.out.println("----------------------------------------------");
-//        for (int i = 0; i < game.pacman.current.next.length; i++) {
-//            inputs = this.getInputs(game, game.pacman.current.next[i]);
-//            outputs.add(net.feedForward(inputs).get(0));
-//            if(verbose > 0) System.out.println("NET Output: " + outputs.get(i));
-//        }
-//        if (verbose > 0) System.out.println("----------------------------------------------");
-        Double output = net.feedForward(this.getInputs(game, game.pacman.current)).get(0);
-        if(output <= 0.25){
-            return LEFT;
-        }else if(output > 0.25 && output <= 0.5){
-            return RIGHT;
-        }else if(output > 0.5 && output <= 0.75){
-            return UP;
-        }else if(output > 0.75 && output <= 1){
-            return DOWN;
+        Double output, bestEvaluation = 0.0;
+        int bestMove = 0;
+
+        if (verbose > 0) System.out.println("----------------------------------------------");
+        String[] directions = {"UP", "RIGHT", "DOWN", "LEFT"};
+        for (int i = 0; i < 4; i++) { // up, right, down, left
+            if (game.pacman.current.canMove(i)) {
+                output = net.feedForward(this.getInputs(game, game.pacman.current.next(i))).get(0);
+                if (output > bestEvaluation) {
+                    bestEvaluation = output;
+                    bestMove = i;
+                    if(verbose > 0) System.out.println("Best output so far: " + output + ", Direction: " + directions[i]);
+                }
+            }
         }
-        return RIGHT;
+        if(verbose > 0) System.out.println("NET Output: " + directions[bestMove]);
+        if (verbose > 0) System.out.println("----------------------------------------------");
+        //Double output = net.feedForward(this.getInputs(game, game.pacman.current)).get(0);
+//        if(output <= 0.25){
+//            return LEFT;
+//        }else if(output > 0.25 && output <= 0.5){
+//            return RIGHT;
+//        }else if(output > 0.5 && output <= 0.75){
+//            return UP;
+//        }else if(output > 0.75 && output <= 1){
+//            return DOWN;
+//        }
+        return bestMove;
     }
 }
