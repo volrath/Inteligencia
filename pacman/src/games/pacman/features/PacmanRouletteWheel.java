@@ -31,7 +31,7 @@ public class PacmanRouletteWheel extends RouletteWheel {
         this.pc = new NeuroticPacmanController(game, p_member);
 		this.game.setController(this.pc);
 		slice.member = p_member;
-		slice.fitness = calcFitness(10);
+		slice.fitness = calcFitness(50);
 		this.roulette_slices.add(slice);
 		Object[] list = this.roulette_slices.toArray();
 		Arrays.sort(list);

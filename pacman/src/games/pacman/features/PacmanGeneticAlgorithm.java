@@ -74,7 +74,6 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	public PacmanGeneticAlgorithm(PacmanFeedForwardNeuralNetwork p_network)
 	{
 		super(p_network);
-        System.out.println("Network: "+this.network);
 		this.network.setActivationFunction(new ActivationFunctionSigmoid());
 		this.population.addMember(this.network);
         for(int i = 0; i < this.population_size; i++){
@@ -91,15 +90,16 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	{
         System.out.println("Current generation: "+this.current_epoch);
 		Random rnd = new Random();
-		FeedForwardNeuralNetwork member1;
-		FeedForwardNeuralNetwork member2;
+        int index;
+		FeedForwardNeuralNetwork member;
+        Vector<FeedForwardNeuralNetwork> old_population = this.population.getPopulation();
 		Vector<FeedForwardNeuralNetwork> new_population = new Vector<FeedForwardNeuralNetwork>();
-		// Fill population to it's maximum
-		while (new_population.size() < this.population_size)
+
+		// Fill half of the population with mutated members
+		while (new_population.size() < this.population_size / 2)
 		{
-			double value = (double) rnd.nextInt(100) / 100;
-			member1 = this.selection_operator.select(this.population);
-			member2 = this.selection_operator.select(this.population);
+            index = rnd.nextInt(old_population.size() - 1);
+            new_population.add(this.mutation_operator.mutate(old_population.remove(index)));
 			// Crossover or copy
 			/*if (value < this.crossover_rate)
 			{
@@ -107,7 +107,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 			    new_population.add(this.mutation_operator.mutate(this.crossover_operator.cross(member1, member2)));
 			}
 			else
-			{      */
+			{
             
 				double value2 = Math.random();//double) rnd.nextInt(100)/100;
 			    if(value2 <= this.mutation_rate){
@@ -117,8 +117,12 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 				    new_population.add(member1);
 				    new_population.add(member2);
 				}
-			//}
-		}                                              
+			}*/
+		}
+
+        while (new_population.size() < this.population_size)
+            new_population.add(old_population.remove(0));
+
 		this.population.setPopulation(new_population);
 	}
 

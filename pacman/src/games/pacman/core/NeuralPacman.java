@@ -64,7 +64,7 @@ public class NeuralPacman {
         //        System.out.println(net.);
         // Test the results again
         NeuroticPacmanController pc = new NeuroticPacmanController(net);
-        pc.verbose = true;
+        pc.verbose = 1;
         GameFrame game = new GameFrame(pc);
         pc.setGame(game.game);
         game.run();
