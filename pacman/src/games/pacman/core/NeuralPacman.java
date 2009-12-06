@@ -47,7 +47,7 @@ public class NeuralPacman {
         ga.pattern_set = pattern_set;
         ga.learning_strategy = PacmanGeneticAlgorithm.LearningStrategy.Optimization;
         ga.desired_error = -10;
-		ga.maximum_epochs = 25;
+		ga.maximum_epochs = 1000;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
 		ga.mutation_operator = new PacmanMutationRandom();
@@ -69,12 +69,13 @@ public class NeuralPacman {
         // Save the scores
         try{
             Calendar now = Calendar.getInstance();
-            
+
             // Create file
             FileWriter fstream = new FileWriter("logs/scores-" + now.get(Calendar.DATE) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.HOUR_OF_DAY) + "-" + now.get(Calendar.MINUTE) + "-" + now.get(Calendar.SECOND) + ".log");
             BufferedWriter out = new BufferedWriter(fstream);
             for (Double score: ga.score_timeline)
                 out.write(score + " ");
+            out.write("\n\nMaximum: " + ga.maximum_score + " at " + ga.maximum_score_epoch + " epochs...");
             //Close the output stream
             out.close();
         } catch (Exception e) {//Catch exception if any
