@@ -42,7 +42,7 @@ public class NeuralPacman {
         ga.pattern_set = pattern_set;
         ga.learning_strategy = PacmanGeneticAlgorithm.LearningStrategy.Optimization;
         ga.desired_error = -10;
-		ga.maximum_epochs = 25;
+		ga.maximum_epochs = 50;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
 		ga.mutation_operator = new PacmanMutationRandom();
