@@ -6,6 +6,8 @@ import neuralj.networks.feedforward.learning.bprop.BackPropagation;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Vector;
 
 import games.pacman.core.FullGame;
 import games.pacman.controllers.PacController;
@@ -24,6 +26,10 @@ import utilities.ElapsedTimer;
 public class PacmanRouletteWheel extends RouletteWheel {
     FullGame game = new FullGame();
     PacController pc;    
+
+    public Vector<RouletteSlice> getFullPopulation(){
+        return this.roulette_slices;      
+    }
 
     public void addMember(FeedForwardNeuralNetwork p_member)
 	{
