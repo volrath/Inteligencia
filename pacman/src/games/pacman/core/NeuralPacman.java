@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,12 +43,11 @@ public class NeuralPacman {
         pattern_set.loadPatterns("uselesspacman.patterns", 13);
         pattern_set.generateSets();
         PacmanFeedForwardNeuralNetwork net = new PacmanFeedForwardNeuralNetwork(13, new int[] { 20 }, 1);
-
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(net);
         ga.pattern_set = pattern_set;
         ga.learning_strategy = PacmanGeneticAlgorithm.LearningStrategy.Optimization;
         ga.desired_error = -10;
-		ga.maximum_epochs = 50;
+		ga.maximum_epochs = 25;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
 		ga.mutation_operator = new PacmanMutationRandom();
@@ -56,16 +56,9 @@ public class NeuralPacman {
 		ga.start();
         while (ga.is_running)
 			Thread.sleep(1000);
-        Serializer.saveObject(net, "network.net");
-        int i = 0;
-        for(SynapseLayer sl: net.synapse_layers){
-            System.out.println("Capa de Sinapsis "+i+": ");
-            for(int j = 0; j < sl.getWeightVector().size(); j++){
-                System.out.println("j: "+j+ " Peso: "+sl.getWeightVector().get(j));
-            }
-            i++;
-        }
 
+        Serializer.saveObject(net, "network.net");
+        
         // Save the scores
         try{
             Calendar now = Calendar.getInstance();
@@ -80,16 +73,14 @@ public class NeuralPacman {
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
-
         // Restore the network
         net = (PacmanFeedForwardNeuralNetwork) Serializer.loadObject("network.net");
-        System.out.println("Best Fitness: "+net.calcFitness(50));
         // Test the results again
         NeuroticPacmanController pc = new NeuroticPacmanController(net);
         pc.verbose = 1;
         GameFrame game = new GameFrame(pc);
         pc.setGame(game.game);
         game.run();
-        System.out.println("Best result in epoch: " + ga.maximum_score_epoch + " with: " + ga.maximum_score);
+        //System.out.println("Best result in epoch: " + ga.maximum_score_epoch + " with: " + ga.maximum_score);
     }
 }

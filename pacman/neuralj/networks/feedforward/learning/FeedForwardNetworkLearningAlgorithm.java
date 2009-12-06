@@ -6,7 +6,7 @@ import neuralj.conditioncheckers.ConsoleConditionChecker;
 import neuralj.conditioncheckers.IConditionChecker;
 import neuralj.datasets.Pattern;
 import neuralj.datasets.PatternSet;
-import neuralj.datasets.PatternSet.PatternType;
+import neuralj.datasets.PatternSet.PoptatternType;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 import neuralj.networks.feedforward.Neuron;
 import neuralj.networks.feedforward.NeuronLayer;
