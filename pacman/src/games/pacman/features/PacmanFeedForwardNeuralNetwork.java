@@ -9,6 +9,10 @@ import neuralj.Mathematics;
 import java.util.Random;
 import java.util.Vector;
 
+import utilities.ElapsedTimer;
+import games.pacman.core.FullGame;
+import games.pacman.controllers.NeuroticPacmanController;
+
 /**
  * Created by IntelliJ IDEA.
  * User: kristoffer
@@ -17,11 +21,15 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class PacmanFeedForwardNeuralNetwork extends FeedForwardNeuralNetwork {
-    
+
+    public PacmanFeedForwardNeuralNetwork(FeedForwardNeuralNetwork net){
+        super(net.getNumberNeuronsInput(Neuron.NeuronType.Normal),net.getNumberNeuronsHidden(Neuron.NeuronType.Normal),net.getNumberNeuronsOutput(Neuron.NeuronType.Normal),new ActivationFunctionHTangent());
+        this.setWeightVector((Vector<Double>)net.getWeightVector().clone());
+    }
+
     public PacmanFeedForwardNeuralNetwork(int input_size, int[] hidden_size, int output_size)
 	{
-		super(input_size, hidden_size, output_size, new ActivationFunctionHTangent());
-        System.out.println("Size NeuralN: "+this.neuron_layers.size());
+		super(input_size, hidden_size, output_size, new ActivationFunctionHTangent());        
 	}    
 
 	/**
@@ -65,5 +73,33 @@ public class PacmanFeedForwardNeuralNetwork extends FeedForwardNeuralNetwork {
 		destination.incoming_synapses.add(synapse);
 		return synapse;		
 	}
+
+    public double calcFitness(int numIter){
+        double score = 0;
+        FullGame game = new FullGame();
+        NeuroticPacmanController pc = new NeuroticPacmanController(game, this);
+		game.setController(pc);        
+        ElapsedTimer t = new ElapsedTimer();
+        int lives = 3;
+        int maxIts = 10000;
+        for(int i = 0; i < numIter; i++) {
+            score += game.runModel( lives, maxIts );
+        }
+        return (score/numIter);
+    }
+
+    public static double calcFitness(int numIter, FeedForwardNeuralNetwork net){
+        double score = 0;
+        FullGame game = new FullGame();
+        NeuroticPacmanController pc = new NeuroticPacmanController(game, net);
+		game.setController(pc);
+        ElapsedTimer t = new ElapsedTimer();
+        int lives = 3;
+        int maxIts = 10000;
+        for(int i = 0; i < numIter; i++) {
+            score += game.runModel( lives, maxIts );
+        }
+        return (score/numIter);
+    }
 
 }
