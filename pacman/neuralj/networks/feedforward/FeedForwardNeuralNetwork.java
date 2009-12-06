@@ -1,4 +1,4 @@
-package neuralj.networks.feedforward;
+package neuralj.networks.feedforward;                                     
 
 import java.io.Serializable;
 import java.util.Vector;

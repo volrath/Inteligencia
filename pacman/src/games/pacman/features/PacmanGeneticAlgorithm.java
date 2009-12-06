@@ -2,9 +2,14 @@ package games.pacman.features;
 
 import java.util.Random;
 import java.util.Vector;
+import java.util.HashMap;
+
 import neuralj.datasets.Pattern;
 import neuralj.datasets.PatternSet;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
+import neuralj.networks.feedforward.Synapse;
+import neuralj.networks.feedforward.NeuronLayer;
+import neuralj.networks.feedforward.Neuron;
 import neuralj.networks.feedforward.activation.ActivationFunctionSigmoid;
 import neuralj.networks.feedforward.learning.FeedForwardNetworkLearningAlgorithm;
 import neuralj.networks.feedforward.learning.genetic.crossover.CrossoverSinglePoint;
@@ -64,6 +69,21 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	// Genetic algorithm selection operator
 	public ISelectionOperator	selection_operator			= new PacmanSelectionRouletteWheel();
 
+    // The previous weight update performed in each synapse
+    private HashMap<Synapse, Double>	old_weight_update;
+
+    private Double maximum_score;
+    private Double current_score;
+    private Vector<Double> maximum_score_weights;
+    private int maximum_score_epoch;
+    // The types of learning strategy employable
+	public enum LearningStrategy
+	{
+		Memorize, Generalization, Optimization
+	}
+    // The types of learning strategy employed
+	public LearningStrategy		learning_strategy	= LearningStrategy.Optimization;
+
 	/**
 	 * Simple constructor for the Genetic Algorithm
 	 *
@@ -95,11 +115,14 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
         Vector<FeedForwardNeuralNetwork> old_population = this.population.getPopulation();
 		Vector<FeedForwardNeuralNetwork> new_population = new Vector<FeedForwardNeuralNetwork>();
 
-		// Fill half of the population with mutated members
-		while (new_population.size() < this.population_size / 2)
-		{
-            index = rnd.nextInt(old_population.size() - 1);
-            new_population.add(this.mutation_operator.mutate(old_population.remove(index)));
+        // Fill half of the new population with the best of the old one...
+        while (new_population.size() < this.population_size / 2)
+            new_population.add(old_population.remove(0));
+
+        // Then add a mutated copy of the best one...
+        for (int i = 0; i < this.population_size / 2; i++)
+            new_population.add(this.mutation_operator.mutate(new_population.get(i)));
+
 			// Crossover or copy
 			/*if (value < this.crossover_rate)
 			{
@@ -118,22 +141,104 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 				    new_population.add(member2);
 				}
 			}*/
-		}
-
-        while (new_population.size() < this.population_size)
-            new_population.add(old_population.remove(0));
-
 		this.population.setPopulation(new_population);
 	}
 
-	@Override
-	protected void trainEpoch(Vector<Pattern> patterns)
+    /**
+	 * Resets all the data used by the learning algorithm
+	 */
+	private void reset()
 	{
-		this.population.test_set = patterns;
+		this.current_epoch = 0;
+        this.maximum_score = 0.;
+        this.maximum_score_epoch = 0;
+        this.maximum_score_weights = null;
+        this.current_score = 0.;
+		this.current_validation_error = Double.MAX_VALUE;
+		this.current_training_error = Double.MAX_VALUE;
+		this.minimum_training_error_epoch = 0;
+		this.minimum_training_error = Double.MAX_VALUE;
+		this.minimum_training_error_weights = null;
+		this.minimum_validation_error_epoch = 0;
+		this.minimum_validation_error = Double.MAX_VALUE;
+		this.minimum_validation_error_weights = null;
+		this.old_error_partial_derivative = new HashMap<Synapse, Double>();
+		this.error_partial_derivative = new HashMap<Synapse, Double>();
+		this.delta_weight = new HashMap<Synapse, Double>();
+		this.old_weight_update = new HashMap<Synapse, Double>();
+		this.weight_update = new HashMap<Synapse, Double>();
+		for (NeuronLayer layer : this.network.neuron_layers)
+			for (Neuron neuron : layer.neurons)
+				for (Synapse synapse : neuron.outgoing_synapses)
+				{
+					this.weight_update.put(synapse, new Double(0));
+					this.old_error_partial_derivative.put(synapse, new Double(0));
+					this.error_partial_derivative.put(synapse, new Double(0));
+					this.delta_weight.put(synapse, new Double(0));
+				}
+		resetPartialDerivatives();
+	}
+
+    @SuppressWarnings( { "unchecked", "unchecked" })
+    protected boolean optimize() {
+        reset();
+        this.is_running = true;
+        this.watcher.start();
+        // Train while minimum error is not met and the maximum number of
+        // steps is not exceeded
+        while (this.current_epoch < this.maximum_epochs && this.is_running)
+        {
+            while (this.is_paused)
+                ;
+            this.current_score = trainEpochOptimization();
+            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score);
+            if (this.current_score > this.maximum_score) {
+                this.maximum_score_weights = this.network.getWeightVector();
+                this.maximum_score = this.current_score;
+                this.maximum_score_epoch = this.current_epoch;
+            }
+            if (this.auto_pause)
+                this.is_paused = true;
+            this.watcher.monitor();
+        }
+        this.network.setWeightVector(this.maximum_score_weights);
+        this.watcher.stop();
+        this.is_running = false;
+        return true;
+    }
+
+	protected Double trainEpochOptimization()
+	{
 		generatePopulation();
 		this.network = this.population.getEliteMember();
 		this.current_epoch++;
-		// return 1.0 - this.population.getEliteFitness();
+		return this.population.getEliteFitness();
 	}
+
+    @Override
+    protected void trainEpoch(Vector<Pattern> pattern)
+    {
+        generatePopulation();
+        this.network = this.population.getEliteMember();
+        this.current_epoch++;
+        //return this.population.getEliteFitness();
+    }
+
+    @Override
+    public void run()
+    {
+        this.is_running = true;
+        if (this.pattern_set != null)
+        {
+            if (this.learning_strategy == LearningStrategy.Memorize)
+                memorize(this.pattern_set.getShrunkPatterns(PatternSet.PatternType.All));
+            else if (this.learning_strategy == LearningStrategy.Generalization)
+                generalize(this.pattern_set.getShrunkPatterns(PatternSet.PatternType.Training), this.pattern_set.getShrunkPatterns(PatternSet.PatternType.Validation));
+            else if (this.learning_strategy == LearningStrategy.Optimization)
+                optimize();
+        }
+        this.is_running = false;
+    }
+
     
 }

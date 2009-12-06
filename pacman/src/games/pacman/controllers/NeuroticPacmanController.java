@@ -68,7 +68,7 @@ public class NeuroticPacmanController implements PacController{
     }
 
     public int getDirection() {
-        Double output, bestEvaluation = 0.0;
+        Double output, bestEvaluation = 0.0, currentEvaluation = 0.0;
         int bestMove = 0;
 
         if (verbose > 0) System.out.println("----------------------------------------------");
@@ -81,9 +81,17 @@ public class NeuroticPacmanController implements PacController{
                     bestMove = i;
                     if(verbose > 0) System.out.println("Best output so far: " + output + ", Direction: " + directions[i]);
                 }
+                if (i == game.pacman.curDir())
+                    currentEvaluation = output;
             }
         }
-        if(verbose > 0) System.out.println("NET Output: " + directions[bestMove]);
+        if(verbose > 0) System.out.println("NET Output: " + directions[bestMove] + ", old direction: " + directions[game.pacman.curDir()]);
+        if (Math.abs(game.pacman.curDir() - bestMove) == 2) { // if the new move is in the opposed direction of the old one..
+            if (verbose > 0) System.out.println("Reevaluating...");
+            if ((1.0 - bestEvaluation) > ((1.0 - currentEvaluation) / 2))
+                bestMove = game.pacman.curDir();
+            if(verbose > 0) System.out.println("NET Output: " + directions[bestMove]);
+        }
         if (verbose > 0) System.out.println("----------------------------------------------");
         //Double output = net.feedForward(this.getInputs(game, game.pacman.current)).get(0);
 //        if(output <= 0.25){
@@ -93,7 +101,7 @@ public class NeuroticPacmanController implements PacController{
 //        }else if(output > 0.5 && output <= 0.75){
 //            return UP;
 //        }else if(output > 0.75 && output <= 1){
-//            return DOWN;
+//            return DOWN;                                      
 //        }
         return bestMove;
     }

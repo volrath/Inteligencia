@@ -59,7 +59,7 @@ public class PacmanFeedForwardNeuralNetwork extends FeedForwardNeuralNetwork {
     public Synapse connectNeurons(Neuron source, Neuron destination)
 	{
         Random rnd = new Random(); 
-		double weight = rnd.nextGaussian()*getNumberNeuronsInput(Neuron.NeuronType.Normal);
+		double weight = rnd.nextGaussian()*Math.sqrt(getNumberNeuronsInput(Neuron.NeuronType.Normal));
 		Synapse synapse = new Synapse(source, destination, weight);
 		source.outgoing_synapses.add(synapse);
 		destination.incoming_synapses.add(synapse);

@@ -39,9 +39,9 @@ public class NeuralPacman {
         PacmanFeedForwardNeuralNetwork net = new PacmanFeedForwardNeuralNetwork(13, new int[] { 20 }, 1);
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(net);
         ga.pattern_set = pattern_set;
-        ga.learning_strategy = FeedForwardNetworkLearningAlgorithm.LearningStrategy.Generalization;
-        ga.desired_error = 0;
-		ga.maximum_epochs = 50;
+        ga.learning_strategy = PacmanGeneticAlgorithm.LearningStrategy.Optimization;
+        ga.desired_error = -10;
+		ga.maximum_epochs = 25;
         ga.crossover_operator = new CrossoverDoublePoint();
         ga.selection_operator = new PacmanSelectionRouletteWheel();
 		ga.mutation_operator = new PacmanMutationRandom();

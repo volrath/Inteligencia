@@ -30,26 +30,26 @@ public class PacmanMutationRandom extends MutationRandom {
             for(SynapseLayer sl: net.synapse_layers) {
                 slSize = sl.getWeightVector().size() / 20;
                 for (Double weight: sl.getWeightVector())
-                    newWeights.add(weight + gen.nextGaussian()*slSize);
+                    newWeights.add(weight + gen.nextGaussian()*Math.sqrt(slSize));
             }
             net.setWeightVector(newWeights);
         }
         else if (mc <= 37) { // all the weights in a randomly selected layer
             SynapseLayer sl = net.synapse_layers.get(gen.nextInt(net.synapse_layers.size()));
             for (Double weight: sl.getWeightVector())
-                newWeights.add(weight + gen.nextGaussian() * (sl.getWeightVector().size()/20));
+                newWeights.add(weight + gen.nextGaussian() * Math.sqrt(sl.getWeightVector().size()/20));
             sl.setWeightVector(newWeights);
         }
         else if (mc <= 64) { // all the weights going into a randomly selecte layer, i can't tell the difference between this and the last one
             SynapseLayer sl = net.synapse_layers.get(gen.nextInt(net.synapse_layers.size()));
             for (Double weight: sl.getWeightVector())
-                newWeights.add(weight + gen.nextGaussian() * (sl.getWeightVector().size()/20));
+                newWeights.add(weight + gen.nextGaussian() * Math.sqrt(sl.getWeightVector().size()/20));
             sl.setWeightVector(newWeights);
         }
         else {
             newWeights = net.getWeightVector();
             int rInd = gen.nextInt(newWeights.size());
-            newWeights.set(rInd, newWeights.get(rInd) + (gen.nextGaussian()*14));
+            newWeights.set(rInd, newWeights.get(rInd) + Math.sqrt(gen.nextGaussian()*14));
             net.setWeightVector(newWeights);
         }
 		return net;
