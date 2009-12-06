@@ -88,7 +88,7 @@ public class NeuroticPacmanController implements PacController{
         if(verbose > 0) System.out.println("NET Output: " + directions[bestMove] + ", old direction: " + directions[game.pacman.curDir()]);
         if (Math.abs(game.pacman.curDir() - bestMove) == 2) { // if the new move is in the opposed direction of the old one..
             if (verbose > 0) System.out.println("Reevaluating...");
-            if ((2.5 * (1.0 - bestEvaluation)) > (1.0 - currentEvaluation))
+            if ((2.0 * (1.0 - bestEvaluation)) > (1.0 - currentEvaluation))
                 bestMove = game.pacman.curDir();
             if(verbose > 0) System.out.println("NET Output: " + directions[bestMove]);
         }
