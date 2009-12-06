@@ -18,7 +18,7 @@ import java.util.Collections;
  * To change this template use File | Settings | File Templates.
  */
 public class NeuroticPacmanController implements PacController{
-    public static final double MAXDIST = 158; 
+    public static final double MAXDIST = 158/8; 
     FullGame game;
     FeedForwardNeuralNetwork net;
     public int verbose = 0;
@@ -43,25 +43,25 @@ public class NeuroticPacmanController implements PacController{
         for (Ghost ghost:game.ghosts){
             if(ghost.edible()){
                 inputs.add(new Double(0));
-                inputs.add(new Double((double)game.maze.dist[pacman_node.ix][ghost.current.ix]));
+                inputs.add(new Double((double)game.maze.dist[pacman_node.ix][ghost.current.ix]/MAXDIST));
                 if(verbose == 2) System.out.println("Dist. de Pacman a Ghost Comestible"+ i + " : "+(double)game.maze.dist[pacman_node.ix][ghost.current.ix]);
             }else{
-                inputs.add(new Double((double)game.maze.dist[pacman_node.ix][ghost.current.ix]));
+                inputs.add(new Double((double)game.maze.dist[pacman_node.ix][ghost.current.ix]/MAXDIST));
                 inputs.add(new Double(0));
                 if(verbose == 2) System.out.println("Dist. de Pacman a Ghost "+ i + " : "+(double)game.maze.dist[pacman_node.ix][ghost.current.ix]);
             }
             i++;
         }
         
-        inputs.add(new Double((double)pacman_node.x));
+        inputs.add(new Double((double)pacman_node.x/MAXDIST));
         if(verbose == 2) System.out.println("Posicion en x de Pacman: "+pacman_node.x+" div: "+((double)pacman_node.x));
-        inputs.add(new Double((double)pacman_node.y));
+        inputs.add(new Double((double)pacman_node.y/MAXDIST));
         if(verbose == 2) System.out.println("Posicion en y de Pacman: "+pacman_node.y+" div: "+((double)pacman_node.y));
-        inputs.add(new Double(gamdat.pillDist(pacman_node,game.maze.pills)));
+        inputs.add(new Double(gamdat.pillDist(pacman_node,game.maze.pills)/MAXDIST));
         if(verbose == 2) System.out.println("Posicion de la pastilla mas cercana a Pacman: "+gamdat.pillDist(pacman_node,game.maze.pills));
-        inputs.add(new Double(gamdat.pillDist(pacman_node,game.maze.power)));
+        inputs.add(new Double(gamdat.pillDist(pacman_node,game.maze.power)/MAXDIST));
         if(verbose == 2) System.out.println("Posicion de la power pill mas cercana a Pacman: "+gamdat.pillDist(pacman_node,game.maze.power));
-        inputs.add(new Double(pacman_node.junctionDist));
+        inputs.add(new Double(pacman_node.junctionDist/MAXDIST));
         if(verbose == 2) System.out.println("Posicion del cruce mas cercano a Pacman: "+pacman_node.junctionDist);
 
         return inputs;
