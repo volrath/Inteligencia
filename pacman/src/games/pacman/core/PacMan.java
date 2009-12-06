@@ -64,4 +64,8 @@ public class PacMan extends Mobile {
             g.fillOval(fac * (current.x - rad), fac * (current.y - rad), fac * 2 * rad, fac * 2 * rad);
         }
     }
+
+    public int curDir() {
+        return curDir;
+    }
 }
