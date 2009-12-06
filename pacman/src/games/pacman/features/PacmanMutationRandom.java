@@ -22,36 +22,40 @@ public class PacmanMutationRandom extends MutationRandom {
      */
     public FeedForwardNeuralNetwork mutate(FeedForwardNeuralNetwork net)
 	{
+        // Copies the net
+        FeedForwardNeuralNetwork newNetwork = new FeedForwardNeuralNetwork(net);
+        newNetwork.setWeightVector((Vector<Double>)net.getWeightVector().clone());
+
         Vector<Double> newWeights = new Vector<Double>();
 		Random gen = new Random();
         int mc = gen.nextInt(100), slSize;
 
         if (mc <= 10) { // all the weights in the network
-            for(SynapseLayer sl: net.synapse_layers) {
+            for(SynapseLayer sl: newNetwork.synapse_layers) {
                 slSize = sl.getWeightVector().size() / 20;
                 for (Double weight: sl.getWeightVector())
                     newWeights.add(weight + gen.nextGaussian()*Math.sqrt(slSize));
             }
-            net.setWeightVector(newWeights);
+            newNetwork.setWeightVector(newWeights);
         }
         else if (mc <= 37) { // all the weights in a randomly selected layer
-            SynapseLayer sl = net.synapse_layers.get(gen.nextInt(net.synapse_layers.size()));
+            SynapseLayer sl = newNetwork.synapse_layers.get(gen.nextInt(newNetwork.synapse_layers.size()));
             for (Double weight: sl.getWeightVector())
                 newWeights.add(weight + gen.nextGaussian() * Math.sqrt(sl.getWeightVector().size()/20));
             sl.setWeightVector(newWeights);
         }
         else if (mc <= 64) { // all the weights going into a randomly selecte layer, i can't tell the difference between this and the last one
-            SynapseLayer sl = net.synapse_layers.get(gen.nextInt(net.synapse_layers.size()));
+            SynapseLayer sl = newNetwork.synapse_layers.get(gen.nextInt(newNetwork.synapse_layers.size()));
             for (Double weight: sl.getWeightVector())
                 newWeights.add(weight + gen.nextGaussian() * Math.sqrt(sl.getWeightVector().size()/20));
             sl.setWeightVector(newWeights);
         }
         else {
-            newWeights = net.getWeightVector();
+            newWeights = newNetwork.getWeightVector();
             int rInd = gen.nextInt(newWeights.size());
             newWeights.set(rInd, newWeights.get(rInd) + Math.sqrt(gen.nextGaussian()*14));
-            net.setWeightVector(newWeights);
+            newNetwork.setWeightVector(newWeights);
         }
-		return net;
+		return newNetwork;
 	}
 }

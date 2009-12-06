@@ -39,11 +39,7 @@ public class PacmanRouletteWheel extends RouletteWheel {
 		slice.member = p_member;
 		slice.fitness = calcFitness(50);
 		this.roulette_slices.add(slice);
-		Object[] list = this.roulette_slices.toArray();
-		Arrays.sort(list);
-		this.roulette_slices.clear();
-		for (Object sliceobj : list)
-			this.roulette_slices.add((RouletteSlice) sliceobj);
+		Collections.sort(this.roulette_slices);
 	}
 
     public double calcFitness(int numIter){

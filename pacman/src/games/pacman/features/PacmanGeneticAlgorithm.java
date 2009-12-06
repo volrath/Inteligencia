@@ -70,10 +70,10 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
     // The previous weight update performed in each synapse
     private HashMap<Synapse, Double>	old_weight_update;
 
-    private Double maximum_score;
+    public Double maximum_score;
     private Double current_score;
     private Vector<Double> maximum_score_weights;
-    private int maximum_score_epoch;
+    public int maximum_score_epoch;
     // The types of learning strategy employable
 	public enum LearningStrategy
 	{
@@ -109,21 +109,17 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 		Random rnd = new Random();
         int index;
 		FeedForwardNeuralNetwork member;
-        Vector<RouletteSlice> full_old_population = this.population.getFullPopulation();
         Vector<FeedForwardNeuralNetwork> old_population = this.population.getPopulation();
 		Vector<FeedForwardNeuralNetwork> new_population = new Vector<FeedForwardNeuralNetwork>();
 
         // Fill half of the new population with the best of the old one...
-        while (new_population.size() < this.population_size / 2){
+        while (new_population.size() < this.population_size / 2)
             new_population.add(old_population.remove(0));
-        }
+
         // Then add a mutated copy of the best one...
-        for (int i = 0; i < this.population_size / 2; i++){
-            FeedForwardNeuralNetwork newNet = new FeedForwardNeuralNetwork(new_population.get(i));
-            newNet.synapse_layers = (Vector<SynapseLayer>)new_population.get(i).synapse_layers.clone();
-            newNet.neuron_layers = (Vector<NeuronLayer>)new_population.get(i).neuron_layers.clone();
-            new_population.add(this.mutation_operator.mutate(newNet));
-        }
+        for (int i = 0; i < this.population_size / 2; i++)
+            new_population.add(this.mutation_operator.mutate(new_population.get(i)));
+
 
 			// Crossover or copy
 			/*if (value < this.crossover_rate)
@@ -193,7 +189,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
             while (this.is_paused)
                 ;
             this.current_score = trainEpochOptimization();
-            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score+ "Last Score" + this.population.roulette_slices.size());
+            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score+ ", Last Score: " + this.population.roulette_slices.size());
             if (this.current_score > this.maximum_score) {
                 this.maximum_score_weights = this.network.getWeightVector();
                 this.maximum_score = this.current_score;
@@ -212,7 +208,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	protected Double trainEpochOptimization()
 	{
 		generatePopulation();
-		this.network = this.population.getEliteMember();
+		//this.network = this.population.getEliteMember();
 		this.current_epoch++;
 		return this.population.getEliteFitness();
 	}
