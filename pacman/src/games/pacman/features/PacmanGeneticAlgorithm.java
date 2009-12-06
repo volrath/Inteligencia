@@ -6,10 +6,7 @@ import java.util.HashMap;
 
 import neuralj.datasets.Pattern;
 import neuralj.datasets.PatternSet;
-import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
-import neuralj.networks.feedforward.Synapse;
-import neuralj.networks.feedforward.NeuronLayer;
-import neuralj.networks.feedforward.Neuron;
+import neuralj.networks.feedforward.*;
 import neuralj.networks.feedforward.activation.ActivationFunctionSigmoid;
 import neuralj.networks.feedforward.learning.FeedForwardNetworkLearningAlgorithm;
 import neuralj.networks.feedforward.learning.genetic.crossover.CrossoverSinglePoint;
@@ -19,6 +16,7 @@ import neuralj.networks.feedforward.learning.genetic.mutation.MutationRandom;
 import neuralj.networks.feedforward.learning.genetic.selection.ISelectionOperator;
 import neuralj.networks.feedforward.learning.genetic.selection.RouletteWheel;
 import neuralj.networks.feedforward.learning.genetic.selection.SelectionRouletteWheel;
+import neuralj.networks.feedforward.learning.genetic.selection.RouletteSlice;
 import games.pacman.features.PacmanSelectionRouletteWheel;
 import games.pacman.features.PacmanRouletteWheel;
 
@@ -61,7 +59,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	// The genetic algorithm's mutation rate
 	// private double mutation_rate;
 	// The genetic algorithm's population
-	public RouletteWheel		population					= new PacmanRouletteWheel();
+	public PacmanRouletteWheel		population					= new PacmanRouletteWheel();
 
 	// The genetic algorithm's population size
 	public int					population_size				= DEFAULT_POPULATION_SIZE;
@@ -108,20 +106,24 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	@SuppressWarnings("unchecked")
 	public void generatePopulation()
 	{
-        System.out.println("Current generation: "+this.current_epoch);
 		Random rnd = new Random();
         int index;
 		FeedForwardNeuralNetwork member;
+        Vector<RouletteSlice> full_old_population = this.population.getFullPopulation();
         Vector<FeedForwardNeuralNetwork> old_population = this.population.getPopulation();
 		Vector<FeedForwardNeuralNetwork> new_population = new Vector<FeedForwardNeuralNetwork>();
 
         // Fill half of the new population with the best of the old one...
-        while (new_population.size() < this.population_size / 2)
+        while (new_population.size() < this.population_size / 2){
             new_population.add(old_population.remove(0));
-
+        }
         // Then add a mutated copy of the best one...
-        for (int i = 0; i < this.population_size / 2; i++)
-            new_population.add(this.mutation_operator.mutate(new_population.get(i)));
+        for (int i = 0; i < this.population_size / 2; i++){
+            FeedForwardNeuralNetwork newNet = new FeedForwardNeuralNetwork(new_population.get(i));
+            newNet.synapse_layers = (Vector<SynapseLayer>)new_population.get(i).synapse_layers.clone();
+            newNet.neuron_layers = (Vector<NeuronLayer>)new_population.get(i).neuron_layers.clone();
+            new_population.add(this.mutation_operator.mutate(newNet));
+        }
 
 			// Crossover or copy
 			/*if (value < this.crossover_rate)
@@ -191,7 +193,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
             while (this.is_paused)
                 ;
             this.current_score = trainEpochOptimization();
-            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score);
+            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score+ "Last Score" + this.population.roulette_slices.size());
             if (this.current_score > this.maximum_score) {
                 this.maximum_score_weights = this.network.getWeightVector();
                 this.maximum_score = this.current_score;

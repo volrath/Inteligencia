@@ -18,7 +18,7 @@ import java.util.Collections;
  * To change this template use File | Settings | File Templates.
  */
 public class NeuroticPacmanController implements PacController{
-    public static final double MAXDIST = 158/8; 
+    public static final double MAXDIST = 158/16; 
     FullGame game;
     FeedForwardNeuralNetwork net;
     public int verbose = 0;
