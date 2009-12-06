@@ -22,6 +22,11 @@ import games.pacman.controllers.PacController;
 import games.pacman.maze.OldMaze;
 import games.pacman.maze.MazeNode;
 
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.util.Date;
+import java.util.Calendar;
+
 /**
  * Created by IntelliJ IDEA.
  * User: kristoffer
@@ -60,6 +65,22 @@ public class NeuralPacman {
             }
             i++;
         }
+
+        // Save the scores
+        try{
+            Calendar now = Calendar.getInstance();
+            
+            // Create file
+            FileWriter fstream = new FileWriter("logs/scores-" + now.get(Calendar.DATE) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.HOUR_OF_DAY) + "-" + now.get(Calendar.MINUTE) + "-" + now.get(Calendar.SECOND) + ".log");
+            BufferedWriter out = new BufferedWriter(fstream);
+            for (Double score: ga.score_timeline)
+                out.write(score + " ");
+            //Close the output stream
+            out.close();
+        } catch (Exception e) {//Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        }
+
         // Restore the network
         net = (PacmanFeedForwardNeuralNetwork) Serializer.loadObject("network.net");
         System.out.println("Best Fitness: "+net.calcFitness(50));

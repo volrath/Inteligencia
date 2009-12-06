@@ -82,6 +82,8 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
     // The types of learning strategy employed
 	public LearningStrategy		learning_strategy	= LearningStrategy.Optimization;
 
+    public Vector<Double> score_timeline = new Vector<Double>();
+
 	/**
 	 * Simple constructor for the Genetic Algorithm
 	 *
@@ -198,6 +200,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
             if (this.auto_pause)
                 this.is_paused = true;
             this.watcher.monitor();
+            this.score_timeline.add(this.current_score);
         }
         this.network.setWeightVector(this.maximum_score_weights);
         this.watcher.stop();
