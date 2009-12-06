@@ -37,6 +37,7 @@ public class NeuralPacman {
         pattern_set.loadPatterns("uselesspacman.patterns", 13);
         pattern_set.generateSets();
         PacmanFeedForwardNeuralNetwork net = new PacmanFeedForwardNeuralNetwork(13, new int[] { 20 }, 1);
+
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(net);
         ga.pattern_set = pattern_set;
         ga.learning_strategy = PacmanGeneticAlgorithm.LearningStrategy.Optimization;

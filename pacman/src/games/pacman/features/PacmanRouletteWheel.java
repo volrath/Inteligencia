@@ -6,6 +6,8 @@ import neuralj.networks.feedforward.learning.bprop.BackPropagation;
 import neuralj.networks.feedforward.FeedForwardNeuralNetwork;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Collections;
 
 import games.pacman.core.FullGame;
 import games.pacman.controllers.PacController;
@@ -33,11 +35,7 @@ public class PacmanRouletteWheel extends RouletteWheel {
 		slice.member = p_member;
 		slice.fitness = calcFitness(50);
 		this.roulette_slices.add(slice);
-		Object[] list = this.roulette_slices.toArray();
-		Arrays.sort(list);
-		this.roulette_slices.clear();
-		for (Object sliceobj : list)
-			this.roulette_slices.add((RouletteSlice) sliceobj);
+        Collections.sort(this.roulette_slices);
 	}
 
     public double calcFitness(int numIter){
