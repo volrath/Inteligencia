@@ -69,5 +69,6 @@ public class NeuralPacman {
         GameFrame game = new GameFrame(pc);
         pc.setGame(game.game);
         game.run();
+        System.out.println("Best result in epoch: " + ga.maximum_score_epoch + " with: " + ga.maximum_score);
     }
 }

@@ -52,7 +52,7 @@ public class NeuroticPacmanController implements PacController{
             }
             i++;
         }
-        
+
         inputs.add(new Double((double)pacman_node.x/MAXDIST));
         if(verbose == 2) System.out.println("Posicion en x de Pacman: "+pacman_node.x+" div: "+((double)pacman_node.x));
         inputs.add(new Double((double)pacman_node.y/MAXDIST));
@@ -88,7 +88,7 @@ public class NeuroticPacmanController implements PacController{
         if(verbose > 0) System.out.println("NET Output: " + directions[bestMove] + ", old direction: " + directions[game.pacman.curDir()]);
         if (Math.abs(game.pacman.curDir() - bestMove) == 2) { // if the new move is in the opposed direction of the old one..
             if (verbose > 0) System.out.println("Reevaluating...");
-            if ((1.0 - bestEvaluation) > ((1.0 - currentEvaluation) / 2))
+            if ((2.5 * (1.0 - bestEvaluation)) > (1.0 - currentEvaluation))
                 bestMove = game.pacman.curDir();
             if(verbose > 0) System.out.println("NET Output: " + directions[bestMove]);
         }
