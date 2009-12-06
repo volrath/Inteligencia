@@ -189,7 +189,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
             while (this.is_paused)
                 ;
             this.current_score = trainEpochOptimization();
-            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score+ ", Last Score: " + this.population.roulette_slices.size());
+            System.out.println("Epoch " + this.current_epoch + " of " + this.maximum_epochs + " - Score: " + this.current_score);
             if (this.current_score > this.maximum_score) {
                 this.maximum_score_weights = this.network.getWeightVector();
                 this.maximum_score = this.current_score;
@@ -208,7 +208,7 @@ public class PacmanGeneticAlgorithm extends FeedForwardNetworkLearningAlgorithm
 	protected Double trainEpochOptimization()
 	{
 		generatePopulation();
-		//this.network = this.population.getEliteMember();
+		this.network = this.population.getEliteMember();
 		this.current_epoch++;
 		return this.population.getEliteFitness();
 	}
