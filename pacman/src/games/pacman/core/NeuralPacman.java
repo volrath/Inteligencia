@@ -61,7 +61,7 @@ public class NeuralPacman {
         }
         // Restore the network
         net = (PacmanFeedForwardNeuralNetwork) Serializer.loadObject("network.net");
-        //        System.out.println(net.);
+        System.out.println("Best Fitness: "+net.calcFitness(50));
         // Test the results again
         NeuroticPacmanController pc = new NeuroticPacmanController(net);
         pc.verbose = 1;
