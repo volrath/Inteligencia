@@ -18,5 +18,7 @@ cnf_*
 *.out
 *.snm
 *.toc
+*.bbl
+*.blg
 *.vrb
 *.iws

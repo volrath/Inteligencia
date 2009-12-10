@@ -1,6 +1,7 @@
 \documentclass[12pt, spanish]{report}
 \usepackage[spanish, activeacute]{babel}
 \usepackage[latin1]{inputenc}
+\renewcommand{\baselinestretch}{1.3}
 \usepackage{graphicx}
 
 \begin{document}
@@ -33,7 +34,6 @@
   to Play Ms. Pac-Man}
 \label{sec:inv-prev}
 
-
 \chapter{Implementación}
 \label{chap:impl}
 
@@ -49,10 +49,145 @@
 \section{Cambios y mejoras}
 \label{sec:mejoras}
 
-\chapter{Resultados}
-\label{chap:result}
+\subsection{Tasa de escalamiento de inputs}
+\label{sec:escalamiento}
 
-\chapter{Referencias}
-\label{chap:ref}
+\subsection{Tasa de Neurotismo}
+\label{sec:neurotismo}
+
+
+\chapter{Experimentos y Resultados}
+\label{chap:result}
+En este capítulo se presentan los experimentos realizados para probar
+la efectividad de los cambios realizados sobre nuestra implementación
+del agente \emph{NeuroticPacman}.
+
+\section{Descripción de los experimentos}
+\label{sec:desc-experimentos}
+Tanto el algoritmo evolutivo de aprendizaje de \emph{NeuroticPacman}
+como la red neural que sirve como su controlador, pueden ser ajustados
+o configurados con ciertos parámetros de interés, los cuales son
+mencionados a continuación:
+
+\subsection{Parámetros de configuración para el algoritmo evolutivo de aprendizaje}
+\begin{itemize}
+\item Tamaño de la población.
+\item Porcentaje de la población a ser mutada en una nueva generación.
+\item Cantidad de juegos utilizados para calcular el score average
+  (fitness) de un individuo.
+\end{itemize}
+
+\subsection{Parámetros de configuración para el controlador del agente}
+\begin{itemize}
+\item Cantidad de capas intermedias de la red neural.
+\item Cantidad de neuronas en la(s) capa(s) intermedia(s).
+\item \textbf{Tasa de escalamiento de inputs} (sección \ref{sec:escalamiento}).
+\item \textbf{Tasa de Neurotismo} (sección \ref{sec:neurotismo}).
+\end{itemize}
+
+Para todos estos parámetros, la investigación de
+Lucas\cite{lucas:2005} cubre pruebas sobre la mejor configuración de
+todos los parámetros mencionados para el algoritmo evolutivo de
+aprendizaje y para la cantidad de capas intermedias de la red neural y
+la cantidad de neuronas en ellas. Lucas llega a sus mejores resultados
+(Figura \ref{img:resultados-lucas}) usando la siguiente configuración:
+
+\begin{itemize}
+\item Tamaño de la población: \textbf{20}
+\item Porcentaje de la población a ser mutada en una nueva generación:
+  \textbf{50\%}
+\item Cantidad de juegos utilizados para calcular el score average
+  (fitness) de un individuo: \textbf{50}
+\item Cantidad de capas intermedias de la red neural: \textbf{1}
+\item Cantidad de neuronas en la capa intermedia: \textbf{20}
+\end{itemize}
+
+Los experimentos realizados en nuestro trabajo se basan completamente
+en esta configuración, y prueban los resultados de variar los últimos
+dos parámetros mencionados: \textbf{Tasa de escalamiento de inputs} y
+\textbf{Tasa de Neurotismo}.\\
+
+Para estos dos parámetros, las variaciones tomadas fueron las
+siguientes: La tasa de Neurotismo es variada entre los valores 1.5,
+2.0 y 2.5 mientras que la tasa de escalamiento de inputs es variada
+entre $\frac{1}{9.875}$, $\frac{1}{39.5}$, $1$ (sin tasa de
+escalamiento).\\
+
+Todas las corridas del algoritmo evolutivo se realizaron con 1000
+generaciones, al igual que el trabajo original de
+Lucas\ref{lucas:2005}, para poder establecer comparaciones con su
+trabajo.
+
+Por razones de tiempo, las pruebas realizadas sobre la tasa de
+escalamiento entre los valores $\frac{1}{9.875}$ y $\frac{1}{39.5}$
+fueron realizadas con únicamente 100 generaciones, y no son reportadas
+gráficamente, sin embargo los resultados mostraron que el uso del
+valor $\frac{1}{9.875}$ tuvo mejores resultados.
+
+\section{Pruebas principales}
+\label{sec:pruebas-principales}
+
+Los experimentos realizados buscan conseguir cual tasa de Neurotismo
+hace que \emph{NeuroticPacman} tenga un mejor comportamiento usando la
+tasa de escalamiento de inputs en $\frac{1}{9.875}$, y luego usando
+dicha tasa, probamos deshabilitando la tasa de escalamiento.\\
+
+Los resultados se encuentran detallados gráficamente a continuación:
+
+\newpage
+\begin{center}
+  \textbf{
+    Tasa de Neurotismo: 1.5\\
+    Tasa de escalamiento: 9.875 }
+\end{center}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.7]{logs/scores-7-12-2009-13-14-36.png}
+  \caption{Mejor resultado obtenido: 3811.0 en la generación 991}
+\end{figure}
+
+\newpage
+\begin{center}
+  \textbf{
+    Tasa de Neurotismo: 2.0\\
+    Tasa de escalamiento: 9.875 }
+\end{center}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.7]{logs/scores-6-12-2009-11-50-17.png}
+  \caption{Mejor resultado obtenido: 3713.4 en la generación 935}
+\end{figure}
+
+\newpage
+\begin{center}
+  \textbf{
+    Tasa de Neurotismo: 2.5\\
+    Tasa de escalamiento: 9.875 }
+\end{center}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.7]{logs/scores-6-12-2009-13-55-34.png}
+  \caption{Mejor resultado obtenido: 3727.4 en la generación 617}
+\end{figure}
+
+\newpage
+\begin{center}
+  \textbf{
+    Tasa de Neurotismo: 1.5\\
+    Tasa de escalamiento: 1 }
+\end{center}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.7]{logs/scores-7-12-2009-14-12-11.png}
+  \caption{Mejor resultado obtenido: 2703.2 en la generación 843}
+\end{figure}
+
+\newpage
+\section{Análisis de resultados}
+\label{sec:analisis}
+
+\bibliographystyle{plain}
+\addcontentsline{toc}{chapter}{Bibliograf\'ia}
+\bibliography{bibliography}
 
 \end{document}
