@@ -19,16 +19,111 @@
 
 \chapter{Introducción}
 \label{chap:intr}
+Los juegos en general han sido utilizados ampliamente para el estudio de la
+inteligencia artificial y el aprendizaje de máquinas. Inicialmente los juegos
+considerados como problemas o ejemplos clásicos en el campo de la inteligencia
+artificial fueron versiones de tablero, o juegos con una mecánica o sistema de
+reglas medianamente sencillo (ejem. damas, ajedrez, backgammon, etc). En los
+últimos años, los avances en el campo de los videojuegos y las tecnologías
+aplicadas a los mismos han introducido nuevas características y condiciones
+útiles para la investigación en el área. Los videojuegos más recientes
+requieren un amplio rango de habilidades y destrezas para ser jugados,
+convirtiéndose en un reto exigente incluso para los jugadores más
+experimentados. Debido a la dificultad y exigencia de los juegos modernos, ha
+crecido el interés por parte de la comunidad científica en utilizar los
+videojuegos como medio donde probar y evaluar enfoques y algoritmos de
+inteligencia artificial. Los videojuegos parecen ser, además, especialmente
+adecuados para probar mecanismos específicos del área de aprendizaje de
+máquinas y computación evolutiva.\\
 
 \section{Definición del problema}
 \label{sec:intr1}
+En este trabajo abordamos específicamente el desarrollo de un agente que
+juegue Ms. Pac-Man, utilizando para ello una red neuronal evolucionada mediante
+un algoritmo genético.\\
 
-\section{Pacman vs. Ms. Pacman}
+\section{Pac-Man vs. Ms. Pac-Man}
 \label{sec:intr2}
+Pac-Man es un videojuego arcade publicado en 1980. La mecánica del juego
+consiste en controlar un personaje que debe comerse todas las píldoras que
+están repartidas por el laberinto, mientras evita los cuatro fantasmas que lo
+persiguen. Cuando se logra comer todas las píldoras del laberinto, se avanza
+al siguiente nivel. Además de las píldoras normales, hay cuatro píldoras más
+grandes o ``\emph{píldoras de poder}'' colocadas en las esquinas del laberinto,
+que le proporcionan a Pac-Man la habilidad de comerse a los fantasmas. En caso
+de que algún fantasma sea alcanzado por Pac-Man durante dicho estado, el mismo
+se regenera en el área situada en el centro del laberinto. Por cada píldora
+(normal o especial) o fantasma comido por Pac-Man se obtiene una puntuación o
+``\emph{score}'' determinada. Durante el juego también aparecen aleatoriamente
+objetos que pueden ser comidos por Pac-Man para aumentar la puntuación
+obtenida. Los fantasmas de este juego poseen un comportamiento determinístico
+basado en reglas específicas para cada uno de ellos, lo que permite a
+jugadores experimentados (y eventualmente a un algoritmo desarrollado para
+explotar esas características) usar estrategias o rutas predefinidas que
+garantizan pasar los niveles con poca dificultad y una puntuación alta.\\
+
+Ms. Pac-Man es una de las variantes más conocidas del videojuego original. Fue
+lanzada en 1981, e introducía una serie de cambios sobre el videojuego previo.
+Además de una serie de variaciones cosméticas o superficiales (nuevo
+personaje, nuevos laberintos, etc.), este videojuego presentaba a los 4
+fantasmas originales con un comportamiento aleatorio, lo que variaba la
+jugabilidad del mismo y la dificultad exigida a jugadores. El comportamiento
+aleatorio de los fantasmas eliminaba la posibilidad de manipular su
+comportamiento (como se podía hacer en el juego original), por lo que predecir
+el comportamiento futuro de los mismos era inviable.\\
+
+La diferencia entre el determinismo de Pac-Man y el no-determinismo de Ms.
+Pac-Man, además de aumentar considerablemente la dificultad del videojuego y
+hacerlo más interesante, también tiene un impacto significativo en los
+algoritmos y enfoques utilizados para resolver el problema. En la versión
+determinística del videojuego es posible utilizar satisfactoriamente
+algoritmos de búsqueda clásicos, e incluso, algoritmos basados en reglas
+predefinidas o ``\emph{hand-coded}'', para alcanzar resultados satisfactorios
+o elevados, lo que hace innecesario el uso de algoritmos o técnicas más
+complejas como aprendizaje. Sin embargo, para la versión no-determinística
+del videojuego no es factible aplicar métodos de búsqueda o sistemas de
+reglas, por lo que enfoques basados en aprendizaje o computación evolutiva se
+vuelven necesarios.\\
 
 
 \chapter{Marco Teórico: Investigaciones Previas}
 \label{chap:mt}
+
+La tarea de implementar un agente controlador para el videojuego Pac-Man
+utilizando técnicas de aprendizaje y computación evolutiva no es una idea
+nueva. Entre las investigaciones relacionadas que se han llevado cabo están:\\
+
+\begin{itemize}
+    \item Koza, quien realizó su propia implementación de Pac-Man basada en
+    el primer nivel de Ms. Pac-Man. En su investigación él definió 15
+    funciones para controlar el personaje, con reglas como "alcanzar el punto
+    más cercano a través del camino más corto". Además, su implementación
+    tenía varias diferencias con respecto al videojuego original, lo que lo
+    hacía que el juego fuera considerablemente más fácil para el agente que
+    desarrolló. La principal diferencia fue que los 4 fantasmas tenían el
+    mismo comportamiento, que era perseguir a Pac-Man mientras fuera visible
+    durante un período de tiempo y cambiar de dirección aleatoriamente
+    durante otro intervalo de tiempo. Este cambio hacía que el comportamiento
+    los fantasmas fueran más parecidos entre sí y menos agresivos que en la
+    versión original.\\
+    \item Gallagher y Ryan, quienes realizaron un agente de Pac-Man basado en
+    un máquina de estado finito y un conjunto de reglas adicionales. Su
+    implementación varió mucho del videojuego original debido a que sólo
+    simulaban 1 fantasma (en vez de los 4) y no existían píldoras de poder.
+    En su enfoque ellos evolucionaron los parámetros del conjunto de reglas,
+    para producir reglas más efectivas con las que controlar el personaje.\\
+    \item De Bonet y Stouffer utilizaron un enfoque de aprendizaje por
+    reforzamiento basado en una área de visión limitada centrada en Pac-Man y
+    1 fantasma. Su implementación logro aprender efectivamente comportamientos
+    simples como comerse las pastillas y evitar el fantasma. También hubo
+    avances en el aprendizaje de algunas rutas predefinidas, aunque estos
+    resultados no son útiles aplicados a la versión no-determinística del
+    videojuego.\\
+\end{itemize}
+
+Nuestro trabajo está basado en la investigación del Profesor Simon M. Lucas,
+publicada en el paper "Evolving a Neural Network Location Evaluator to Play Ms.
+Pac-Man".\\
 
 \section{Simon M. Lucas: Evolving a Neural Network Location Evaluator
   to Play Ms. Pac-Man}
@@ -37,24 +132,164 @@
 \chapter{Implementación}
 \label{chap:impl}
 
+La implementación de la investigación hizo uso de una estructura previamente definida por
+Simon Lucas en el simulador de Pacman que él utilizó y que nos suministró para realizar 
+la investigación. Fue necesario únicamente definir una clase del tipo \emph{PacmanController}
+para el controlador del agente y una clase principal \emph{NeuralPacman} que se encargara 
+de la ejecución del programa. 
+
+Adicional a la definición del controlador fue necesario redefinir varias clases de la librería NeuralJ
+(la cual será descrita en la sección \ref{subsec:neuralj}) haciendo uso de  la relación \emph{extends}
+de Java ya que no se ajustaba a nuestras necesidades. Estos cambios serán descritos en la sección \ref{sec:red}.
+
 \section{Herramientas usadas}
 \label{sec:herr}
+\subsection{NeuralJ}
+\label{subsec:neuralj}
+Como parte del trabajo de implementación necesario para la investigación
+se hizo uso de la librería NeuralJ para el lenguaje Java la cual implementa
+redes neurales que pueden ser entrenadas de varias formas entre las cuales
+se encuentra el uso de un algoritmo genético para generar individuos óptimos
+lo cual forma parte de los requerimientos del proyecto.
 
-\section{Red Neural}
-\label{sec:red}
+Fue necesario realizar cambios considerables a la librería ya que la implementación
+no se adaptaba a nuestras necesidades y el proyecto se encuentra abandonado desde
+el año 2007 con varios errores los cuales debimos arreglar para poder hacer uso
+debido de la herramienta.
+\subsection{IntelliJ}
+Durante el proceso de desarrollo del proyecto se utilizó el ambiente de desarrollo
+integrado IntelliJ para el lenguaje Java como herramienta de programación. Esto se hizo 
+ya que el simulador del juego Pacman que fue utilizado para esta investigación incluía un
+proyecto de IntelliJ sobre el cual trabajamos por razones de
+eficiencia y comodidad.
 
-\section{Algorítmo genético}
+\section{Controlador del agente}
 \label{sec:ag}
+El controlador del agente Pacman se encarga de decidir el siguiente movimiento del
+agente en cada instante de juego usando una red neural para evaluar las posibles movidas
+de acuerdo a las siguientes entradas a la red:
+\newline
+\newline
+\begin{tabular}{| l | c |}
+  \hline
+  Entrada & Descripción \\ \hline
+  g1 ... g4 & Distancia a cada fantasma no-comestible desde Pacman. \\
+  e1 ... e4 & Distancia a cada fantasma comestible desde Pacman. \\
+  x & Posición en el eje x de Pacman. \\
+  y & Posición en el eje y de Pacman. \\
+  pildora & Distancia a la píldora normal más cercana a Pacman. \\
+  poder & Distancia a la píldora de poder más cercana a Pacman. \\
+  cruce & Distancia al cruce más cercano a Pacman. \\ \hline
+\end{tabular}
+\newline
+\newline    
+\newline
+Estas entradas son consideradas para cada  movida válida a partir del estado actual
+y el resultado generado por la red para cada una se utiliza como una función de valoración de posibles 
+estados donde aquel movimiento que tenga el mejor resultado será el que realice Pacman en el 
+próximo instante de juego.
+
+La definición del controlador usado fue hecha en la clase \emph{NeuroticPacmanController}
+y asignado como el controlador del agente en el simulador. 
+
+\section{Proceso de aprendizaje}
+\label{sec:red}
+    
+El proceso de aprendizaje consiste en el uso de un algoritmo genético
+para la generación de individuos óptimos donde cada individuo de la
+población utilizada es un vector de pesos de una red neural que es
+usada para el controlador del agente Pacman. El algoritmo utiliza como función de
+fitness el promedio de la ejecución de un número predeterminado de simulaciones
+del juego asignando los pesos del invididuo a la red neural utilizada
+en el controlador.
+
+Siguiendo las recomendaciones de Simon Lucas, los pesos iniciales de
+cada red son seleccionados utlizando una distribución gaussiana de
+media cero y de desviación estándar igual a la raíz cuadrada del número
+de conexiones que entran a una neurona.
+
+Se hizo uso de la siguiente manera de cada uno de los operadores del
+algoritmo genético:
+
+\begin{itemize}
+\item \textbf{Selección:} La selección de los individuos que debían
+  continuar a la próxima generación se hizo con el algoritmo de Top
+  Percent que selecciona los mejores individuos de la población y
+  desecha a los demás. Se mantuvo una tasa de selección fija de 0.5.
+\item \textbf{Mutación:} La mutación aplicada a los individuos
+  consiste en 4 tipos diferentes de mutación los cuales son escogidos
+  al azar dado por un número x entre 0 y 1: 
+  \begin{itemize}
+    \item $0 \leq x \leq 0.1$ : Se mutan todos los pesos del
+      individuo.
+    \item $0.1 < x \leq 0.37$: Se mutan todos los pesos que entran a
+      una capa de neuronas seleccionada al azar.
+    \item $0.37 < x \leq 0.64$: Se mutan todos los pesos que entran
+      a una neurona seleccionada al azar.
+    \item $0.64 < x \leq 1$ : Se muta un solo peso seleccionado al azar.
+  \end{itemize}
+  La mutación aplicada consiste en cambiar el peso seleccionado por
+  otro escogido al azar de la misma manera en la que son generados los
+  pesos iniciales.
+
+  La mutación se aplica a todos los individuos seleccionados con el operador
+  de selección para generar la otra mitad de la población ya que no se
+  realiza la operación de crossover.
+  \item \textbf{Crossover:} La operación de crossover no está siendo
+    usada en el algoritmo genético implementado por recomendaciones de
+    la investigación de Simon Lucas ya que los grandes saltos que
+    genera este operador en los individuos no funcionan adecuadamente
+    para este tipo de problema.
+\end{itemize}
 
 \section{Cambios y mejoras}
 \label{sec:mejoras}
 
-\subsection{Tasa de escalamiento de inputs}
-\label{sec:escalamiento}
+Fue necesario redefinir varias clases utilizadas en la librería
+NeuralJ para cumplir con los requerimientos del proyecto y modificar 
+el proceso de aprendizaje de acuerdo a los lineamientos establecidos y
+para reparar errores dejados por el desarrollador del proyecto el cual
+lo abandonó en Abril del año 2007. Estos cambios se ven reflejados en
+las clases:
+\begin{itemize}
+  \item PacmanFeedForwardNeuralNetwork
+  \item PacmanGeneticAlgorithm
+  \item PacmanMutationRandom
+  \item PacmanRouletteWheel
+  \item PacmanSelectionRouletteWheel
+\end{itemize}
 
-\subsection{Tasa de Neurotismo}
-\label{sec:neurotismo}
-
+En cuanto a las mejoras, adicional a las evaluaciones contempladas por
+Simon Lucas en su investigación se implentaron dos procesos
+adicionales en el controlador que mejoraron los resultados generales 
+del proyecto:
+\begin{itemize}
+  \item \textbf{Inercia:}\label{sec:inercia} Al observar el funcionamiento del agente
+    durante varias pruebas pudimos notar que fallaba constantemente al
+    retornar por el camino que acababa de recorrer por lo tanto
+    decidimos agregar la condición al controlador de que para cambiar
+    su movimiento hacia la dirección opuesta a la que se dirigía el
+    valor obtenido de evaluar dicha dirección debe ser mayor que el
+    valor obtenido al evaluar la dirección original multiplicado por
+    un factor. Este factor fue variado en los experimentos realizados
+    para determinar su configuración óptima.
+  \item \textbf{Escalamiento de los inputs:} \label{sec:escalamiento}De la misma forma que la
+    inercia, al observar los resultados de las pruebas realizadas
+    durante el desarrollo de la investigación notamos que con
+    frecuencia los valores de salida de la red neural del controlador
+    eran muy cercanos a 1 e incluso se tendía a perder la precisión de
+    selección del movimiento óptimo ya que varias evaluaciones
+    resultaban en el valor 1 por las limitaciones de representación
+    del computador. Notamos que esto se debía al alto valor de las
+    entradas de la red neural por lo que decidimos escalarlas
+    dividiéndolas entre la máxima distancia entre dos puntos en el
+    simulador utilizado pero esto generaba resultados poco
+    satisfactorios también ya que los valores de salida de la red
+    neural tendían a 0 resultando en una pérdida de precisión. Por lo
+    tanto el factor de escalamiento se cambió por la máxima distancia
+    entre dos puntos dividida entre 16 para poder obtener valores
+    intermedios sin tener una pérdida de precisión en los resultados.
+\end{itemize}
 
 \chapter{Experimentos y Resultados}
 \label{chap:result}
@@ -82,7 +317,7 @@ mencionados a continuación:
 \item Cantidad de capas intermedias de la red neural.
 \item Cantidad de neuronas en la(s) capa(s) intermedia(s).
 \item \textbf{Tasa de escalamiento de inputs} (sección \ref{sec:escalamiento}).
-\item \textbf{Tasa de Neurotismo} (sección \ref{sec:neurotismo}).
+\item \textbf{Tasa de Inercia} (sección \ref{sec:inercia}).
 \end{itemize}
 
 Para todos estos parámetros, la investigación de
@@ -105,10 +340,10 @@ la cantidad de neuronas en ellas. Lucas llega a sus mejores resultados
 Los experimentos realizados en nuestro trabajo se basan completamente
 en esta configuración, y prueban los resultados de variar los últimos
 dos parámetros mencionados: \textbf{Tasa de escalamiento de inputs} y
-\textbf{Tasa de Neurotismo}.\\
+\textbf{Tasa de Inercia}.\\
 
 Para estos dos parámetros, las variaciones tomadas fueron las
-siguientes: La tasa de Neurotismo es variada entre los valores 1.5,
+siguientes: La tasa de Inercia es variada entre los valores 1.5,
 2.0 y 2.5 mientras que la tasa de escalamiento de inputs es variada
 entre $\frac{1}{9.875}$, $\frac{1}{39.5}$, $1$ (sin tasa de
 escalamiento).\\
@@ -127,7 +362,7 @@ valor $\frac{1}{9.875}$ tuvo mejores resultados.
 \section{Pruebas principales}
 \label{sec:pruebas-principales}
 
-Los experimentos realizados buscan conseguir cual tasa de Neurotismo
+Los experimentos realizados buscan conseguir cual tasa de Inercia
 hace que \emph{NeuroticPacman} tenga un mejor comportamiento usando la
 tasa de escalamiento de inputs en $\frac{1}{9.875}$, y luego usando
 dicha tasa, probamos deshabilitando la tasa de escalamiento.\\
@@ -137,7 +372,7 @@ Los resultados se encuentran detallados gráficamente a continuación:
 \newpage
 \begin{center}
   \textbf{
-    Tasa de Neurotismo: 1.5\\
+    Tasa de Inercia: 1.5\\
     Tasa de escalamiento: 9.875 }
 \end{center}
 \begin{figure}[htp]
@@ -149,7 +384,7 @@ Los resultados se encuentran detallados gráficamente a continuación:
 \newpage
 \begin{center}
   \textbf{
-    Tasa de Neurotismo: 2.0\\
+    Tasa de Inercia: 2.0\\
     Tasa de escalamiento: 9.875 }
 \end{center}
 \begin{figure}[htp]
@@ -161,7 +396,7 @@ Los resultados se encuentran detallados gráficamente a continuación:
 \newpage
 \begin{center}
   \textbf{
-    Tasa de Neurotismo: 2.5\\
+    Tasa de Inercia: 2.5\\
     Tasa de escalamiento: 9.875 }
 \end{center}
 \begin{figure}[htp]
@@ -173,7 +408,7 @@ Los resultados se encuentran detallados gráficamente a continuación:
 \newpage
 \begin{center}
   \textbf{
-    Tasa de Neurotismo: 1.5\\
+    Tasa de Inercia: 1.5\\
     Tasa de escalamiento: 1 }
 \end{center}
 \begin{figure}[htp]
